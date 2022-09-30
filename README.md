@@ -20,7 +20,7 @@ Windows or (Macbook, not recommended)
   NDK: 21.3.6528147 (r21d)
 #### Emulator: Not recommended, use your own device
   
-###B lender version?
+### Blender version: ?
 
 
 ## Build Guide
