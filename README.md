@@ -11,11 +11,24 @@ Experimental Repo For FYP development
 - (Macbook, not recommended)
 
 ## Software Need:
-### Unity 2021.3.11f1
-- Android Build Support needed
+### Unity Editor 2021.3.11f1 (From Unity Hub)
+- Android Build Support (Android SDK, NDK, and OpenJDK) must be checked when installing in Unity Hub Installer to reduce debug trouble of Java & gradle build
+- Not suggest adding Android Build Support after installing Unity Editor
 - (Optional: iOS Support)
+  
+### Blender version: ?
 
-### Android Studio
+
+## Build Guide
+### Pure Unity
+1. In Project Setting, change to Android Platform (click Export, if you would like to build the apk file via Android Studio; Yet not suggested)
+2. Pre
+
+### (Hard-core) Unity Export to Android Studio to build Android .apk file to install in the phone, contact Kenneth for more information
+#### Android Studio Setup and Specs:
+- Gradle Version: > 4.2.0
+- Java Version 1.8 (Java 8)
+
 #### AVD Manager Dev Download:
 SDK Platform:
 - Depends on your testing devices
@@ -24,11 +37,3 @@ SDK Tools:
 - SDK: Min SDK Level 24, target 30
 - NDK: 21.3.6528147 (r21d)
 #### Emulator: Not recommended, use your own device
-  
-### Blender version: ?
-
-
-## Build Guide
-### Pure Unity
-
-### Unity Export to Android Studio to build Android .apk file to install in the phone
