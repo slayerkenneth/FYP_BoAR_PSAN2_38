@@ -2480,6 +2480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -2834,7 +2835,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 2055860220}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2055860223}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00203f13141804260a205f7c8a71dc60, type: 3}
@@ -2846,6 +2847,25 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 2055860220}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2055860223 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7315055104982771470, guid: e91d6d15f11cc4ad29bb1a41ae9aa381,
+    type: 3}
+  m_PrefabInstance: {fileID: 2055860220}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2055860224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055860223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 544755552afaf4436af235f6de9be0b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _permissions: 00000000
 --- !u!1 &2072081253
 GameObject:
   m_ObjectHideFlags: 0
