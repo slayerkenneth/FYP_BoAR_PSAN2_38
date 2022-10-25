@@ -44,7 +44,7 @@ public class SemanticsTexture : MonoBehaviour
         //get the current buffer
         ISemanticBuffer semanticBuffer = args.Sender.AwarenessBuffer;
         //get the index for sky
-        int channel = semanticBuffer.GetChannelIndex("sky");
+        int channel = semanticBuffer.GetChannelIndex("water");
 
         semanticBuffer.CreateOrUpdateTextureARGB32(
             ref _semanticTexture, channel

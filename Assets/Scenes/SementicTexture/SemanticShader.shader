@@ -1,9 +1,10 @@
 Shader "Custom/SemanticShader"
 {
-     Properties
+    Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _DepthTex("_SemanticTex", 2D) = "red" {}
+        _SemanticTex("_SemanticTex", 2D) = "red" {}
+        _OverlayTex("Overlay", 2D) = "black" {}
     }
     SubShader
     {
@@ -30,6 +31,7 @@ Shader "Custom/SemanticShader"
                 float4 vertex : SV_POSITION;
                 //storage for our transformed depth uv
                 float3 semantic_uv : TEXCOORD1;
+                float2 overlay_uv : TEXCOORD2;
             };
 
             // Transforms used to sample the context awareness textures
@@ -41,14 +43,18 @@ Shader "Custom/SemanticShader"
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
 
-                //multiply the uv's by the depth transform to rotate them correctly.
+                //multiply the uv's by the depth transform to roate them correctly.
                 o.semantic_uv = mul(_semanticTransform, float4(v.uv, 1.0f, 1.0f)).xyz;
+
+                o.overlay_uv = UnityWorldToViewPos(v.vertex).xy; //Add camera facing here
                 return o;
             }
 
             //our texture samplers
             sampler2D _MainTex;
             sampler2D _SemanticTex;
+            sampler2D _OverlayTex;
+            float4 _OverlayTex_ST;
 
 
             fixed4 frag (v2f i) : SV_Target
@@ -60,17 +66,9 @@ Shader "Custom/SemanticShader"
                 //read the semantic texture pixel
                 float4 semanticCol = tex2D(_SemanticTex, semanticUV);
 
+                fixed4 OverlayPix = tex2D(_OverlayTex, i.overlay_uv);
 
-                // //add some grid lines to the sky
-                // semanticCol.g *= sin(i.uv.x* 100.0);
-                // semanticCol.b *= cos(i.uv.y* 100.0);
-                // //set alpha to blend rather than overight
-                // semanticCol.a *= 0.1f;
-                //
-                // //mix the main color and the semantic layer
-                // return lerp(mainCol,semanticCol, semanticCol.a);
-
-                return mainCol+semanticCol;
+                return mainCol+semanticCol*OverlayPix; //Need to add camera rotation offset to OverlayPix (uv problem, plz go to vert() to change)
             }
             ENDCG
         }
