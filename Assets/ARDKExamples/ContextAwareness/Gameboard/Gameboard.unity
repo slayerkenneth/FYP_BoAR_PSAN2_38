@@ -2243,8 +2243,13 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 7963815754292762357, guid: 9f82ecc5afc3c4c2695d9cf37d46f25c,
         type: 3}
+      propertyPath: _targetFrameRate
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963815754292762357, guid: 9f82ecc5afc3c4c2695d9cf37d46f25c,
+        type: 3}
       propertyPath: _useInvisibleMaterial
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f82ecc5afc3c4c2695d9cf37d46f25c, type: 3}
