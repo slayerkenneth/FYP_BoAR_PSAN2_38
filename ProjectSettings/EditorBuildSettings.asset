@@ -8,9 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/ARMeshing.unity
     guid: 6b1d0a66c70ceb74098b67a30d9f25f1
-  - enabled: 1
+  - enabled: 0
     path: Assets/ARDKExamples/ContextAwareness/Gameboard/Gameboard.unity
     guid: 1b7213c3fe5564515858f79a5dadc2f5
+  - enabled: 0
+    path: Assets/Scenes/SementicTexture/Sementics.unity
+    guid: 57ea147a1d6b94603af6bba4297852ac
+  - enabled: 1
+    path: Assets/ARDKExamples/WayspotAnchors/WayspotAnchors.unity
+    guid: 3477628c2e7624b9386c43bf7c008d15
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 744b813df90924c169af73489b8325de,
       type: 2}

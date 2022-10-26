@@ -5,6 +5,7 @@ Shader "Custom/SemanticShader"
         _MainTex ("Texture", 2D) = "white" {}
         _SemanticTex("_SemanticTex", 2D) = "red" {}
         _OverlayTex("Overlay", 2D) = "black" {}
+        _Intensity("Intensity", Range(0,1)) = 1
     }
     SubShader
     {
@@ -44,6 +45,8 @@ Shader "Custom/SemanticShader"
             sampler2D _MainTex;
             sampler2D _SemanticTex;
             sampler2D _OverlayTex;
+
+            float _Intensity;
             float4 _MainTex_ST;
             float4 _OverlayTex_ST;
 
@@ -59,7 +62,7 @@ Shader "Custom/SemanticShader"
                 //Original uv mapping
                 // o.overlay_uv = UnityWorldToViewPos(v.vertex).xy; //Add camera facing here
                 //Alt
-                o.overlay_uv = mul(unity_CameraToWorld, v.vertex).xy;
+                o.overlay_uv = mul(unity_CameraToWorld, UnityViewToClipPos(UnityWorldToViewPos(v.vertex))).xz; //World -> View Pos -> Clip Pos
                 
                 return o;
             }
@@ -76,7 +79,7 @@ Shader "Custom/SemanticShader"
 
                 fixed4 OverlayPix = tex2D(_OverlayTex, i.overlay_uv);
 
-                return mainCol+semanticCol*OverlayPix; //Need to add camera rotation offset to OverlayPix (uv problem, plz go to vert() to change)
+                return mainCol+semanticCol*OverlayPix * _Intensity; //Wanna dimmer the effects of the overlay texture: /2
             }
             ENDCG
         }

@@ -10,7 +10,6 @@ using Niantic.ARDK.AR.ARSessionEventArgs;
 using Niantic.ARDK.AR.Configuration;
 using Niantic.ARDK.AR.Awareness;
 using Niantic.ARDK.AR.Awareness.Semantics;
-using TMPro.EditorUtilities;
 using UnityEngine.UI;
 
 
@@ -19,6 +18,7 @@ public class SemanticsTexture : MonoBehaviour
     public Material _shaderMaterial;
     Texture2D _semanticTexture;
     public ARSemanticSegmentationManager _semanticManager;
+    public GameObject refGO;
 
     //Not good performance type of overlay:
     // public RawImage _overlayImage;
@@ -30,8 +30,8 @@ public class SemanticsTexture : MonoBehaviour
         //on initialisation
         ARSessionFactory.SessionInitialized += OnSessionInitialized;
         
-        // Matrix4x4 WorldToUVMatrix = Matrix4x4.TRS(refGO.transform.position, refGO.transform.rotation, Vector3.one);
-        // _shaderMaterial.SetMatrix("_WorldToUVMatrix", WorldToUVMatrix);
+        Matrix4x4 WorldToUVMatrix = Matrix4x4.TRS(refGO.transform.position, refGO.transform.rotation, Vector3.one);
+        _shaderMaterial.SetMatrix("_WorldToUVMatrix", WorldToUVMatrix);
     }
 
     private void OnSessionInitialized(AnyARSessionInitializedArgs args)
@@ -50,7 +50,7 @@ public class SemanticsTexture : MonoBehaviour
         int channel = semanticBuffer.GetChannelIndex("water");
 
         semanticBuffer.CreateOrUpdateTextureARGB32(
-            ref _semanticTexture,channel
+            ref _semanticTexture, channel, FilterMode.Trilinear
         );
         
         // //alt
