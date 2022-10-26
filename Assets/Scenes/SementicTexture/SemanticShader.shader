@@ -37,24 +37,32 @@ Shader "Custom/SemanticShader"
             // Transforms used to sample the context awareness textures
             float4x4 _semanticTransform;
 
+            //For translate to world
+            float4x4 _WorldToUVMatrix;
+
+            //our texture samplers
+            sampler2D _MainTex;
+            sampler2D _SemanticTex;
+            sampler2D _OverlayTex;
+            float4 _MainTex_ST;
+            float4 _OverlayTex_ST;
+
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
 
-                //multiply the uv's by the depth transform to roate them correctly.
+                //multiply the uv's by the depth transform to rotate them correctly.
                 o.semantic_uv = mul(_semanticTransform, float4(v.uv, 1.0f, 1.0f)).xyz;
 
-                o.overlay_uv = UnityWorldToViewPos(v.vertex).xy; //Add camera facing here
+                //Original uv mapping
+                // o.overlay_uv = UnityWorldToViewPos(v.vertex).xy; //Add camera facing here
+                //Alt
+                o.overlay_uv = mul(unity_CameraToWorld, v.vertex).xy;
+                
                 return o;
             }
-
-            //our texture samplers
-            sampler2D _MainTex;
-            sampler2D _SemanticTex;
-            sampler2D _OverlayTex;
-            float4 _OverlayTex_ST;
 
 
             fixed4 frag (v2f i) : SV_Target

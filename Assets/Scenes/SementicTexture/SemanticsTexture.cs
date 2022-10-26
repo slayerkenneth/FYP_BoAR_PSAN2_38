@@ -19,7 +19,7 @@ public class SemanticsTexture : MonoBehaviour
     public Material _shaderMaterial;
     Texture2D _semanticTexture;
     public ARSemanticSegmentationManager _semanticManager;
-    
+
     //Not good performance type of overlay:
     // public RawImage _overlayImage;
 
@@ -29,6 +29,9 @@ public class SemanticsTexture : MonoBehaviour
         _semanticManager.SemanticBufferUpdated += OnSemanticsBufferUpdated;
         //on initialisation
         ARSessionFactory.SessionInitialized += OnSessionInitialized;
+        
+        // Matrix4x4 WorldToUVMatrix = Matrix4x4.TRS(refGO.transform.position, refGO.transform.rotation, Vector3.one);
+        // _shaderMaterial.SetMatrix("_WorldToUVMatrix", WorldToUVMatrix);
     }
 
     private void OnSessionInitialized(AnyARSessionInitializedArgs args)
@@ -47,8 +50,15 @@ public class SemanticsTexture : MonoBehaviour
         int channel = semanticBuffer.GetChannelIndex("water");
 
         semanticBuffer.CreateOrUpdateTextureARGB32(
-            ref _semanticTexture, channel
+            ref _semanticTexture,channel
         );
+        
+        // //alt
+        // _semanticManager.SemanticBufferProcessor.CopyToAlignedTextureARGB32(
+        //     texture: ref _semanticTexture,
+        //     channel: channel,
+        //     orientation: Screen.orientation
+        //     );
 
         //not good performance
         // _overlayImage.texture = _semanticTexture;

@@ -326,6 +326,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
   _semanticManager: {fileID: 619056672}
+  refGO: {fileID: 1159741834}
+--- !u!1 &1159741834 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3265213345172326831, guid: 9c3d09eeec84640a68419eeca0061189,
+    type: 3}
+  m_PrefabInstance: {fileID: 1257604196}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1237155827 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5760349965259531221, guid: 9c3d09eeec84640a68419eeca0061189,
