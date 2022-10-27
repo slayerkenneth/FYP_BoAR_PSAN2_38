@@ -49,6 +49,9 @@ namespace Niantic.ARDK.AR.WayspotAnchors
     InvalidAPIKey = 12,
 
     // Dev is not authenticated to use VPS
-    Unauthenticated = 13
+    Unauthenticated = 13,
+
+    // Dev is not authenticated to use VPS
+    MaxRequestsPerSecondLimitExceeded = 14
   }
 }

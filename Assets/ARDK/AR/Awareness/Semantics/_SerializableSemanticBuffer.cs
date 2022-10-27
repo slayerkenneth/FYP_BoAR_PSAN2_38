@@ -19,7 +19,6 @@ namespace Niantic.ARDK.AR.Awareness.Semantics
     _SerializableAwarenessBufferBase<UInt32>,
     ISemanticBuffer
   {
-    private static bool _hasWarnedAboutInterpolation;
     private bool[] _hasChannelCache;
 
     internal _SerializableSemanticBuffer
@@ -159,32 +158,6 @@ namespace Niantic.ARDK.AR.Awareness.Semantics
     {
       var index = Array.IndexOf(ChannelNames, channelName);
       return index != -1 && DoesChannelExist(index);
-    }
-    
-    public UInt32 Sample(Vector2 uv)
-    {
-      var w = (int)Width;
-      var h = (int)Height;
-
-      var x = Mathf.Clamp(Mathf.RoundToInt(uv.x * w - 0.5f), 0, w - 1);
-      var y = Mathf.Clamp(Mathf.RoundToInt(uv.y * h - 0.5f), 0, h - 1);
-
-      return Data[x + w * y];
-    }
-
-    public UInt32 Sample(Vector2 uv, Matrix4x4 transform)
-    {
-      var w = (int)Width;
-      var h = (int)Height;
-
-      var st = transform * new Vector4(uv.x, uv.y, 1.0f, 1.0f);
-      var sx = st.x / st.z;
-      var sy = st.y / st.z;
-
-      var x = Mathf.Clamp(Mathf.RoundToInt(sx * w - 0.5f), 0, w - 1);
-      var y = Mathf.Clamp(Mathf.RoundToInt(sy * h - 0.5f), 0, h - 1);
-
-      return Data[x + w * y];
     }
 
     /// <inheritdoc />

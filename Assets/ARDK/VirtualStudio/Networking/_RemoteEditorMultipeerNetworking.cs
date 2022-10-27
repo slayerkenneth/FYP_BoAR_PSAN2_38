@@ -69,6 +69,7 @@ namespace Niantic.ARDK.VirtualStudio.Remote
       if (configuration.ClientMetadata == null)
         configuration.GenerateRandomClientId();
 
+#pragma warning disable 0618
       _EasyConnection.Send
       (
         new NetworkingInitMessage
@@ -78,7 +79,8 @@ namespace Niantic.ARDK.VirtualStudio.Remote
         },
         TransportType.ReliableOrdered
       );
-
+#pragma warning restore 0618
+      
       _RemoteConnection.Register
       (
         NetworkingConnectedMessage.ID.Combine(stageIdentifier),
@@ -152,6 +154,7 @@ namespace Niantic.ARDK.VirtualStudio.Remote
       ARLog._Error("_RemoteEditorMultipeerNetworking should be destroyed by an explicit call to Dispose().");
     }
 
+#pragma warning disable 0618
     private bool _isDestroyed;
     public void Dispose()
     {
@@ -314,7 +317,8 @@ namespace Niantic.ARDK.VirtualStudio.Remote
         TransportType.ReliableOrdered
       );
     }
-
+#pragma warning restore 0618
+    
     private void HandleDidConnectMessage(MessageEventArgs e)
     {
       var message = e.data.DeserializeFromArray<NetworkingConnectedMessage>();
@@ -520,6 +524,11 @@ namespace Niantic.ARDK.VirtualStudio.Remote
     public string ToString(int count)
     {
       return string.Format("_RemoteMultipeerNetworking (ID: {0})", StageIdentifier);
+    }
+
+    internal int _GetLatestArbeRttMeasurement()
+    {
+      return 0;
     }
 
     public event ArdkEventHandler<ConnectionFailedArgs> ConnectionFailed;

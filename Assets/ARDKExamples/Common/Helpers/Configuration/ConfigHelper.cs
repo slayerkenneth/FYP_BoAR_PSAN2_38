@@ -17,21 +17,12 @@ namespace Niantic.ARDKExamples.Configuration
   public class ConfigHelper:
     MonoBehaviour
   {
-    [SerializeField]
-    private string _dbowUrl = "";
-
     /// Empty URL will trigger default URL
     [SerializeField]
     private string _contextAwarenessUrl = "";
 
     void Awake()
     {
-      if (!string.IsNullOrEmpty(_dbowUrl))
-      {
-        if (ArdkGlobalConfig.SetDbowUrl(_dbowUrl))
-          Debug.Log("Set the DBoW URL to: " + _dbowUrl);
-      }
-
       if (!string.IsNullOrEmpty(_contextAwarenessUrl))
       {
         if (ArdkGlobalConfig.SetContextAwarenessUrl(_contextAwarenessUrl))

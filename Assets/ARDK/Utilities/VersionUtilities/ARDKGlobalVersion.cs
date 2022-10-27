@@ -10,12 +10,7 @@ namespace Niantic.ARDK.Utilities.VersionUtilities
     {
       get
       {
-        if (_impl == null)
-        {
-          _impl = new _NativeARDKVersion();
-        }
-
-        return _impl;
+        return _impl ??= new _NativeARDKVersion();
       }
     }
 

@@ -1,17 +1,16 @@
 ﻿// Copyright 2022 Niantic, Inc. All Rights Reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Niantic.ARDK.AR.Protobuf;
 using Niantic.ARDK.Configuration;
 using Niantic.ARDK.Configuration.Internal;
 using Niantic.ARDK.LocationService;
+using Niantic.ARDK.Telemetry;
 using Niantic.ARDK.Utilities;
 using Niantic.ARDK.Utilities.Logging;
 using Niantic.ARDK.VPSCoverage.GeoserviceMessages;
-
-using UnityEditor;
 
 using UnityEngine;
 
@@ -24,8 +23,10 @@ namespace Niantic.ARDK.VPSCoverage
   internal class _NativeCoverageClient: ICoverageClient
   {
     private const string VpsCoverageEndpoint = "https://vps-coverage-api.nianticlabs.com/api/json/v1/";
-    private const string CoverageAreasEndpoint = VpsCoverageEndpoint + "GET_VPS_COVERAGE";
-    private const string LocalizationTargetsEndpoint = VpsCoverageEndpoint + "GET_VPS_LOCALIZATION_TARGETS";
+    private const string CoverageAreasMethodName = "GET_VPS_COVERAGE";
+    private const string LocalizationTargetMethodName = "GET_VPS_LOCALIZATION_TARGETS";
+    private const string CoverageAreasEndpoint = VpsCoverageEndpoint + CoverageAreasMethodName;
+    private const string LocalizationTargetsEndpoint = VpsCoverageEndpoint + LocalizationTargetMethodName;
 
     internal _NativeCoverageClient()
     {
@@ -44,7 +45,7 @@ namespace Niantic.ARDK.VPSCoverage
         queryRadius = 0;
 
       var metadata = ArdkGlobalConfig._Internal.GetCommonDataEnvelopeWithRequestIdAsStruct();
-      var header =  ArdkGlobalConfig._Internal.GetApiGatewayHeader();
+      var requestHeaders =  ArdkGlobalConfig._Internal.GetApiGatewayHeaders();
 
       ARLog._Debug(JsonUtility.ToJson(metadata, true));
       
@@ -58,16 +59,21 @@ namespace Niantic.ARDK.VPSCoverage
         request = new _CoverageAreasRequest(queryLocation, queryRadius, metadata);
       }
 
+      ReportRequestToTelemetry(CoverageAreasMethodName, request.ar_common_metadata.request_id);
+
       _HttpResponse<_CoverageAreasResponse> response =
         await _HttpClient.SendPostAsync<_CoverageAreasRequest, _CoverageAreasResponse>
         (
           CoverageAreasEndpoint,
           request,
-          header
+          requestHeaders
         );
 
       if (response.Status == ResponseStatus.Success)
+      {
         response.Status = _ResponseStatusTranslator.FromString(response.Data.status);
+      }
+      ReportResponseToTelemetry(CoverageAreasMethodName, request.ar_common_metadata.request_id, response.HttpStatusCode, response.Status);
 
       CoverageAreasResult result = new CoverageAreasResult(response);
 
@@ -79,32 +85,31 @@ namespace Niantic.ARDK.VPSCoverage
       return await RequestCoverageAreasAsync(new LatLng(queryLocation), queryRadius);
     }
 
-    public async Task<LocalizationTargetsResult> RequestLocalizationTargetsAsync
-    (
-      string[] targetIdentifiers
-    )
+    public async Task<LocalizationTargetsResult> RequestLocalizationTargetsAsync(string[] targetIdentifiers)
     {
       var metadata = ArdkGlobalConfig._Internal.GetCommonDataEnvelopeWithRequestIdAsStruct();
-      var header =  ArdkGlobalConfig._Internal.GetApiGatewayHeader();
-
-      ARLog._Debug(JsonUtility.ToJson(metadata, true));
+      var requestHeaders =  ArdkGlobalConfig._Internal.GetApiGatewayHeaders();
       
-      _LocalizationTargetsRequest request = new _LocalizationTargetsRequest(targetIdentifiers, metadata);
+      ARLog._Debug(JsonUtility.ToJson(metadata, true));
 
+      _LocalizationTargetsRequest request = new _LocalizationTargetsRequest(targetIdentifiers, metadata);
+      ReportRequestToTelemetry(LocalizationTargetMethodName, request.ar_common_metadata.request_id);
+      
       _HttpResponse<_LocalizationTargetsResponse> response =
         await _HttpClient.SendPostAsync<_LocalizationTargetsRequest, _LocalizationTargetsResponse>
         (
           LocalizationTargetsEndpoint,
           request,
-          header
+          requestHeaders
         );
 
       if (response.Status == ResponseStatus.Success)
         response.Status = _ResponseStatusTranslator.FromString(response.Data.status);
-
+      ReportResponseToTelemetry(LocalizationTargetMethodName, request.ar_common_metadata.request_id, response.HttpStatusCode, response.Status);
+      
       LocalizationTargetsResult result = new LocalizationTargetsResult(response);
 
-     return result;
+      return result;
     }
 
     public async void RequestCoverageAreas(LocationInfo queryLocation, int queryRadius, Action<CoverageAreasResult> onAreasReceived)
@@ -123,6 +128,50 @@ namespace Niantic.ARDK.VPSCoverage
     {
       LocalizationTargetsResult result = await RequestLocalizationTargetsAsync(targetIdentifiers);
       onTargetsReceived?.Invoke(result);
+    }
+    
+    private void ReportRequestToTelemetry(string methodName, string requestId)
+    {
+      try
+      {
+        _TelemetryService.RecordEvent
+        (
+          new LightshipServiceEvent()
+          {
+            IsRequest = true, ApiMethodName = methodName,
+          },
+          requestId
+        );
+      }
+      catch (Exception e)
+      {
+        ARLog._Debug($"Error logging vps coverage request {e}");
+      }
+    }
+    
+    private void ReportResponseToTelemetry(string methodName, string requestId, long httpStatus, ResponseStatus responseStatus)
+    {
+      try
+      {
+        bool isSuccess = false;
+        if (httpStatus >= 200 && httpStatus < 300)
+          isSuccess = true;
+        
+        _TelemetryService.RecordEvent(
+          new LightshipServiceEvent()
+          {
+            IsRequest = false,
+            ApiMethodName = methodName,
+            Success = isSuccess,
+            Response = responseStatus.ToString(),
+            HttpStatus = httpStatus.ToString(),
+          },
+          requestId);
+      }
+      catch (Exception e)
+      {
+        ARLog._Debug($"Error logging vps coverage response: {e}");
+      }
     }
   }
 }

@@ -7,6 +7,8 @@ using Niantic.ARDK.AR;
 using Niantic.ARDK.Internals;
 using Niantic.ARDK.Utilities;
 
+using UnityEngine;
+
 namespace Niantic.ARDK.Networking
 {
   /// <summary>
@@ -35,7 +37,7 @@ namespace Niantic.ARDK.Networking
       Guid identifier;
       _NARPeerInfo_GetIdentifier(nativeHandle, out identifier);
       _NARPeerInfo_Release(nativeHandle);
-
+      
       return FromIdentifier(identifier);
     }
 
@@ -54,7 +56,7 @@ namespace Niantic.ARDK.Networking
     {
       // Do not call into native if this is run during testing
 #pragma warning disable CS0162
-      if (NativeAccess.Mode == NativeAccess.ModeType.Testing)
+      if (_NativeAccess.Mode == _NativeAccess.ModeType.Testing)
         return;
 #pragma warning restore CS0162
 

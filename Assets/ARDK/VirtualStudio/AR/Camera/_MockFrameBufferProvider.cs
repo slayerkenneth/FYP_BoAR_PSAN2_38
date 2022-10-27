@@ -147,6 +147,11 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
     {
       // Instantiate a new Unity camera
       _imageCamera = CreateCameraBase("Image");
+      
+      // Cache the correct values so they can be used instead of potentially incorrect values
+      // due to this bug: Unity Issue-598763
+      _MockCameraConfiguration.CorrectedScreenWidth = _imageCamera.pixelWidth;
+      _MockCameraConfiguration.CorrectedScreenHeight = _imageCamera.pixelHeight;
 
       // Configure the camera to use physical properties
       _imageCamera.usePhysicalProperties = true;
@@ -154,24 +159,11 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
       _imageCamera.nearClipPlane = 0.1f;
       _imageCamera.farClipPlane = 100f;
 
-      // Infer the orientation of the editor
-      var editorOrientation = Screen.width > Screen.height
-#if UNITY_2021_3_OR_NEWER
-        ? ScreenOrientation.LandscapeLeft
-#else
-        ? ScreenOrientation.Landscape
-#endif
-        : ScreenOrientation.Portrait;
-
       // Rotate the 'device' to the UI orientation
       _imageCamera.transform.localRotation = MathUtils.CalculateViewRotation
       (
-#if UNITY_2021_3_OR_NEWER
         from: ScreenOrientation.LandscapeLeft,
-#else
-        from: ScreenOrientation.Landscape,
-#endif
-        to: editorOrientation
+        to: MathUtils.CalculateScreenOrientation()
       ).ToRotation();
 
       // Set up rendering offscreen to render texture.
@@ -194,9 +186,9 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
         _imageIntrinsics,
         _ARImageWidth,
         _ARImageHeight,
-        Screen.width,
-        Screen.height,
-        RenderTarget.ScreenOrientation,
+        _imageCamera.pixelWidth,
+        _imageCamera.pixelHeight,
+        MathUtils.CalculateScreenOrientation(),
         _imageCamera.nearClipPlane,
         _imageCamera.farClipPlane
       );
@@ -230,24 +222,13 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
       _depthCamera = CreateAwarenessCamera("Depth");
       _depthCamera.depthTextureMode = DepthTextureMode.Depth;
 
-      var editorOrientation = Screen.width > Screen.height
-#if UNITY_2021_3_OR_NEWER
-        ? ScreenOrientation.LandscapeLeft
-#else
-        ? ScreenOrientation.Landscape
-#endif
-        : ScreenOrientation.Portrait;
-
       // Rotate the 'device' to the UI orientation
-      _depthCamera.transform.localRotation = MathUtils.CalculateViewRotation
-      (
-#if UNITY_2021_3_OR_NEWER
-        from: ScreenOrientation.LandscapeLeft,
-#else
-        from: ScreenOrientation.Landscape,
-#endif
-        to: editorOrientation
-      ).ToRotation();
+      _depthCamera.transform.localRotation =
+        MathUtils.CalculateViewRotation
+        (
+          from: ScreenOrientation.LandscapeLeft,
+          to: MathUtils.CalculateScreenOrientation()
+        ).ToRotation();
 
       _depthRT =
       new RenderTexture
@@ -284,23 +265,12 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
       _semanticsCamera.clearFlags = CameraClearFlags.SolidColor;
       _semanticsCamera.backgroundColor = new Color(0, 0, 0, 0);
 
-      var editorOrientation = Screen.width > Screen.height
-#if UNITY_2021_3_OR_NEWER
-        ? ScreenOrientation.LandscapeLeft
-#else
-        ? ScreenOrientation.Landscape
-#endif
-        : ScreenOrientation.Portrait;
-
       // Rotate the 'device' to the UI orientation
-      _semanticsCamera.transform.localRotation = MathUtils.CalculateViewRotation
+      _semanticsCamera.transform.localRotation =
+        MathUtils.CalculateViewRotation
         (
-#if UNITY_2021_3_OR_NEWER
           from: ScreenOrientation.LandscapeLeft,
-#else
-          from: ScreenOrientation.Landscape,
-#endif
-          to: editorOrientation
+          to: MathUtils.CalculateScreenOrientation()
         ).ToRotation();
 
       _semanticsRT =
@@ -416,12 +386,8 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
     {
       var rotation = MathUtils.CalculateViewRotation
       (
-#if UNITY_2021_3_OR_NEWER
         from: ScreenOrientation.LandscapeLeft,
-#else
-        from: ScreenOrientation.Landscape,
-#endif
-        to: RenderTarget.ScreenOrientation
+        to: MathUtils.CalculateScreenOrientation()
       );
 
       var narView = serializedCamera.worldToCameraMatrix.ConvertViewMatrixBetweenNarAndUnity();
@@ -465,16 +431,7 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
             lightEstimate: null,
             anchors: null,
             maps: null,
-            worldScale: 1.0f,
-            estimatedDisplayTransform: MathUtils.CalculateDisplayTransform
-            (
-              _ARImageWidth,
-              _ARImageHeight,
-              Screen.width,
-              Screen.height,
-              RenderTarget.ScreenOrientation,
-              invertVertically: true
-            )
+            worldScale: 1.0f
           );
 
           _arSession.UpdateFrame(serializedFrame);
@@ -529,7 +486,7 @@ namespace Niantic.ARDK.VirtualStudio.AR.Mock
       (
         _ModelWidth * _ModelHeight,
         Allocator.Persistent,
-        NativeArrayOptions.UninitializedMemory
+        NativeArrayOptions.ClearMemory
       );
 
 #if ENABLE_UNITY_COLLECTIONS_CHECKS

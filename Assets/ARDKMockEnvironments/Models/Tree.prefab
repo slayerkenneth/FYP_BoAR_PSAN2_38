@@ -201,6 +201,7 @@ GameObject:
   - component: {fileID: 5397041895191320318}
   - component: {fileID: 939070411142795240}
   - component: {fileID: 6627875287287394800}
+  - component: {fileID: 5897097857703681877}
   m_Layer: 8
   m_Name: Dirt
   m_TagString: Untagged
@@ -271,6 +272,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5897097857703681877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6442899183818744755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f16534bb6007474a91d7b492b09b52c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Channel: 14
 --- !u!1 &7585384812552663232
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,6 +21,7 @@ namespace Niantic.ARDK.Rendering
     /// on Android devices.
     /// @param commandBuffer The command buffer to add the IssuePluginEventAndData step to.
     /// @param arSession The AR session to fetch updates for.
+    [Obsolete("Please use _NativeARSession.SetUpdatingCamera(UnityEngine.Camera) instead.")]
     public static void IssuePluginEventAndData
     (
       this CommandBuffer commandBuffer,
@@ -28,7 +29,7 @@ namespace Niantic.ARDK.Rendering
     )
     {
       if (arSession is _NativeARSession nativeSession)
-        nativeSession.SetupCommandBuffer(commandBuffer);
+        nativeSession.AddIssueNativeRenderEvent(commandBuffer);
     }
 
     public static void AddBackgroundBuffer(Camera camera, CommandBuffer commandBuffer)

@@ -50,14 +50,7 @@ namespace Niantic.ARDKExamples.Rendering
     /// Renders the current frame.  This should be called from LateUpdate.
     public void RenderFrame()
     {
-      if (_renderer == null)
-        return;
-
-      var frame = _session?.CurrentFrame;
-      if (frame == null)
-        return;
-
-      _renderer.UpdateState(frame);
+      _renderer?.UpdateState(withFrame: _session?.CurrentFrame);
     }
 
     private void ARSessionFactory_SessionInitialized(AnyARSessionInitializedArgs args)
@@ -98,8 +91,8 @@ namespace Niantic.ARDKExamples.Rendering
 
       var result = ARFrameRendererFactory.Create
       (
-        renderTarget,
-        environment
+        target: renderTarget,
+        env: environment
       );
 
       if (result != null)

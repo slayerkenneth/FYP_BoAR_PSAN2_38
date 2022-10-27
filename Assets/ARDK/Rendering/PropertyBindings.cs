@@ -17,6 +17,12 @@ namespace Niantic.ARDK.Rendering
     /// Texture property for the depth network output
     public static readonly int DepthChannel = Shader.PropertyToID("_textureDepth");
     
+    /// Texture property for the semantic segmentation network output
+    public static readonly int SemanticChannel = Shader.PropertyToID("_textureSemantic");
+
+    // Texture property for depth captured from the fused mesh
+    public static readonly int FusedDepthChannel = Shader.PropertyToID("_textureFusedDepth");
+    
     /// Texture property for the depth suppression mask
     public static readonly int DepthSuppressionMask = Shader.PropertyToID("_textureDepthSuppressionMask");
     
@@ -49,5 +55,9 @@ namespace Niantic.ARDK.Rendering
 
     /// When enabled, parts of the depth texture defined by a semantic mask get discarded 
     public const string DepthSuppression = "DEPTH_SUPPRESSION";
+    
+    // When enabled, parts of the depth texture get substituted with values from the fused
+    // depth render
+    public const string DepthStabilization = "DEPTH_STABILIZATION";
   }
 }

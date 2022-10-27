@@ -121,23 +121,5 @@ namespace Niantic.ARDK.AR.Awareness.Semantics
     ///   is null.
     /// @returns True if the buffer was successfully copied to the given texture.
     bool CreateOrUpdateTextureRFloat(ref Texture2D texture, FilterMode filterMode = FilterMode.Point);
-
-    /// Returns the nearest value to the specified normalized coordinates in the buffer.
-    /// @param uv
-    ///   Normalized coordinates.
-    /// @returns
-    ///   The value in the semantic buffer at the nearest location to the coordinates.
-    UInt32 Sample(Vector2 uv);
-
-    /// Returns the nearest value to the specified normalized coordinates in the buffer.
-    /// @param uv
-    ///   Normalized coordinates.
-    /// @param transform
-    ///   2D transformation applied to normalized coordinates before sampling.
-    ///   This transformation should convert to the depth buffer's coordinate frame.
-    /// @returns
-    ///   The value in the semantic buffer at the nearest location to the
-    ///   transformed coordinates.
-    UInt32 Sample(Vector2 uv, Matrix4x4 transform);
   }
 }

@@ -35,8 +35,6 @@ namespace Niantic.ARDK.Rendering
     protected override GraphicsFence? OnConfigurePipeline
     (
       RenderTarget target,
-      Resolution targetResolution,
-      Resolution sourceResolution,
       Material renderMaterial
     )
     {

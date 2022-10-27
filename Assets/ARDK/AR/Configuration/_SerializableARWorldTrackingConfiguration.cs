@@ -33,30 +33,80 @@ namespace Niantic.ARDK.AR.Configuration
     public bool IsMeshingEnabled { get; set; }
 
     public uint MeshingTargetFrameRate { get; set; }
+    
+    [Obsolete("This property is obsolete. Use MeshDecimationThreshold instead.", false)]
+    public float MeshingRadius { 
+      get => MeshDecimationThreshold;
+      set { MeshDecimationThreshold = value; }
+    }
 
     public float MeshingTargetBlockSize { get; set; }
+    
+    public bool IsPalmDetectionEnabled { get; set; }
 
-    public float MeshingRadius
+    public float MeshDecimationThreshold
     {
-      get => _meshingRadius;
+      get => _meshDecimationThreshold;
       set
       {
-        if (value > 0 && value < 5)
+        if (value > 0 && value < MeshingRangeMax)
         {
           ARLog._Error
           (
-            "The smallest meshing radius possible is 5 meters. " +
-            "Set the value to 0 for an infinite radius."
+            "The smallest mesh decimation threshold possible is the maximum meshing range " +
+            "distance. Set the value to 0 for an infinite distance."
           );
 
           return;
         }
 
-        _meshingRadius = value;
+        _meshDecimationThreshold = value;
       }
     }
 
-    private float _meshingRadius;
+    private float _meshDecimationThreshold;
+    
+    public float MeshingRangeMax
+    {
+      get => _meshingRangeMax;
+      set
+      {
+        if (value <= 0)
+        {
+          ARLog._Error
+          (
+            "The maximum meshing range must be larger then zero."
+          );
+
+          return;
+        }
+        
+        _meshingRangeMax = value;
+      }
+    }
+
+    private float _meshingRangeMax = 5f;
+    
+    public float VoxelSize
+    {
+      get => _voxelSize;
+      set
+      {
+        if (value <= 0)
+        {
+          ARLog._Error
+          (
+            "The voxel size must be larger than 0."
+          );
+
+          return;
+        }
+        
+        _voxelSize = value;
+      }
+    }
+
+    private float _voxelSize = 0.025f;
 
     private IReadOnlyCollection<IARReferenceImage> _detectionImages =
       EmptyArdkReadOnlyCollection<IARReferenceImage>.Instance;
@@ -103,7 +153,11 @@ namespace Niantic.ARDK.AR.Configuration
       worldTarget.IsMeshingEnabled = IsMeshingEnabled;
       worldTarget.MeshingTargetFrameRate = MeshingTargetFrameRate;
       worldTarget.MeshingTargetBlockSize = MeshingTargetBlockSize;
-      worldTarget.MeshingRadius = MeshingRadius;
+      worldTarget.MeshDecimationThreshold = MeshDecimationThreshold;
+      worldTarget.MeshingRangeMax = MeshingRangeMax;
+      worldTarget.VoxelSize = VoxelSize;
+
+      worldTarget.IsPalmDetectionEnabled = IsPalmDetectionEnabled;
 
       // Not copying DetectionImages because ARReferenceImage is not supported in Editor.
     }

@@ -28,12 +28,6 @@ namespace Niantic.ARDK.Networking
     public static string ApiKey { get; set; }
 
     /// <summary>
-    /// URL at which the API key will be authenticated.
-    /// @note This can only be set for internal testing. Other attempts to set it will no-op. 
-    /// </summary>
-    public static string AuthenticationUrl { get; set; }
-
-    /// <summary>
     /// Generates a ServerConfiguration pointed at ARBEs, with no defined ClientMetadata. If the
     ///   ClientMetadata is not defined when this ServerConfiguration is used to generate an
     ///   IMultipeerNetworking, a random Guid will be generated

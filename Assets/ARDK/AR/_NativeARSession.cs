@@ -1,4 +1,10 @@
 // Copyright 2022 Niantic, Inc. All Rights Reserved.
+#if UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_WIN
+#define UNITY_STANDALONE_DESKTOP
+#endif
+#if (UNITY_IOS || UNITY_ANDROID || UNITY_STANDALONE_DESKTOP) && !UNITY_EDITOR
+#define AR_NATIVE_SUPPORT
+#endif
 
 using System;
 using System.Collections.Generic;
@@ -19,18 +25,25 @@ using Niantic.ARDK.AR.Awareness;
 using Niantic.ARDK.AR.Camera;
 using Niantic.ARDK.AR.Configuration;
 using Niantic.ARDK.AR.Awareness.Depth.Generators;
+using Niantic.ARDK.AR.Awareness.Human;
 using Niantic.ARDK.AR.Frame;
 using Niantic.ARDK.AR.PointCloud;
 using Niantic.ARDK.AR.Mesh;
+using Niantic.ARDK.AR.Protobuf;
 using Niantic.ARDK.AR.SLAM;
 using Niantic.ARDK.Extensions.Meshing;
 using Niantic.ARDK.Internals;
 using Niantic.ARDK.LocationService;
 using Niantic.ARDK.Rendering;
+using Niantic.ARDK.Telemetry;
 using Niantic.ARDK.Utilities;
 using Niantic.ARDK.Utilities.BinarySerialization.ItemSerializers;
 using Niantic.ARDK.Utilities.Collections;
 using Niantic.ARDK.Utilities.Logging;
+using Niantic.ARDK.VirtualStudio;
+using Niantic.ARDK.VirtualStudio.AR;
+
+
 
 namespace Niantic.ARDK.AR
 {
@@ -44,11 +57,8 @@ namespace Niantic.ARDK.AR
 
     RuntimeEnvironment IARSession.RuntimeEnvironment
     {
-      // Maybe Playback will become a different Kind... for now, LiveDevice is the only one available.
-      get => RuntimeEnvironment.LiveDevice;
+      get => _playbackEnabled ? RuntimeEnvironment.Playback : RuntimeEnvironment.LiveDevice;
     }
-
-    public bool IsPlayback { get { return _playbackEnabled; } }
 
     /// <inheritdoc />
     public IARConfiguration Configuration { get; private set; }
@@ -77,8 +87,10 @@ namespace Niantic.ARDK.AR
 #pragma warning restore 0414
 
     private _NativeLocationServiceAdapter _locationServiceAdapter;
-    private bool _hasSetupCommandBuffer;
-    private _VirtualCamera _virtualCamera;
+
+    private CommandBuffer _commandBuffer = null;
+    private _VirtualCamera _virtualCamera = null;
+    private UnityEngine.Camera _updatingCamera = null;
 
     /// <inheritdoc />
     public float WorldScale { get; set; } = 1;
@@ -90,7 +102,7 @@ namespace Niantic.ARDK.AR
 
     static _NativeARSession()
     {
-      Platform.Init();
+      _Platform.Init();
     }
 
     /// <inheritdoc />
@@ -103,8 +115,25 @@ namespace Niantic.ARDK.AR
 
     private _MeshDataParser _meshDataParser = new _MeshDataParser();
 
+    public HandTracker HandTracker
+    {
+      get
+      {
+        if (_handTracker == null)
+        {
+          _handTracker = new HandTracker(this);
+        }
+
+        return _handTracker;
+      }
+    }
+
+    private HandTracker _handTracker;
+
+    public _PlaybackDataset PlaybackDataset { get; private set; }
+
     /// <inheritdoc />
-    internal _NativeARSession(Guid stageIdentifier, bool playbackEnabled=false)
+    internal _NativeARSession(Guid stageIdentifier, bool playbackEnabled = false)
     {
       _FriendTypeAsserter.AssertCallerIs(typeof(ARSessionFactory));
 
@@ -113,18 +142,32 @@ namespace Niantic.ARDK.AR
         ARLog._Error("AR Core is not compatible with Vulkan. You're going to get a black screen.");
 #endif
 
-      ARLog._DebugFormat("Creating _NativeARSession with stage identifier: {0}", false, stageIdentifier);
-
       StageIdentifier = stageIdentifier;
       _playbackEnabled = playbackEnabled;
       ARSessionChangesCollector = new ARSessionChangesCollector(this);
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
+        ARLog._DebugFormat
+        (
+          "Creating {0} _NativeARSession with stage identifier: {1}",
+          false,
+          _playbackEnabled ? RuntimeEnvironment.Playback : RuntimeEnvironment.LiveDevice,
+          stageIdentifier
+        );
+
         if (playbackEnabled)
+        {
+          var launcher =
+            (_PlaybackModeLauncher)_VirtualStudioLauncher.GetOrCreateModeLauncher(RuntimeEnvironment.Playback);
+
+          PlaybackDataset = new _PlaybackDataset(launcher.DatasetPath);
           _nativeHandle = _NARPlaybackSession_Init(StageIdentifier.ToByteArray());
+        }
         else
+        {
           _nativeHandle = _NARSession_Init(StageIdentifier.ToByteArray());
+        }
 
         // Inform the GC that this class is holding a large native object, so it gets cleaned up fast
         // TODO(awang): Make an IReleasable interface that handles this for all native-related classes
@@ -136,6 +179,13 @@ namespace Niantic.ARDK.AR
       #pragma warning disable 0162
       else
       {
+        ARLog._DebugFormat
+        (
+          "Creating testing _NativeARSession with stage identifier: {0}",
+          false,
+          stageIdentifier
+        );
+
         _nativeHandle = (IntPtr)1;
       }
       #pragma warning restore 0162
@@ -185,9 +235,18 @@ namespace Niantic.ARDK.AR
 
         _meshDataParser?.Dispose();
         _meshDataParser = null;
+
+        _handTracker = null;
+
+        PlaybackDataset?.Dispose();
+        PlaybackDataset = null;
+
+        _updatingCamera = null;
+        _virtualCamera?.Dispose();
+        _commandBuffer?.Dispose();
       }
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Release(_nativeHandle);
         GC.RemoveMemoryPressure(GCPressure);
@@ -240,6 +299,19 @@ namespace Niantic.ARDK.AR
         ARLog._Error("Configuration validation failed, not running session");
         return;
       }
+      
+      try
+      {
+        var configForTelemetry = (IARWorldTrackingConfiguration)configuration;
+        _TelemetryService.RecordEvent(new EnabledContextualAwarenessEvent()
+        {
+          Depth = configForTelemetry.IsDepthEnabled,
+          Meshing = configForTelemetry.IsMeshingEnabled,
+          Semantics = configForTelemetry.IsSemanticSegmentationEnabled
+        });
+      }
+      finally
+      { }
 
       Configuration = configuration;
       RunOptions = options;
@@ -250,25 +322,12 @@ namespace Niantic.ARDK.AR
       if ((RunOptions & ARSessionRunOptions.RemoveExistingMesh) != 0)
         _meshDataParser.Clear();
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-      if (!_hasSetupCommandBuffer)
-      {
-        var msg =
-          "No command buffer was set up to fetch ARCore updates, so _NativeARSession" +
-          " will create and set up execution of one on a new virtual camera. This virtual" +
-          " camera will be disposed if ARSessionBuffersHelper.IssuePluginEventAndData is " +
-          " called to explicitly set up a command buffer later.";
-        ARLog._Debug(msg);
-
-        var commandBuffer = new CommandBuffer();
-        commandBuffer.IssuePluginEventAndData(this);
-        _virtualCamera = _VirtualCameraFactory.CreateContinousVirtualCamera(commandBuffer);
-      }
-#endif
+      SetUpdatingCamera(_updatingCamera);
 
       ARLog._DebugFormat("Running _NativeARSession with options: {0}", false, options);
-
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      
+      
+      if (_NativeAccess.IsNativeAccessValid())
       {
         var nativeConfiguration = (_NativeARConfiguration)configuration;
         _NARSession_Run(_nativeHandle, nativeConfiguration.NativeHandle, (UInt64)options);
@@ -283,20 +342,18 @@ namespace Niantic.ARDK.AR
     {
       _CheckThread();
 
-      ARLog._Debug("Pausing _NativeARSession");
-
       CurrentFrame = null;
 
       if (_nativeHandle == IntPtr.Zero)
       {
-        ARLog._Debug("Session was freed before Pause()");
+        ARLog._Debug("Session was freed before call to _NativeARSession.Pause");
         return;
       }
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Pause(_nativeHandle);
-        ARLog._Debug("Called pause on native object");
+        ARLog._Debug("Paused native ARSession.");
       }
 
       State = ARSessionState.Paused;
@@ -316,7 +373,7 @@ namespace Niantic.ARDK.AR
 
       var anchor = _ARAnchorFactory._Create(transform);
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         var nativeAnchor = anchor as _NativeARAnchor;
         if (nativeAnchor != null)
@@ -349,7 +406,7 @@ namespace Niantic.ARDK.AR
         return;
       }
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         ARLog._DebugFormat("Removing native anchor {0}", false, anchor.Identifier);
         var nativeAnchor = anchor as _NativeARAnchor;
@@ -358,10 +415,7 @@ namespace Niantic.ARDK.AR
       }
     }
 
-    internal bool _IsLocationServiceInitialized()
-    {
-      return _locationServiceAdapter != null;
-    }
+    internal bool _IsLocationServiceInitialized { get; private set; }
 
     public void SetupLocationService(ILocationService locationService)
     {
@@ -370,6 +424,14 @@ namespace Niantic.ARDK.AR
       if (_locationServiceAdapter != null)
       {
         ARLog._Error("This ARSession is already listening to a LocationService instance.");
+        return;
+      }
+
+      _IsLocationServiceInitialized = true;
+
+      if (_playbackEnabled)
+      {
+        // Do nothing, because location updates are fed to required systems c++ side
         return;
       }
 
@@ -398,7 +460,7 @@ namespace Niantic.ARDK.AR
 
       if (_nativeHandle != IntPtr.Zero)
       {
-        if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+        if (_NativeAccess.Mode == _NativeAccess.ModeType.Native)
         {
           var code = (_NativeAwarenessInitializationCode)_NARSession_GetAwarenessFeaturesError(_nativeHandle);
           var status = code.ToStatus();
@@ -431,6 +493,15 @@ namespace Niantic.ARDK.AR
 
           return status;
         }
+#pragma warning disable CS0162
+        else
+        {
+          // TODO AR-10906: Fix _NARSession_GetAwarenessFeaturesErrorMessage returning garbage values for playback
+          error = AwarenessInitializationError.None;
+          errorMessage = string.Empty;
+          return AwarenessInitializationStatus.Ready;
+        }
+#pragma warning restore CS0162
       }
       else
       {
@@ -442,28 +513,67 @@ namespace Niantic.ARDK.AR
       errorMessage = string.Empty;
       return AwarenessInitializationStatus.Unknown;
     }
-
-    internal void SetupCommandBuffer(CommandBuffer commandBuffer)
+    
+    [Obsolete
+    (
+      "Explicit addition of a command to invoke the native render " +
+      "event will be removed in favor of handling it through cameras."
+    )]
+    internal void AddIssueNativeRenderEvent(CommandBuffer commandBuffer)
     {
-      _CheckThread();
+#if UNITY_ANDROID && !UNITY_EDITOR
+      commandBuffer?.IssuePluginEventAndData(GetRenderEventFunc(), 1, _nativeHandle);
+#endif
+    }
 
-      if (_hasSetupCommandBuffer && _virtualCamera == null)
+    /// Delegates the responsibility of driving frame updates to the specified camera.
+    /// This call is only relevant on Android as ARKit pushes updates automatically.
+    /// Calling this method with null will result in assigning the update task to the
+    /// AR session.
+    /// @param camera The camera that will drive the ARCore frame updates.
+    internal void SetUpdatingCamera(UnityEngine.Camera camera)
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+      // Only required on Android
+      _CheckThread();
+      
+      if (_commandBuffer == null)
       {
-        ARLog._Debug("Multiple command buffers are being set up to fetch AR updates." +
-          "This is expected on the Android platform, but may not be desired otherwise.");
+        // Allocate the command buffer that periodically invokes the native ARCore update event
+        _commandBuffer = new CommandBuffer {name = "ARCore update driver"};
+        _commandBuffer.IssuePluginEventAndData(GetRenderEventFunc(), 1, _nativeHandle);
       }
 
-      if (_virtualCamera != null)
+      // Assign to the internal camera
+      if (camera == null)
       {
-        _virtualCamera.Dispose();
+        // Remove ARCore updates from the current external camera, if any
+        if (_updatingCamera != null)
+          ARSessionBuffersHelper.RemoveBackgroundBuffer(_updatingCamera, _commandBuffer);
+        
+        // Assign updating ARCore to the internal camera
+        _virtualCamera ??= _VirtualCameraFactory.CreateContinousVirtualCamera(_commandBuffer);
+        ARLog._Debug("Fetching ARCore updates are enabled on the _NativeARSession.");
+      }
+      
+      // Assign to a new external camera
+      else if (_updatingCamera != camera)
+      {
+        // Dispose the internal camera, if it exists
+        _virtualCamera?.Dispose();
         _virtualCamera = null;
 
-        ARLog._Debug("A command buffer was explicitly set up to fetch AR updates, so the virtual " +
-          " camera set up to do so previously has been disposed.");
+        // Remove ARCore updates from the current external camera, if any
+        if (_updatingCamera != null)
+          ARSessionBuffersHelper.RemoveBackgroundBuffer(_updatingCamera, _commandBuffer);
+
+        // Assign updating ARCore to the new camera
+        ARSessionBuffersHelper.AddAfterRenderingBuffer(camera, _commandBuffer);
+        ARLog._Debug("Fetching ARCore updates are disabled on the _NativeARSession.");
       }
 
-      commandBuffer.IssuePluginEventAndData(GetRenderEventFunc(), 1, _nativeHandle);
-      _hasSetupCommandBuffer = true;
+      _updatingCamera = camera;
+#endif
     }
 
     /// @name Events
@@ -751,7 +861,7 @@ namespace Niantic.ARDK.AR
       if (_updateFrameInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_didUpdateFrameCallback
         (
@@ -776,7 +886,7 @@ namespace Niantic.ARDK.AR
         if (_updateMeshInitialized)
           return;
 
-        if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+        if (_NativeAccess.IsNativeAccessValid())
         {
           _NARSession_Set_didUpdateMeshCallback(_handle, _nativeHandle, _onDidUpdateMeshNative);
         }
@@ -792,7 +902,7 @@ namespace Niantic.ARDK.AR
       if (_addAnchorsInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_didAddAnchorsCallback
         (
@@ -814,7 +924,7 @@ namespace Niantic.ARDK.AR
       if (_updateAnchorsInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_didUpdateAnchorsCallback
         (
@@ -836,7 +946,7 @@ namespace Niantic.ARDK.AR
       if (_removeAnchorsInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_didRemoveAnchorsCallback
         (
@@ -845,7 +955,7 @@ namespace Niantic.ARDK.AR
           _onDidRemoveAnchorsNative
         );
 
-        ARLog._Debug("Subscried to native anchors removed");
+        ARLog._Debug("Subscribed to native anchors removed");
       }
 
       _removeAnchorsInitialized = true;
@@ -858,7 +968,7 @@ namespace Niantic.ARDK.AR
       if (_mergeAnchorsInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_didMergeAnchorsCallback
         (
@@ -880,7 +990,7 @@ namespace Niantic.ARDK.AR
       if (_addMapsInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_didAddMapsCallback
         (
@@ -902,7 +1012,7 @@ namespace Niantic.ARDK.AR
       if (_updateMapsInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_didUpdateMapsCallback
         (
@@ -924,7 +1034,7 @@ namespace Niantic.ARDK.AR
       if (_cameraDidChangeTrackingStateInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_cameraDidChangeTrackingStateCallback
         (
@@ -946,7 +1056,7 @@ namespace Niantic.ARDK.AR
       if (_sessionWasInterruptedInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_wasInterruptedCallback
         (
@@ -968,7 +1078,7 @@ namespace Niantic.ARDK.AR
       if (_sessionInterruptionEndedInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_interruptionEndedCallback
         (
@@ -990,7 +1100,7 @@ namespace Niantic.ARDK.AR
       if (_sessionShouldAttemptRelocalizationInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_shouldAttemptRelocalizationCallback
         (
@@ -1012,7 +1122,7 @@ namespace Niantic.ARDK.AR
       if (_sessionDidFailWithErrorInitialized)
         return;
 
-      if (NativeAccess.Mode == NativeAccess.ModeType.Native)
+      if (_NativeAccess.IsNativeAccessValid())
       {
         _NARSession_Set_didFailWithErrorCallback
         (
@@ -1087,7 +1197,12 @@ namespace Niantic.ARDK.AR
           }
 
           var frame = new _NativeARFrame(newFramePtr, session.WorldScale);
-
+#if AR_NATIVE_SUPPORT
+          // We mark the frame as consumed to let the native layer know that
+          // this ARFrame was not dropped and it's going to be processed by
+          // the application. 
+          _NARSession_MarkFrameConsumed(session._nativeHandle, newFramePtr);
+#endif
           session.CurrentFrame = frame;
           session.UpdateGenerators(frame);
 
@@ -1742,7 +1857,7 @@ namespace Niantic.ARDK.AR
 
     internal static class _TestingShim
     {
-      #pragma warning disable 0162
+#pragma warning disable 0162
       // If the session has already been disposed, this method will incidentally recreate the
       // session's _handle. To avoid this, use _GetHandle and the _InvokeDidReceiveFrame override
       // that takes an IntPtr instead of a _NativeARSession.
@@ -1753,7 +1868,7 @@ namespace Niantic.ARDK.AR
 
       internal static void _InvokeDidReceiveFrame(IntPtr sessionPtr, IntPtr framePtr)
       {
-        if (NativeAccess.Mode == NativeAccess.ModeType.Testing)
+        if (_NativeAccess.Mode == _NativeAccess.ModeType.Testing)
           _onDidUpdateFrameNative(sessionPtr, framePtr);
       }
 
@@ -1761,7 +1876,7 @@ namespace Niantic.ARDK.AR
       {
         return session._handle;
       }
-      #pragma warning restore 0162
+#pragma warning restore 0162
     }
 
 #endregion
@@ -1785,6 +1900,9 @@ namespace Niantic.ARDK.AR
 
     [DllImport(_ARDKLibrary.libraryName)]
     private static extern void _NARSession_Pause(IntPtr nativeSession);
+    
+    [DllImport(_ARDKLibrary.libraryName)]
+    private static extern void _NARSession_MarkFrameConsumed(IntPtr nativeSession, IntPtr nativeFrame);
 
     [DllImport(_ARDKLibrary.libraryName)]
     private static extern IntPtr GetRenderEventFunc();

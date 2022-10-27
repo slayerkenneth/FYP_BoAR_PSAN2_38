@@ -8,3 +8,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("ARDKTestTools")]
 [assembly:InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly:InternalsVisibleTo("ARDKTestScenes")]
+[assembly:InternalsVisibleTo("ARF-Extension")]

@@ -21,7 +21,7 @@ namespace Niantic.ARDK.VPSCoverage
       var activationTargets = new Dictionary<string, LocalizationTarget>();
       foreach (var target in response.vps_localization_target)
       {
-        activationTargets.Add(target.id, new LocalizationTarget(target));
+        activationTargets[target.id] = new LocalizationTarget(target);
       }
 
       ActivationTargets = activationTargets;
@@ -39,7 +39,7 @@ namespace Niantic.ARDK.VPSCoverage
           activationTargets = new Dictionary<string, LocalizationTarget>();
           foreach (var target in response.Data.vps_localization_target)
           {
-            activationTargets.Add(target.id, new LocalizationTarget(target));
+            activationTargets[target.id] = new LocalizationTarget(target);
           }
         }
         

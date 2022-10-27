@@ -45,8 +45,6 @@ namespace Niantic.ARDK.Rendering
     protected override GraphicsFence? OnConfigurePipeline
     (
       RenderTarget target,
-      Resolution targetResolution,
-      Resolution sourceResolution,
       Material renderMaterial
     )
     {
@@ -68,11 +66,19 @@ namespace Niantic.ARDK.Rendering
 
     protected override void OnAddToCamera(Camera camera)
     {
+      // Take over fetching ARCore updates
+      if (Session is _NativeARSession nativeARSession)
+        nativeARSession.SetUpdatingCamera(camera);
+      
       ARSessionBuffersHelper.AddBackgroundBuffer(camera, _commandBuffer);
     }
 
     protected override void OnRemoveFromCamera(Camera camera)
     {
+      // Delegate fetching updates back to the session
+      if (Session is _NativeARSession nativeARSession)
+        nativeARSession.SetUpdatingCamera(null);
+      
       ARSessionBuffersHelper.RemoveBackgroundBuffer(camera, _commandBuffer);
     }
 

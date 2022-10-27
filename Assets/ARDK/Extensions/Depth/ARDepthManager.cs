@@ -2,15 +2,17 @@
 using System;
 using System.Collections.Generic;
 
+using ARDK.Extensions.Depth;
+
 using Niantic.ARDK.AR;
 using Niantic.ARDK.AR.Awareness;
 using Niantic.ARDK.AR.Awareness.Depth;
 using Niantic.ARDK.AR.Awareness.Semantics;
 using Niantic.ARDK.AR.Configuration;
 using Niantic.ARDK.AR.Depth.Effects;
-using Niantic.ARDK.Internals.EditorUtilities;
 using Niantic.ARDK.Rendering;
 using Niantic.ARDK.Utilities;
+using Niantic.ARDK.Utilities.Editor;
 using Niantic.ARDK.Utilities.Logging;
 
 using UnityEngine;
@@ -77,6 +79,16 @@ namespace Niantic.ARDK.Extensions
     [SerializeField]
     [HideInInspector]
     private FilterMode _textureFilterMode = FilterMode.Point;
+    
+    [SerializeField]
+    [Tooltip
+      (
+        "When enabled, parts of the depth buffer is filled with pixels from the fused depth. " +
+        "This feature may improve situations where the traditional depth prediction is uncertain." +
+        "This settings requires meshing to be enabled on the AR session."
+      )
+    ]
+    private bool _stabilizeOcclusionsExperimental = false;
 
     /// Returns a reference to the scene camera used to render AR content, if present.
     public Camera Camera
@@ -161,11 +173,63 @@ namespace Niantic.ARDK.Extensions
       }
     }
 
+    /// Depth stabilization is a feature that mixes depth values
+    /// captured from the fused mesh to fill in parts of the depth
+    /// texture that otherwise would contain flickery data during
+    /// occlusion.
+    /// @note this is an experimental feature. Experimental features should not be used in
+    /// production projects as they are subject to breaking changes, not officially supported, and
+    /// may be deprecated without notice.
+    /// @note In order to use this feature, the scene needs to employ
+    /// an ARMeshManager component, configured with a mesh chunk that
+    /// is set to 'ARDK_FusedMesh' layer.
+    public bool StabilizeOcclusions
+    {
+      get => _stabilizeOcclusionsExperimental;
+      set
+      {
+        if (_stabilizeOcclusionsExperimental == value)
+          return;
+
+        _stabilizeOcclusionsExperimental = value;
+        
+        if (_fusedDepthRenderer != null)
+          _fusedDepthRenderer.gameObject.SetActive(_stabilizeOcclusionsExperimental);
+        
+        InvalidateActiveFeatures();
+      }
+    }
+
     /// If true, will use bilinear filtering instead of point filtering on the depth texture.
     public bool PreferSmoothEdges
     {
       get => _textureFilterMode != FilterMode.Point;
-      set => _textureFilterMode = value ? FilterMode.Bilinear : FilterMode.Point;
+      set
+      {
+        _textureFilterMode = value ? FilterMode.Bilinear : FilterMode.Point;
+        
+        // Re-evaluate using floating point textures
+        _useFloatingPointTextures = SystemInfo.SupportsTextureFormat
+            (TextureFormat.RFloat) && _textureFilterMode == FilterMode.Point;
+
+        // Check if we have the depth texture allocated using the wrong format
+        // This can occur if PreferSmoothEdges is changed during runtime
+        var invalidateDepthTexture = _depthTexture != null &&
+          (!_useFloatingPointTextures && _depthTexture.format == TextureFormat.RFloat ||
+            _useFloatingPointTextures && _depthTexture.format != TextureFormat.RFloat);
+
+        if (invalidateDepthTexture)
+        {
+          // Release the current texture
+          Destroy(_depthTexture);
+          _depthTexture = null;
+          
+          // Let the mesh occluder re-allocate when the new texture gets created
+          // If we're using zbuffer occlusions, this does nothing...
+          _meshOccluder?.Dispose();
+          _meshOccluder = null;
+        }
+      }
     }
 
     /// Returns the underlying context awareness processor.
@@ -240,8 +304,12 @@ namespace Niantic.ARDK.Extensions
     // a suppression mask if that feature is enabled.
     private ARSemanticSegmentationManager _semanticSegmentationManager;
 
+    // Depth texture supplier for stabilizing occlusion using the fused mesh
+    // This is only instantiated when occlusion stabilization is enabled
+    private ARFusedDepthRenderer _fusedDepthRenderer;
+
     // Helpers
-    private bool _supportsFloatingPointTextures;
+    private bool _useFloatingPointTextures;
     private bool _supportsZWrite;
     private bool _debugVisualizationEnabled;
     private int _lastFrameDepthTextureWasUpdated;
@@ -249,7 +317,7 @@ namespace Niantic.ARDK.Extensions
 
     public bool IsDepthNormalized
     {
-      get => _occlusionMode != OcclusionMode.None && !_supportsFloatingPointTextures;
+      get => _occlusionMode != OcclusionMode.None && !_useFloatingPointTextures;
     }
 
     protected override void InitializeImpl()
@@ -263,11 +331,16 @@ namespace Niantic.ARDK.Extensions
         ARLog._Warn(warning);
         _camera = Camera.main;
       }
+      
+      // Cull the fused mesh from the rendering camera
+      if (_camera != null)
+        _camera.cullingMask &= ~(1 << LayerMask.NameToLayer("ARDK_FusedDepth"));
 
       _GetOrCreateProcessor();
 
-      // Check hardware capabilities
-      _supportsFloatingPointTextures = SystemInfo.SupportsTextureFormat(TextureFormat.RFloat);
+      // Check if the GPU supports floating point textures and it
+      // is not explicitly disabled by the client application
+      _useFloatingPointTextures = SystemInfo.SupportsTextureFormat(TextureFormat.RFloat) && !PreferSmoothEdges;
       _supportsZWrite = DoesDeviceSupportWritingToZBuffer();
       ARLog._Debug("Graphics device: " + SystemInfo.graphicsDeviceType);
 
@@ -315,6 +388,10 @@ namespace Niantic.ARDK.Extensions
 
       // Release the mesh occluder, if any
       _meshOccluder?.Dispose();
+      
+      // Released the fused depth renderer
+      if (_fusedDepthRenderer != null)
+        Destroy(_fusedDepthRenderer.gameObject);
 
       // Release depth texture
       if (_depthTexture != null)
@@ -329,6 +406,9 @@ namespace Niantic.ARDK.Extensions
 
       if (_meshOccluder != null)
         _meshOccluder.Enabled = _occlusionMode == OcclusionMode.ScreenSpaceMesh;
+      
+      if (_fusedDepthRenderer != null)
+        _fusedDepthRenderer.gameObject.SetActive(_stabilizeOcclusionsExperimental);
 
       // Attempt to acquire the semantics manager
       if (_semanticSegmentationManager == null)
@@ -349,6 +429,9 @@ namespace Niantic.ARDK.Extensions
 
       if (_meshOccluder != null)
         _meshOccluder.Enabled = false;
+      
+      if (_fusedDepthRenderer != null)
+        _fusedDepthRenderer.gameObject.SetActive(false);
 
       if (_semanticSegmentationManager != null)
         _semanticSegmentationManager.SemanticBufferUpdated -= OnSemanticBufferUpdated;
@@ -385,9 +468,16 @@ namespace Niantic.ARDK.Extensions
       // Increment frame counter
       _depthFrameCount++;
 
-      // Only update the depth texture when occlusions are enabled
-      if (_occlusionMode != OcclusionMode.None && args.IsKeyFrame)
-        UpdateDepthTexture(fromBuffer: _cpuDepth);
+      if (_occlusionMode != OcclusionMode.None)
+      {
+        // Only update the depth texture when occlusions are enabled
+        if (args.IsKeyFrame)
+          UpdateDepthTexture(fromBuffer: _cpuDepth);
+
+        // Do we need to allocate the fused depth renderer?
+        if (_stabilizeOcclusionsExperimental && _fusedDepthRenderer == null)
+          TryCreateFusedMeshRenderer(); 
+      }
 
       // Update the screen space mesh occluder
       if (_occlusionMode == OcclusionMode.ScreenSpaceMesh)
@@ -431,7 +521,7 @@ namespace Niantic.ARDK.Extensions
 
       _lastFrameDepthTextureWasUpdated = _depthFrameCount;
 
-      if (_supportsFloatingPointTextures)
+      if (_useFloatingPointTextures)
         // Deliver depth in a floating point texture intact
         fromBuffer.CreateOrUpdateTextureRFloat(ref _depthTexture, filterMode: _textureFilterMode);
       else
@@ -490,6 +580,26 @@ namespace Niantic.ARDK.Extensions
         _meshOccluder.SetScaling(0, 1);
     }
 
+    /// Instantiates the fused mesh depth texture supplier
+    private void TryCreateFusedMeshRenderer()
+    {
+      if (_fusedDepthRenderer != null)
+        return;
+
+      _fusedDepthRenderer = new GameObject("FusedDepthCamera")
+        .AddComponent<ARFusedDepthRenderer>();
+
+      // Initialize and start
+      _fusedDepthRenderer.Initialize();
+      _fusedDepthRenderer.Configure
+      (
+        _camera,
+        LayerMask.NameToLayer("ARDK_FusedDepth")
+      );
+      
+      _fusedDepthRenderer.EnableFeatures();
+    }
+
     /// Invoked when this component is asked about the render features
     /// it may be responsible for.
     /// @note: The implementation needs to include all features that are
@@ -499,6 +609,7 @@ namespace Niantic.ARDK.Extensions
       return new HashSet<string>
       {
         FeatureBindings.DepthZWrite,
+        FeatureBindings.DepthStabilization,
         FeatureBindings.DepthDebug
       };
     }
@@ -516,6 +627,10 @@ namespace Niantic.ARDK.Extensions
       // Depth z-write?
       if (_occlusionMode == OcclusionMode.DepthBuffer && _supportsZWrite)
         enabledFeatures.Add(FeatureBindings.DepthZWrite);
+      
+      // Depth stabilization?
+      if (_stabilizeOcclusionsExperimental)
+        enabledFeatures.Add(FeatureBindings.DepthStabilization);
 
       // Visualize depth?
       if (_debugVisualizationEnabled)
@@ -561,6 +676,15 @@ namespace Niantic.ARDK.Extensions
         // Do not scale
         material.SetFloat(PropertyBindings.DepthScaleMin, 0);
         material.SetFloat(PropertyBindings.DepthScaleMax, 1);
+      }
+
+      if (_stabilizeOcclusionsExperimental)
+      {
+        material.SetTexture
+        (
+          PropertyBindings.FusedDepthChannel,
+          _fusedDepthRenderer.GPUTexture
+        );
       }
     }
 

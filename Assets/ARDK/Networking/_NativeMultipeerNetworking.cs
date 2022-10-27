@@ -8,7 +8,7 @@ using System.Text;
 
 using AOT;
 
-using Niantic.ARDK.AR;
+using Niantic.ARDK.Configuration;
 using Niantic.ARDK.Internals;
 using Niantic.ARDK.Networking.Clock;
 using Niantic.ARDK.Networking.MultipeerNetworkingEventArgs;
@@ -258,9 +258,11 @@ namespace Niantic.ARDK.Networking
         return;
       }
 
+#pragma warning disable 612, 618
       var isUnreliableMessage =
         transportType == TransportType.UnreliableOrdered ||
         transportType == TransportType.UnreliableUnordered;
+#pragma warning restore 612, 618 
 
       if (isUnreliableMessage)
       {
@@ -470,9 +472,15 @@ namespace Niantic.ARDK.Networking
       return string.Format("StageID: {0}", StageIdentifier.ToString().Substring(0, count));
     }
 
+    /// <inheritdoc />
+    internal int _GetLatestArbeRttMeasurement()
+    {
+      return _NARMultipeerNetworking_GetLatestArbeRttMeasurement(_nativeHandle);
+    }
+
     static _NativeMultipeerNetworking()
     {
-      Platform.Init();
+      _Platform.Init();
     }
 
     /// <summary>
@@ -497,7 +505,7 @@ namespace Niantic.ARDK.Networking
 #pragma warning disable 0162
       // This is required to differentiate between unit testing (does not require the native platform)
       //  and Native in Editor
-      if (NativeAccess.Mode == NativeAccess.ModeType.Testing)
+      if (_NativeAccess.Mode == _NativeAccess.ModeType.Testing)
         return;
 #pragma warning restore 0162
 
@@ -524,8 +532,14 @@ namespace Niantic.ARDK.Networking
       }
       else
       {
-        var apiKeyCopy = ServerConfiguration.ApiKey;
-        var authUrlCopy = ServerConfiguration.AuthenticationUrl;
+        var apiKeyCopy = ArdkGlobalConfig._Internal.GetApiKey();
+        
+#pragma warning disable 0618
+        // TODO AR-12775: Formally move several public URL set/get api's to private
+        // Disabling the obsolete method call warning. When we remove the API from the public SDK,
+        // it will become private. We then need to remove the warning disablement.
+        var authUrlCopy = ArdkGlobalConfig._Internal.GetAuthenticationUrl();
+#pragma warning restore 0618
 
         var isMissingAuthComponents =
           string.IsNullOrEmpty(apiKeyCopy) || string.IsNullOrEmpty(authUrlCopy);
@@ -1492,6 +1506,13 @@ namespace Niantic.ARDK.Networking
       IntPtr context,
       IntPtr nativeHandle,
       _NARMultipeerNetworking_Did_Receive_Session_Result_From_ARM_Callback cb
+    );
+
+
+    [DllImport(_ARDKLibrary.libraryName)]
+    private static extern int _NARMultipeerNetworking_GetLatestArbeRttMeasurement
+    (
+      IntPtr nativeHandle
     );
 
     private delegate void _NARMultipeerNetworking_Did_Connect_Callback

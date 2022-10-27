@@ -1,184 +1,169 @@
 // Copyright 2022 Niantic, Inc. All Rights Reserved.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using Niantic.ARDK.AR;
 using Niantic.ARDK.AR.Awareness;
 using Niantic.ARDK.AR.Awareness.Semantics;
+using Niantic.ARDK.Configuration;
 using Niantic.ARDK.Extensions;
+using Niantic.ARDK.Rendering;
 
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Niantic.ARDKExamples
 {
-  /// @brief An example script to demonstrate Context Awareness' semantic segmentation.
-  /// @remark Use the Change Feature Channel button to swap between which active semantic will be
-  /// painted white.
-  /// @remark This example only works in portrait mode.
+  /// This example showcases how to create textures from semantic segmentation data.
+  /// ARDK supports two types of semantics data:
+  /// 
+  ///   Thresholded: This is accessed through IARFrame.Semantics or
+  ///   _semanticSegmentationManager.SemanticBufferProcessor?.AwarenessBuffer when
+  ///   using the manager. This buffer contains all semantic classifications encoded
+  ///   in a 32-bit value per pixel, where each bit represent whether the network is
+  ///   confident in the particular classification.
+  ///
+  ///   Confidences: This is accessed through IARFrame.CopySemanticConfidences(channel)
+  ///   or _semanticSegmentationManager.GetConfidences(channel) when using the manager.
+  ///   This floating point buffer contains precisely how confident was the network for
+  ///   the specified classification for each pixel. The values range from 0.0f to 1.0f.
   public class SemanticSegmentationExampleManager:
     MonoBehaviour
   {
     [SerializeField]
-    private ARSessionManager _arSessionManager = null;
-
-    [SerializeField]
     private ARSemanticSegmentationManager _semanticSegmentationManager;
 
-    [Header("Rendering")]
-    // The UI image that the camera overlay is rendered in.
     [SerializeField]
-    private RawImage _segmentationOverlayImage = null;
+    private Material _overlayMaterial;
 
     [Header("UI")]
     [SerializeField]
-    private GameObject _togglesParent = null;
+    private GameObject _togglesParent;
 
     [SerializeField]
-    private Text _toggleFeaturesButtonText = null;
+    private Text _toggleFeaturesButtonText;
 
     [SerializeField]
-    private Text _toggleInterpolationText = null;
+    private Text _toggleInterpolationText;
 
     [SerializeField]
-    private Text _channelNameText = null;
+    private Text _channelNameText;
 
+    [SerializeField]
+    private Text _selectedModeText;
+    
     private Texture2D _semanticTexture;
+    private bool _useThresholdedSemantics = true;
+    private bool _semanticsUpdated = false;
 
-    // The current active channel that is painted white. -1 means that no semantic is used.
-    private int _featureChannel = -1;
-    private bool _isTextureDirty;
-
+    // All channels available in the model will be stored here. 
+    private string[] _channels;
+    
+    // The index of the currently displayed semantics channel in the array
+    private int _featureChannel;
+    
     private void Start()
     {
+      // Disable the UI while contextual awareness is initializing
       if (_togglesParent != null)
         _togglesParent.SetActive(false);
-
-      // TODO: this should be set from renderer
-      Application.targetFrameRate = 60;
-
-      _arSessionManager.EnableFeatures();
-      _semanticSegmentationManager.SemanticBufferInitialized += OnSemanticBufferInitialized;
+      
+      // Enable the UI when the semantic segmentation stream starts
+      _semanticSegmentationManager.SemanticBufferInitialized += EnableUserInterface;
       _semanticSegmentationManager.SemanticBufferUpdated += OnSemanticBufferUpdated;
-    }
-
-    private void Update()
-    {
-      // Should update the semantics representation?
-      if (_isTextureDirty)
-      {
-        // Update
-        _semanticSegmentationManager.SemanticBufferProcessor.CopyToAlignedTextureARGB32
-        (
-          texture: ref _semanticTexture,
-          channel: _featureChannel,
-          orientation: Screen.orientation
-        );
-
-        // Assign
-        _segmentationOverlayImage.texture = _semanticTexture;
-        _isTextureDirty = false;
-      }
-
-      if (_featureChannel == -1)
-      {
-        var detectedChannels = string.Empty;
-        if (Input.touchCount > 0)
-        {
-          // Display the names of the channels the user is touching on the screen
-          var touchPosition = Input.touches[0].position;
-          var channelsForPixel =
-            _semanticSegmentationManager.SemanticBufferProcessor.GetChannelNamesAt
-            (
-              (int)touchPosition.x,
-              (int)touchPosition.y
-            );
-
-          detectedChannels = channelsForPixel.Aggregate
-          (
-            detectedChannels,
-            (current, channelName) =>
-              string.IsNullOrEmpty(current)
-                ? (current + channelName)
-                : (current + ", " + channelName)
-          );
-        }
-
-        _channelNameText.text = detectedChannels.Length > 0 ? detectedChannels : "None";
-      }
-    }
-
-    private void OnDestroy()
-    {
-      _semanticSegmentationManager.SemanticBufferUpdated -= OnSemanticBufferUpdated;
-
-      // Release semantic overlay texture
-      if (_semanticTexture != null)
-        Destroy(_semanticTexture);
-    }
-
-    private void OnSemanticBufferInitialized(ContextAwarenessArgs<ISemanticBuffer> args)
-    {
-      _semanticSegmentationManager.SemanticBufferInitialized -= OnSemanticBufferInitialized;
-      if (_togglesParent != null)
-        _togglesParent.SetActive(true);
     }
 
     private void OnSemanticBufferUpdated(ContextAwarenessStreamUpdatedArgs<ISemanticBuffer> args)
     {
-      _isTextureDirty = _isTextureDirty || _featureChannel != -1;
+      if (!args.IsKeyFrame)
+      {
+        return;
+      }
+
+      // Get the name of the observed channel
+      var currentChannelName = _channels[_featureChannel];
+      
+      if (_useThresholdedSemantics)
+      {
+        // Update the texture using thresholded semantics
+        _semanticsUpdated = _semanticSegmentationManager.GetThresholdedARGB32
+        (
+          ref _semanticTexture,
+          currentChannelName
+        );
+      }
+      else
+      {
+        // Update the texture using confidence values
+        _semanticsUpdated = _semanticSegmentationManager.GetConfidencesARGB32
+        (
+          ref _semanticTexture,
+          currentChannelName
+        );  
+      }
+    }
+
+    // We use this callback to overlay semantics on the rendered background
+    private void OnRenderImage(RenderTexture src, RenderTexture dest)
+    {
+      if (!_semanticSegmentationManager.enabled || !_semanticsUpdated)
+      {
+        Graphics.Blit(src, dest);
+        return;
+      }
+
+      // Get the transformation to correctly map the texture to the viewport
+      var sampler = _semanticSegmentationManager.SemanticBufferProcessor.SamplerTransform;
+
+      // Update the transform
+      _overlayMaterial.SetMatrix(PropertyBindings.SemanticsTransform, sampler);
+
+      // Update the texture
+      _overlayMaterial.SetTexture(PropertyBindings.SemanticChannel, _semanticTexture);
+
+      // Display semantics
+      Graphics.Blit(src, dest, _overlayMaterial);
+    }
+
+    private void OnDestroy()
+    {
+      // Release semantic overlay texture
+      if (_semanticTexture != null)
+        Destroy(_semanticTexture);
+      
+      _semanticSegmentationManager.SemanticBufferUpdated -= OnSemanticBufferUpdated;
+    }
+
+    private void EnableUserInterface(ContextAwarenessArgs<ISemanticBuffer> args)
+    {
+      _channels = _semanticSegmentationManager.SemanticBufferProcessor.Channels;
+      
+      _semanticSegmentationManager.SemanticBufferInitialized -= EnableUserInterface;
+      
+      if (_togglesParent != null)
+        _togglesParent.SetActive(true);
+
+      _channelNameText.text = _channels[_featureChannel];
+      
+      // Tell the manager for which channels the semantic confidence is needed.
+      _semanticSegmentationManager.SetConfidenceChannels(_channels[_featureChannel]);
     }
 
     public void ChangeFeatureChannel()
     {
-      // The exact channel names and the order they are returned in may change with
-      // new versions of ARDK, so you should avoid caching information about channels in your app.
-      // Instead, get the list of channel indices and names at runtime.
-      var channelNames = _semanticSegmentationManager.SemanticBufferProcessor.Channels;
-
-      // If the channels aren't yet known, we can't change off the initial default channel.
-      if (channelNames == null)
-        return;
-
       // Increment the channel count with wraparound.
       _featureChannel += 1;
-      if (_featureChannel == channelNames.Length)
-        _featureChannel = -1;
-
-      // Update the displayed name of the channel, and enable or disable the overlay.
-      if (_featureChannel == -1)
-      {
-        _channelNameText.text = "None";
-        _segmentationOverlayImage.enabled = false;
-      }
-      else
-      {
-        _channelNameText.text = FormatChannelName(channelNames[_featureChannel]);
-        if (_semanticSegmentationManager.AreFeaturesEnabled)
-        {
-          _segmentationOverlayImage.enabled = true;
-        }
-
-        _isTextureDirty = true;
-      }
+      if (_featureChannel == _channels.Length)
+        _featureChannel = 0;
+      
+      // Tell the manager for which channels the semantic confidence is needed.
+      _semanticSegmentationManager.SetConfidenceChannels(_channels[_featureChannel]);
+      _channelNameText.text = _channels[_featureChannel];
     }
 
     public void ToggleSessionSemanticFeatures()
     {
       var newEnabledState = !_semanticSegmentationManager.enabled;
-
       _toggleFeaturesButtonText.text = newEnabledState ? "Disable Features" : "Enable Features";
-
       _semanticSegmentationManager.enabled = newEnabledState;
-      _segmentationOverlayImage.enabled = newEnabledState;
-
-      if (!newEnabledState)
-      {
-        Destroy(_semanticTexture);
-        _semanticTexture = null;
-      }
     }
 
     public void ToggleInterpolation()
@@ -195,16 +180,13 @@ namespace Niantic.ARDKExamples
           : "Enable Interpolation";
     }
 
-    private string FormatChannelName(string text)
+    public void ToggleBinaryAndConfidence()
     {
-      var parts = text.Split('_');
-      List<string> displayParts = new List<string>();
-      foreach (var part in parts)
-      {
-        displayParts.Add(char.ToUpper(part[0]) + part.Substring(1));
-      }
+      _useThresholdedSemantics = !_useThresholdedSemantics;
 
-      return String.Join(" ", displayParts.ToArray());
+      _selectedModeText.text = _useThresholdedSemantics
+        ? "Mode:\nThresholded"
+        : "Mode:\nConfidence";
     }
   }
 }

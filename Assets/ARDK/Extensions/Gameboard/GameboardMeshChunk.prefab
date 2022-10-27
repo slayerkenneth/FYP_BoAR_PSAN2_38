@@ -70,12 +70,12 @@ PrefabInstance:
     - target: {fileID: 4501392110370713671, guid: 99a6454115a034b2e9add187cf73f9eb,
         type: 3}
       propertyPath: m_Name
-      value: GameboardMeshChunk
+      value: MeshGameBoardChunk Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4501392110370713671, guid: 99a6454115a034b2e9add187cf73f9eb,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99a6454115a034b2e9add187cf73f9eb, type: 3}

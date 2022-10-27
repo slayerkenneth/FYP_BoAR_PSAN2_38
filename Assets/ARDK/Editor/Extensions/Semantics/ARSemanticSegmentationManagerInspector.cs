@@ -15,12 +15,14 @@ namespace ARDK.Editor.Extensions.Semantics
     private SerializedProperty _interpolationProperty;
     private SerializedProperty _interpolationPreferenceProperty;
     private SerializedProperty _suppressionChannelsProperty;
+    private SerializedProperty _confidenceChannelsProperty;
 
     private void OnEnable()
     {
       _interpolationProperty = serializedObject.FindProperty("_interpolation");
       _interpolationPreferenceProperty = serializedObject.FindProperty("_interpolationPreference");
       _suppressionChannelsProperty = serializedObject.FindProperty("_depthSuppressionChannels");
+      _confidenceChannelsProperty = serializedObject.FindProperty("_confidenceChannels");
     }
 
     public override void OnInspectorGUI()
@@ -51,6 +53,28 @@ namespace ARDK.Editor.Extensions.Semantics
         {
           if (((ARSemanticSegmentationManager)target).GetComponent<ARDepthManager>() == null)
             EditorGUILayout.HelpBox("Please add an AR Depth Manager component to enable this feature.", MessageType.Error);
+        }
+
+        EditorGUI.indentLevel--;
+      }
+      
+      _confidenceChannelsProperty.isExpanded = EditorGUILayout.Foldout
+        (_confidenceChannelsProperty.isExpanded, "Persistent Confidences");
+      
+      if (_confidenceChannelsProperty.isExpanded)
+      {
+        EditorGUI.indentLevel++;
+
+        _confidenceChannelsProperty.arraySize = EditorGUILayout.IntField
+        (
+          "Number of Channels",
+          _confidenceChannelsProperty.arraySize
+        );
+
+        for (var i = 0; i < _confidenceChannelsProperty.arraySize; i++)
+        {
+          var item = _confidenceChannelsProperty.GetArrayElementAtIndex(i);
+          EditorGUILayout.PropertyField(item, new GUIContent($"Element {i}"));
         }
 
         EditorGUI.indentLevel--;

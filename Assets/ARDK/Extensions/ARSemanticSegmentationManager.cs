@@ -9,9 +9,9 @@ using Niantic.ARDK.AR;
 using Niantic.ARDK.AR.Awareness;
 using Niantic.ARDK.AR.Awareness.Semantics;
 using Niantic.ARDK.AR.Configuration;
-using Niantic.ARDK.Internals.EditorUtilities;
 using Niantic.ARDK.Rendering;
 using Niantic.ARDK.Utilities;
+using Niantic.ARDK.Utilities.Editor;
 using Niantic.ARDK.Utilities.Logging;
 
 using UnityEngine;
@@ -37,6 +37,11 @@ namespace Niantic.ARDK.Extensions
     [SerializeField]
     [HideInInspector]
     private string[] _depthSuppressionChannels;
+
+    [SerializeField]
+    [HideInInspector]
+    [Tooltip("The manager will make the confidences of the specified channels in this list always available.")]
+    private string[] _confidenceChannels;
 
     [SerializeField]
     [HideInInspector]
@@ -118,24 +123,6 @@ namespace Niantic.ARDK.Extensions
       }
     }
 
-    /// Sets the depth suppression channels. If there is an existing set of channels, calling
-    /// this method will override them.
-    public void SetDepthSuppressionChannels(params string[] channelNames)
-    {
-      if (GetComponent<ARDepthManager>() == null)
-      {
-        throw new InvalidOperationException
-        (
-          "An AR Depth Manager component is required to add depth suppression channels."
-        );
-      }
-
-      if (_depthSuppressionChannels != null && _depthSuppressionChannels.Length > 0)
-        ARLog._Debug("Overriding existing depth suppression channels.");
-
-      _depthSuppressionChannels = channelNames;
-    }
-
     /// Returns a reference to the depth suppression mask texture, if present.
     /// If the suppression feature is disabled, this returns null.
     public Texture DepthSuppressionTexture
@@ -172,6 +159,112 @@ namespace Niantic.ARDK.Extensions
 
     private Texture2D _suppressionTexture;
     private int[] _suppressionChannelIndices;
+    private Dictionary<string, IDataBufferFloat32> _confidences;
+    
+    /// Sets the depth suppression channels. If there is an existing set of channels, calling
+    /// this method will override them.
+    public void SetDepthSuppressionChannels(params string[] channelNames)
+    {
+      if (GetComponent<ARDepthManager>() == null)
+      {
+        throw new InvalidOperationException
+        (
+          "An AR Depth Manager component is required to add depth suppression channels."
+        );
+      }
+
+      if (_depthSuppressionChannels != null && _depthSuppressionChannels.Length > 0)
+        ARLog._Debug("Overriding existing depth suppression channels.");
+
+      _depthSuppressionChannels = channelNames;
+    }
+
+    /// The manager can maintain the confidence buffers of select semantic channels
+    /// in cache. This method updates the list of channels to maintain.
+    public void SetConfidenceChannels(params string[] channelNames)
+    {
+      if (_confidenceChannels != null && _confidenceChannels.Length > 0)
+        ARLog._Debug("Overriding existing semantic confidence channels.");
+
+      // Update the list of confidences to maintain
+      _confidenceChannels = channelNames;
+
+      // Find cached buffers to release
+      var buffersToRelease = _confidences?.Select
+          (entry => entry.Key)
+        .Where(entry => !channelNames.Contains(entry))
+        .ToList();
+
+      // Release buffers
+      if (buffersToRelease != null)
+      {
+        foreach (var channelName in buffersToRelease)
+        {
+          _confidences[channelName]?.Dispose();
+          _confidences.Remove(channelName);
+        }
+      }
+    }
+
+    /// Returns the cached confidence buffer for the specified channel, if exists.
+    /// @param channelName
+    ///   The name of the channel to acquire the confidence buffer for.
+    /// @returns
+    ///   32-bit floating point awareness buffer in CPU memory. The buffer is owned
+    ///   by the manager and will get invalidated on the next semantics update.
+    public IDataBufferFloat32 GetConfidences(string channelName)
+    {
+      if (_confidences == null || !_confidences.ContainsKey(channelName))
+        return null;
+
+      return _confidences[channelName];
+    }
+    
+    /// Creates or updates the specified texture with a confidence buffer
+    /// if it exists in cache.
+    /// @param texture
+    ///   The texture to copy the confidences to. If the texture is null,
+    ///   it will be created. Deallocating this texture is the caller's
+    ///   responsibility.
+    /// @param channelName
+    ///   The name of the channel to acquire the confidence texture for.
+    /// @returns Whether the values have been successfully copied to the texture.
+    public bool GetConfidencesRFloat(ref Texture2D texture, string channelName)
+    {
+      var cpuBuffer = GetConfidences(channelName);
+      return cpuBuffer != null && cpuBuffer.CreateOrUpdateTextureRFloat(ref texture);
+    }
+    
+    /// Creates or updates the specified texture with a confidence buffer
+    /// if it exists in cache.
+    /// @param texture
+    ///   The texture to copy the confidences to. If the texture is null,
+    ///   it will be created. Deallocating this texture is the caller's
+    ///   responsibility.
+    /// @param channelName
+    ///   The name of the channel to acquire the confidence texture for.
+    /// @returns Whether the values have been successfully copied to the texture.
+    public bool GetConfidencesARGB32(ref Texture2D texture, string channelName)
+    {
+      var cpuBuffer = GetConfidences(channelName);
+      return cpuBuffer != null && cpuBuffer.CreateOrUpdateTextureARGB32(ref texture);
+    }
+
+    /// Creates or updates the texture with data of the specified semantic channel.
+    /// The texture will contain thresholded values where 1 means the pixel is classified as
+    /// the requested semantic channel.
+    /// @param texture
+    ///   Reference to the texture to copy to. This method will create a texture if the reference
+    ///   is null.
+    /// @param channelName
+    ///   Channel name of the semantic class to copy.
+    /// @returns Whether the values have been successfully copied to the texture.
+    public bool GetThresholdedARGB32(ref Texture2D texture, string channelName)
+    {
+      var cpuBuffer = _semanticBufferProcessor?.AwarenessBuffer;
+      return cpuBuffer != null &&
+        cpuBuffer.CreateOrUpdateTextureARGB32(ref texture, cpuBuffer.GetChannelIndex(channelName));
+    }
 
     protected override void InitializeImpl()
     {
@@ -197,6 +290,13 @@ namespace Niantic.ARDK.Extensions
 
       if (_suppressionTexture != null)
         Destroy(_suppressionTexture);
+
+      if (_confidences != null)
+      {
+        foreach (var entry in _confidences)
+          entry.Value?.Dispose();
+        _confidences = null;
+      }
 
       base.DeinitializeImpl();
     }
@@ -287,8 +387,10 @@ namespace Niantic.ARDK.Extensions
 
     private void OnSemanticBufferUpdated(ContextAwarenessStreamUpdatedArgs<ISemanticBuffer> args)
     {
-      // Avoid generating a suppression texture if suppression isn't enabled
-      if (_depthSuppressionChannels.Length != 0)
+      var needsProcessing =
+        _depthSuppressionChannels.Length != 0 || _confidenceChannels.Length != 0;
+      
+      if (needsProcessing)
       {
         // Acquire the typed buffer
         var semanticBuffer = args.Sender.AwarenessBuffer;
@@ -303,18 +405,56 @@ namespace Niantic.ARDK.Extensions
           _suppressionChannelIndices = _depthSuppressionChannels
             .Select(channel => semanticBuffer.GetChannelIndex(channel))
             .ToArray();
-
-        // Update semantics on the GPU
+        
+        // Tasks we only need to perform on key frames
         if (args.IsKeyFrame)
-          semanticBuffer.CreateOrUpdateTextureARGB32
-          (
-            ref _suppressionTexture,
-            _suppressionChannelIndices
-          );
+        {
+          // Update the depth suppression channel
+          if (_depthSuppressionChannels.Length != 0)
+            semanticBuffer.CreateOrUpdateTextureARGB32
+            (
+              ref _suppressionTexture,
+              _suppressionChannelIndices
+            );
+
+          // Maintain confidence buffers
+          if (_confidenceChannels.Length != 0)
+            MaintainConfidences(args.Sender as SemanticBufferProcessor);
+        }
       }
 
       // Finally, let users know the manager has finished updating.
       SemanticBufferUpdated?.Invoke(args);
+    }
+
+    private void MaintainConfidences(SemanticBufferProcessor processor)
+    {
+      // Acquire the most recent AR frame
+      IARFrame arFrame = processor.ARSession?.CurrentFrame;
+      if (arFrame == null)
+        return;
+
+      // Allocate the container lazily
+      _confidences ??= new Dictionary<string, IDataBufferFloat32>();
+
+      foreach (var channelName in _confidenceChannels)
+      {
+        // Acquire the CPU buffer
+        var buffer = arFrame.CopySemanticConfidences(channelName);
+        if (buffer == null)
+          continue;
+
+        // Cache the buffer
+        if (_confidences.ContainsKey(channelName))
+        {
+          _confidences[channelName]?.Dispose();
+          _confidences[channelName] = buffer;
+        }
+        else
+        {
+          _confidences.Add(channelName, buffer);
+        }
+      }
     }
   }
 }

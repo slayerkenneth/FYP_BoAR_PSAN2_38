@@ -518,6 +518,7 @@ MonoBehaviour:
   _arSessionManager: {fileID: 1267855856}
   _meshStatusText: {fileID: 1485291605}
   _loadingStatusPanel: {fileID: 146038755}
+  _meshManager: {fileID: 0}
 --- !u!4 &319369853
 Transform:
   m_ObjectHideFlags: 0
@@ -649,7 +650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _manageUsingUnityLifecycle: 1
-  _arCamera: {fileID: 630554265}
+  _camera: {fileID: 630554265}
   _keyFrameFrequency: 20
   _interpolation: 2
   _interpolationPreference: 0.9

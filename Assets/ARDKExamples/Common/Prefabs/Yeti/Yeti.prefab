@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 452943026870827296}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: cursor_export
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 452943026870827300}
   - component: {fileID: 452943026870057220}
   - component: {fileID: 452943026869058500}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,6 +86,8 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -97,6 +99,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -109,6 +112,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &452943026871313670
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +124,7 @@ GameObject:
   - component: {fileID: 452943026870827302}
   - component: {fileID: 452943026870057222}
   - component: {fileID: 452943026869058502}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Circle.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,6 +167,8 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -174,6 +180,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -186,6 +193,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7531433366306101409
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +203,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194561}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Cheek
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +233,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194563}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Collar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,7 +264,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194565}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Elbow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +296,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194567}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318,7 +326,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194569}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Ankle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +357,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194571}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -380,7 +388,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194573}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_BrowIn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +418,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194575}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_BrowOut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,7 +448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194577}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -485,7 +493,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194579}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Head_NULL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -515,7 +523,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194581}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Hips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -547,7 +555,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194583}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Jaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -580,7 +588,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194585}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Backpack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -614,7 +622,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194587}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -646,7 +654,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194589}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Collar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -680,7 +688,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194591}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Cup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -710,7 +718,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194593}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Neck_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -741,7 +749,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194595}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Pan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -771,7 +779,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194597}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Ankle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -802,7 +810,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194599}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -833,7 +841,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194601}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Wrist_NULL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -863,7 +871,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194603}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_WristTwist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -893,7 +901,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194605}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: LowerLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -923,7 +931,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194607}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Matress
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -953,7 +961,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194609}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_ShoulderTwist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -983,7 +991,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194611}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Toe_NULL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1013,7 +1021,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194613}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_UpperLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1043,7 +1051,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194615}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Wrist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1074,7 +1082,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194617}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Hip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1105,7 +1113,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194619}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Knee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1136,7 +1144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194621}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_LowerLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1166,7 +1174,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194623}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: L_Shoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1198,7 +1206,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194625}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Toe_NULL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1228,7 +1236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194627}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_UpperEyeLid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1258,7 +1266,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194629}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_UpperLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1288,7 +1296,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194631}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Wrist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1319,7 +1327,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194633}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_LowerEyeLid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1349,7 +1357,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194635}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_LowerLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1379,7 +1387,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194637}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Shoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1411,7 +1419,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194639}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_ShoulderTwist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1441,7 +1449,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194641}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Elbow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1473,7 +1481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194643}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1503,7 +1511,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194645}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Hip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1534,7 +1542,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194647}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Knee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1565,7 +1573,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194649}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_BrowIn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1595,7 +1603,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194651}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_BrowOut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1625,7 +1633,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194653}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Cheek
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1655,7 +1663,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194655}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Collar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1687,7 +1695,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194657}
   - component: {fileID: 7531433366317667761}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_expression_frown_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1722,6 +1730,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1733,6 +1743,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -1823,7 +1834,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194659}
   - component: {fileID: 7531433366317667763}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_expression_largeSmileEnd_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1858,6 +1869,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1869,6 +1882,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -1959,7 +1973,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194661}
   - component: {fileID: 7531433366317667765}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_expression_largeSmileStart_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1994,6 +2008,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2005,6 +2021,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2095,7 +2112,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194663}
   - component: {fileID: 7531433366317667767}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_expression_neutral_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2130,6 +2147,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2141,6 +2160,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2231,7 +2251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194665}
   - component: {fileID: 7531433366317667769}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_backpack_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2266,6 +2286,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2277,6 +2299,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2367,7 +2390,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194667}
   - component: {fileID: 7531433366317667771}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_backpack_straps_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2402,6 +2425,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2413,6 +2438,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2503,7 +2529,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194669}
   - component: {fileID: 7531433366317667773}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_body_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2538,6 +2564,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2549,6 +2577,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2639,7 +2668,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194671}
   - component: {fileID: 7531433366317667775}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_expression_dot_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2674,6 +2703,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2685,6 +2716,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -2774,7 +2806,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194673}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Spine_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2805,7 +2837,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194675}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Spine_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2836,7 +2868,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194677}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: String1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2866,7 +2898,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194679}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: UpperLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2896,7 +2928,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194681}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_Wrist_NULL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2926,7 +2958,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194683}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: R_WristTwist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2956,7 +2988,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194685}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2987,7 +3019,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194687}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Sleepingbag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3019,7 +3051,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194697}
   - component: {fileID: 7531433366317667751}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_prop_water_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3054,6 +3086,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3065,6 +3099,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -3154,7 +3189,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194699}
-  m_Layer: 10
+  - component: {fileID: -4059022862914992517}
+  m_Layer: 0
   m_Name: Yeti
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3179,6 +3215,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &-4059022862914992517
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7531433366306101547}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.12
+  m_Height: 0.4
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.15, z: -0.02}
 --- !u!1 &7531433366306101553
 GameObject:
   m_ObjectHideFlags: 0
@@ -3188,7 +3238,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531433366306194705}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Yeti_Geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3235,7 +3285,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194707}
   - component: {fileID: 7531433366317667745}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_prop_mug_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3270,6 +3320,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3281,6 +3333,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -3371,7 +3424,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194709}
   - component: {fileID: 7531433366317667747}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_prop_pan_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3406,6 +3459,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3417,6 +3472,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -3507,7 +3563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194711}
   - component: {fileID: 7531433366317667749}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_prop_shirt_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3542,6 +3598,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3553,6 +3611,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -3643,7 +3702,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194713}
   - component: {fileID: 7531433366317667753}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_expression_ooo_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3678,6 +3737,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3689,6 +3750,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -3779,7 +3841,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194715}
   - component: {fileID: 7531433366317667755}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_expression_smile_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3814,6 +3876,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3825,6 +3889,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -3915,7 +3980,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194717}
   - component: {fileID: 7531433366317667757}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_expression_teethSmile_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3950,6 +4015,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3961,6 +4028,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -4051,7 +4119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7531433366306194719}
   - component: {fileID: 7531433366317667759}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: yeti_expression_wow_geo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4086,6 +4154,8 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4097,6 +4167,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -4189,6 +4260,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shadow
       objectReference: {fileID: 0}
+    - target: {fileID: 5454108969966692673, guid: f29113ad8c3204f28b1e7d0e1b5893a6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5454108969966692685, guid: f29113ad8c3204f28b1e7d0e1b5893a6,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5454108969966692685, guid: f29113ad8c3204f28b1e7d0e1b5893a6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4203,6 +4284,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5454108969966692685, guid: f29113ad8c3204f28b1e7d0e1b5893a6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5454108969966692685, guid: f29113ad8c3204f28b1e7d0e1b5893a6,
         type: 3}
@@ -4221,16 +4307,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5454108969966692685, guid: f29113ad8c3204f28b1e7d0e1b5893a6,
         type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5454108969966692685, guid: f29113ad8c3204f28b1e7d0e1b5893a6,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5454108969966692685, guid: f29113ad8c3204f28b1e7d0e1b5893a6,
-        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
       objectReference: {fileID: 0}
@@ -4244,8 +4320,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5454108970833025905, guid: f29113ad8c3204f28b1e7d0e1b5893a6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5454108970833025917, guid: f29113ad8c3204f28b1e7d0e1b5893a6, type: 3}
+    - {fileID: 5454108970833025919, guid: f29113ad8c3204f28b1e7d0e1b5893a6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f29113ad8c3204f28b1e7d0e1b5893a6, type: 3}
 --- !u!4 &6082009941261001359 stripped
 Transform:

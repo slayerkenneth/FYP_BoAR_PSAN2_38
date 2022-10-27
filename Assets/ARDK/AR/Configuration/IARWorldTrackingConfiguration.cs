@@ -51,13 +51,33 @@ namespace Niantic.ARDK.AR.Configuration
     /// A value specifying how many times the meshing routine
     /// should target running per second.
     UInt32 MeshingTargetFrameRate { get; set; }
-
-    /// A value specifying the radius in meters of the meshed area around the player. The minimum value is 5 meters.
-    /// The default value is 0, meaning that there is no limitations while the mesh grows forever.
+    
+    /// The value specifying the distance, in meters, of the meshed surface around the player. Existing mesh blocks are
+    /// decimated when distance to device is bigger than this threshold. Minimum distance is maximum meshing range.
+    /// @note A value of 0 represents 'Infinity'
+    [Obsolete("This property is obsolete. Use MeshDecimationThreshold instead.", false)]
     float MeshingRadius { get; set; }
 
+    /// The value specifying the distance, in meters, of the meshed surface around the player. Existing mesh blocks are
+    /// decimated when distance to device is bigger than this threshold. Minimum distance is maximum meshing range.
+    /// @note A value of 0 represents 'Infinity'
+    float MeshDecimationThreshold { get; set; }
+    
+    /// The value specifying the maximum range in meters of a depth measurement / estimation used
+    /// for meshing.
+    float MeshingRangeMax { get; set; }
+
+    /// The value specifying the edge length of the meshing voxels in meters.
+    float VoxelSize { get; set; }
+    
     /// A value specifying the target size of a mesh block in meters.
     float MeshingTargetBlockSize { get; set; }
+
+    /// A boolean specifying whether or not palms are detected.
+    /// @note This is an experimental feature. Experimental features should not be used in
+    /// production products as they are subject to breaking changes, not officially supported, and
+    /// may be deprecated without notice
+    bool IsPalmDetectionEnabled { get; set; }
 
     /// <summary>
     /// Set the detection images for this configuration asynchronously. The provided callback will

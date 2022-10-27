@@ -5,6 +5,7 @@ using System.Linq;
 
 using Niantic.ARDK.AR;
 using Niantic.ARDK.AR.Camera;
+using Niantic.ARDK.AR.ARSessionEventArgs;
 using Niantic.ARDK.Utilities;
 using Niantic.ARDK.Utilities.Logging;
 
@@ -26,6 +27,8 @@ namespace Niantic.ARDK.Rendering
     public Resolution Resolution { get; }
     public Matrix4x4 DisplayTransform { get; private set; }
     public Matrix4x4 ProjectionTransform { get; private set; }
+
+    protected IARSession Session { get; private set; }
 
     public float NearPlane
     {
@@ -65,9 +68,25 @@ namespace Niantic.ARDK.Rendering
       }
     }
 
+    /// Event for when the renderer had just initialized.
+    public event ArdkEventHandler<FrameRenderedArgs> Initialized
+    {
+      add
+      {
+        _initialized += value;
+        if (_isInitialized)
+        {
+          var args = new FrameRenderedArgs(this);
+          value.Invoke(args);
+        }
+      }
+      remove => _initialized -= value;
+    }
+    private event ArdkEventHandler<FrameRenderedArgs> _initialized;
+    
     /// Event for when the renderer had just finished rendering to its primary target.
     public event ArdkEventHandler<FrameRenderedArgs> FrameRendered;
-
+    
     public void AddFeatureProvider(IRenderFeatureProvider provider)
     {
       if (!_isInitialized)
@@ -116,19 +135,28 @@ namespace Niantic.ARDK.Rendering
     /// The platform specific shader used to render the frame.
     protected abstract Shader Shader { get; }
 
+    [Obsolete("Implement OnConfigurePipeline() override without Resolution params instead.")]
+    protected virtual GraphicsFence? OnConfigurePipeline
+    (
+      RenderTarget target,
+      Resolution targetResolution,
+      Resolution sourceResolution,
+      Material renderMaterial
+    )
+    {
+      // Do nothing
+      return null;
+    }
+
     /// Invoked when it is time to allocate rendering resources
     /// and configure the platform specific pipeline.
     /// @param target The specified render target.
-    /// @param targetResolution Desired resolution of the artifact.
-    /// @param sourceResolution The resolution of the native textures.
     /// @param renderMaterial Material that will be used for rendering.
     /// @returns Fence that should be waited on in other command buffers that utilize the
     ///          texture output by this renderer.
     protected abstract GraphicsFence? OnConfigurePipeline
     (
       RenderTarget target,
-      Resolution targetResolution,
-      Resolution sourceResolution,
       Material renderMaterial
     );
 
@@ -163,7 +191,6 @@ namespace Niantic.ARDK.Rendering
 
     // State variables...
     private bool _isInitialized;
-    private bool _didConfigurePipeline;
 
     public bool IsEnabled { get; private set; }
 
@@ -195,7 +222,7 @@ namespace Niantic.ARDK.Rendering
     ///               automatically get updated for each frame.
     protected ARFrameRenderer(RenderTarget target)
     {
-      _originalOrientation = RenderTarget.ScreenOrientation;
+      _originalOrientation = MathUtils.CalculateScreenOrientation();
 
       Target = target;
       Resolution = target.GetResolution(_originalOrientation);
@@ -217,12 +244,21 @@ namespace Niantic.ARDK.Rendering
     /// @param far The distance of the far clipping plane.
     protected ARFrameRenderer(RenderTarget target, float near, float far)
     {
-      _originalOrientation = RenderTarget.ScreenOrientation;
-
+      ARSessionFactory.SessionInitialized += OnARSessionInitialized;
+      
+      _originalOrientation = MathUtils.CalculateScreenOrientation();
+      
       Target = target;
       Resolution = target.GetResolution(_originalOrientation);
       NearPlane = near;
       FarPlane = far;
+      
+    }
+    
+    private void OnARSessionInitialized(AnyARSessionInitializedArgs args)
+    {
+      ARSessionFactory.SessionInitialized -= OnARSessionInitialized;
+      Session = args.Session;
     }
 
     /// Initializes rendering resources.
@@ -241,7 +277,11 @@ namespace Niantic.ARDK.Rendering
 
       // Allocate the frame rendering material
       _renderMaterial = new Material(platformShader);
+      
+      // Perform platform specific configurations
+      ConfigurePipeline(Target, _renderMaterial);
 
+      _initialized?.Invoke(new FrameRenderedArgs(this));
       _isInitialized = true;
     }
 
@@ -256,7 +296,7 @@ namespace Niantic.ARDK.Rendering
       IsEnabled = true;
 
       // Wait for the pipeline to initialize
-      if (!_didConfigurePipeline)
+      if (!_isInitialized)
         return;
 
       if (Target.IsTargetingCamera)
@@ -277,7 +317,7 @@ namespace Niantic.ARDK.Rendering
       IsEnabled = false;
 
       // Wait for the pipeline to initialize
-      if (!_didConfigurePipeline)
+      if (!_isInitialized)
         return;
 
       if (Target.IsTargetingCamera)
@@ -309,17 +349,21 @@ namespace Niantic.ARDK.Rendering
     private void ConfigurePipeline
     (
       RenderTarget target,
-      Resolution targetResolution,
-      Resolution sourceResolution,
       Material renderMaterial
     )
     {
-      if (_didConfigurePipeline)
-        return;
-
+#pragma warning disable 0618
       // Set up the platform specific commands
-      GPUFence = OnConfigurePipeline(target, targetResolution, sourceResolution, renderMaterial);
-
+      // TODO: Remove call to deprecated function when next major release lands
+      GPUFence = OnConfigurePipeline  
+      (
+        target,
+        target.GetResolution(MathUtils.CalculateScreenOrientation()),
+        new Resolution(),
+        renderMaterial
+      ) ?? OnConfigurePipeline(target, renderMaterial);
+#pragma warning restore 0618
+      
       // If this renderer is already enabled by the time it
       // initialized, hook up to the target camera's loop
       if (IsEnabled && Target.IsTargetingCamera)
@@ -327,29 +371,15 @@ namespace Niantic.ARDK.Rendering
         RegisterCameraEvents();
         OnAddToCamera(Target.Camera);
       }
-
-      // Done
-      _didConfigurePipeline = true;
     }
 
     public void UpdateState(IARFrame withFrame)
     {
       if (!_isInitialized || !IsEnabled)
         return;
-
-      if (withFrame?.Camera == null || withFrame?.CapturedImageTextures == null)
+      
+      if (withFrame?.Camera == null || withFrame.CapturedImageTextures == null)
         return;
-
-      // We configure the rendering pipeline after the
-      // first frame update to gather more information
-      if (!_didConfigurePipeline)
-        ConfigurePipeline
-        (
-          target: Target,
-          targetResolution: Resolution,
-          sourceResolution: withFrame.Camera.ImageResolution,
-          renderMaterial: _renderMaterial
-        );
 
       // Calculate camera matrices
       UpdateCameraMatrices(withFrame);
@@ -391,7 +421,7 @@ namespace Niantic.ARDK.Rendering
     /// @param texture The render target. This texture needs to be already allocated.
     public void BlitToTexture(ref RenderTexture texture)
     {
-      if (!_didConfigurePipeline)
+      if (!_isInitialized)
         throw new InvalidOperationException
           ("The ARFrameRenderer component cannot blit to texture in its current state");
 
@@ -446,6 +476,8 @@ namespace Niantic.ARDK.Rendering
 
     private void Release()
     {
+      Session = null;
+
       OnRelease();
 
       if (_renderMaterial != null)
@@ -502,9 +534,10 @@ namespace Niantic.ARDK.Rendering
     private void UpdateCameraMatrices(IARFrame frame)
     {
       // Determine target orientation
-      var targetOrientation = IsOrientationLocked
-        ? _originalOrientation
-        : RenderTarget.ScreenOrientation;
+      var targetOrientation =
+        IsOrientationLocked
+          ? _originalOrientation
+          : MathUtils.CalculateScreenOrientation();
 
       // Calculate the target resolution according to the orientation
       var targetResolution = Target.GetResolution(targetOrientation);

@@ -5,8 +5,10 @@ using System.Text;
 
 using Niantic.ARDK.AR;
 using Niantic.ARDK.AR.Networking;
+using Niantic.ARDK.Editor;
 using Niantic.ARDK.Networking;
 using Niantic.ARDK.Networking.MultipeerNetworkingEventArgs;
+using Niantic.ARDK.Utilities.Editor;
 using Niantic.ARDK.Utilities.Extensions;
 using Niantic.ARDK.Utilities.Logging;
 using Niantic.ARDK.VirtualStudio.AR;
@@ -31,27 +33,20 @@ namespace Niantic.ARDK.VirtualStudio.Editor
 
     private Dictionary<string, bool> _foldoutStates = new Dictionary<string, bool>();
 
-    private bool _isSelected;
-
     private string[] _mockSceneGuids;
     private string[] _mockSceneNames;
     private int _selectedMockSceneIndex;
 
     public void OnSelectionChange(bool isSelected)
     {
-      _isSelected = isSelected;
-
-      if (_isSelected)
+      if (isSelected)
         LoadMockScenes();
     }
 
     private void LoadMockScenes()
     {
       var mockPrefabs =
-        _AssetDatabaseExtension.FindPrefabsWithComponent<MockSceneConfiguration>
-        (
-          new[] { "Assets" }
-        );
+        _AssetDatabaseUtilities.FindPrefabsWithComponent<MockSceneConfiguration>("Assets");
 
       _mockSceneGuids = new string[mockPrefabs.Length];
 
@@ -69,15 +64,29 @@ namespace Niantic.ARDK.VirtualStudio.Editor
       }
     }
 
+    private static void ValidateAllMockSceneLayers()
+    {
+      var mockPrefabs =
+        _AssetDatabaseUtilities.FindPrefabsWithComponent<MockSceneConfiguration>("Assets");
+
+      foreach (var prefab in mockPrefabs)
+      {
+        var path = AssetDatabase.GUIDToAssetPath(prefab.Guid);
+        var asset = AssetDatabase.LoadMainAssetAtPath(path);
+
+        ((GameObject)asset).GetComponent<MockSceneConfiguration>()._SetLayersIfNeeded(true);
+      }
+    }
+
     public void DrawGUI()
     {
       EditorGUILayout.LabelField("AR", VirtualStudioConfigurationEditor._HeaderStyle);
       GUILayout.Space(10);
 
       DrawMockSceneGUI();
+      GUILayout.Space(10);
 
       DrawCameraConfigurationGUI();
-
       GUILayout.Space(20);
 
       EditorGUILayout.LabelField("Multiplayer", VirtualStudioConfigurationEditor._HeaderStyle);
@@ -85,13 +94,12 @@ namespace Niantic.ARDK.VirtualStudio.Editor
 
       DrawPlayConfigurationSelector();
       DrawSessionMetadataGUI();
-
       GUILayout.Space(20);
 
       DrawPlayers();
     }
 
-    const char refreshArrow = '\u21bb';
+
 
     private void DrawMockSceneGUI()
     {
@@ -109,14 +117,20 @@ namespace Niantic.ARDK.VirtualStudio.Editor
 
         var guid = _selectedMockSceneIndex >= 1 ? _mockSceneGuids[_selectedMockSceneIndex - 1] : "";
         Launcher.SceneGuid = guid;
-
       }
 
-      if (GUILayout.Button(refreshArrow.ToString(), GUILayout.Width(50)))
-      {
+      if (CommonStyles.RefreshButton())
         LoadMockScenes();
-      }
 
+      EditorGUILayout.EndHorizontal();
+
+      EditorGUILayout.BeginHorizontal();
+      GUILayout.FlexibleSpace();
+
+      if (GUILayout.Button("Validate all Mock scenes", GUILayout.MaxWidth(200)))
+        ValidateAllMockSceneLayers();
+
+      GUILayout.FlexibleSpace();
       EditorGUILayout.EndHorizontal();
     }
 
@@ -193,7 +207,7 @@ namespace Niantic.ARDK.VirtualStudio.Editor
 
     private void DrawLocalPlayer()
     {
-      var localName = _VirtualStudioManager.LOCAL_PLAYER_NAME;
+      var localName = _VirtualStudioSessionsManager.LOCAL_PLAYER_NAME;
       if (!_foldoutStates.ContainsKey(localName))
         _foldoutStates.Add(localName, true);
 
@@ -202,7 +216,7 @@ namespace Niantic.ARDK.VirtualStudio.Editor
 
       if (Application.isPlaying)
       {
-        var localPlayer = _VirtualStudioManager.Instance.LocalPlayer;
+        var localPlayer = _VirtualStudioSessionsManager.Instance.LocalPlayer;
         if (localPlayer == null)
           return;
 

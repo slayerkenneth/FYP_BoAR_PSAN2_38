@@ -1,6 +1,8 @@
 // Copyright 2022 Niantic, Inc. All Rights Reserved.
 using System;
 
+using Niantic.ARDK.Utilities;
+
 using UnityEngine;
 
 namespace Niantic.ARDK.AR.Awareness
@@ -55,6 +57,124 @@ namespace Niantic.ARDK.AR.Awareness
         x: Mathf.Clamp(Mathf.RoundToInt(sx * viewWidth - 0.5f), 0, viewWidth - 1),
         y: Mathf.Clamp(Mathf.RoundToInt(sy * viewHeight - 0.5f), 0, viewHeight - 1)
       );
+    }
+    
+    /// Extracts raw semantic confidences from the frame and uploads it to
+    /// GPU memory in the form of a texture. If the frame does not hold
+    /// semantics data, this API does nothing.
+    /// @param frame The AR frame to get semantics data from.
+    /// @param channelName The name of the semantic class to create a texture of.
+    /// @param viewportWidth The width of the viewport the texture needs to be mapped to.
+    /// @param viewportHeight The height of the viewport the texture needs to be mapped to.
+    /// @param texture The texture to copy the data to. If this reference is null, the
+    ///   texture will be allocated. Deallocating the texture is the responsibility of
+    ///   the caller.
+    /// @param samplerTransform The transformation matrix to be used to sample the texture.
+    /// @returns Whether the texture has been successfully created/updated.
+    public static bool CopySemanticConfidencesARGB32
+    (
+      this IARFrame frame,
+      string channelName,
+      int viewportWidth,
+      int viewportHeight,
+      ref Texture2D texture,
+      out Matrix4x4 samplerTransform
+    )
+    {
+      return CopySemanticConfidences
+      (
+        frame,
+        channelName,
+        viewportWidth,
+        viewportHeight,
+        ref texture,
+        out samplerTransform,
+        true
+      );
+    }
+    
+    /// Extracts raw semantic confidences from the frame and uploads it to
+    /// GPU memory in the form of a texture. If the frame does not hold
+    /// semantics data, this API does nothing.
+    /// @param frame The AR frame to get semantics data from.
+    /// @param channelName The name of the semantic class to create a texture of.
+    /// @param viewportWidth The width of the viewport the texture needs to be mapped to.
+    /// @param viewportHeight The height of the viewport the texture needs to be mapped to.
+    /// @param texture The texture to copy the data to. If this reference is null, the
+    ///   texture will be allocated. Deallocating the texture is the responsibility of
+    ///   the caller.
+    /// @param samplerTransform The transformation matrix to be used to sample the texture.
+    /// @returns Whether the texture has been successfully created/updated.
+    public static bool CopySemanticConfidencesRFloat
+    (
+      this IARFrame frame,
+      string channelName,
+      int viewportWidth,
+      int viewportHeight,
+      ref Texture2D texture,
+      out Matrix4x4 samplerTransform
+    )
+    {
+      return CopySemanticConfidences
+      (
+        frame,
+        channelName,
+        viewportWidth,
+        viewportHeight,
+        ref texture,
+        out samplerTransform,
+        false
+      );
+    }
+
+    private static bool CopySemanticConfidences
+    (
+      IARFrame frame,
+      string channelName,
+      int viewportWidth,
+      int viewportHeight,
+      ref Texture2D texture,
+      out Matrix4x4 samplerTransform,
+      bool colorFormat
+    )
+    {
+      // Defaults
+      samplerTransform = Matrix4x4.identity;
+
+      var buffer = frame.CopySemanticConfidences(channelName);
+      if (buffer == null)
+        return false;
+
+      // Get the screen orientation
+      var orientation = MathUtils.CalculateScreenOrientation();
+      
+      // Calculate display transform
+      var displayTransform = buffer.CalculateDisplayTransform
+      (
+        viewportWidth,
+        viewportHeight,
+        orientation,
+        invertVertically: true
+      );
+
+      // Calculate the interpolation transform,
+      var interpolationTransform = buffer.CalculateInterpolationTransform
+      (
+        frame.Camera,
+        orientation
+      );
+
+      // Calculate the final sampler transform
+      samplerTransform = interpolationTransform * displayTransform;
+      
+      // Push to GPU
+      var success = colorFormat
+        ? buffer.CreateOrUpdateTextureARGB32(ref texture)
+        : buffer.CreateOrUpdateTextureRFloat(ref texture);
+
+      // Release CPU buffer
+      buffer.Dispose();
+      return success;
     }
   }
 }

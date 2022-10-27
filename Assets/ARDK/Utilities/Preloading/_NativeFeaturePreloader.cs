@@ -20,8 +20,6 @@ namespace Niantic.ARDK.Utilities.Preloading
   {
     private IntPtr _nativeHandle;
 
-    private const string _dbowUrl = "https://bowvocab.eng.nianticlabs.com/dbow_b50_l3.bin";
-
     internal _NativeFeaturePreloader()
     {
       _nativeHandle = _NAR_ARDKFilePreloader_Init();
@@ -62,10 +60,6 @@ namespace Niantic.ARDK.Utilities.Preloading
 
     public void Download(Feature[] features)
     {
-      // Todo: This should really be done in native
-      if (features.Contains(Feature.Dbow) && string.IsNullOrEmpty(ArdkGlobalConfig.GetDbowUrl()))
-        ArdkGlobalConfig.SetDbowUrl(ArdkGlobalConfig._DbowUrl);
-
       UInt32[] featuresInts = Array.ConvertAll(features, value => (UInt32) value);
       _NAR_ARDKFilePreloader_Download(_nativeHandle, featuresInts, featuresInts.Length);
     }
