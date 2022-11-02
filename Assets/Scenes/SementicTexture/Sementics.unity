@@ -1104,6 +1104,8 @@ GameObject:
   - component: {fileID: 619056678}
   - component: {fileID: 619056679}
   - component: {fileID: 619056680}
+  - component: {fileID: 619056682}
+  - component: {fileID: 619056681}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1297,7 +1299,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619056668}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57bd0428f36474c849f74401402343f9, type: 3}
   m_Name: 
@@ -1333,6 +1335,47 @@ MonoBehaviour:
   _occlusionMode: 3
   _textureFilterMode: 0
   _stabilizeOcclusionsExperimental: 0
+--- !u!114 &619056681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619056668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e8d937f54af472cb69a845bde0a42c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _manageUsingUnityLifecycle: 1
+  _camera: {fileID: 619056670}
+  _tileSize: 0.15
+  _flatFloorTolerance: 0.2
+  _maxSlope: 25
+  _stepHeight: 0.1
+  _scanInterval: 0.1
+  _scanRange: 1.5
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 2147483647
+  _visualise: 1
+--- !u!114 &619056682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619056668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2020c13c16eb4b849452f4ec07eb39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _arCamera: {fileID: 619056670}
+  _agentPrefab: {fileID: 7531433366306101547, guid: f35dc5483e1de45529d327b97a416082,
+    type: 3}
+  _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
+  _semanticManager: {fileID: 619056672}
 --- !u!1 &622892559
 GameObject:
   m_ObjectHideFlags: 0
@@ -1545,7 +1588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &794311605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1553,7 +1596,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 794311604}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5e62a2add33b469ca93c4d3938350ac, type: 3}
   m_Name: 
@@ -1568,7 +1611,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 794311604}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17e8d937f54af472cb69a845bde0a42c, type: 3}
   m_Name: 
@@ -1583,7 +1626,7 @@ MonoBehaviour:
   _scanRange: 1.5
   _layerMask:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 192
   _visualise: 1
 --- !u!4 &794311607
 Transform:
