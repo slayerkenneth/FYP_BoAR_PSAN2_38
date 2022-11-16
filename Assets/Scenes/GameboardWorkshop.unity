@@ -210,7 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 544755552afaf4436af235f6de9be0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _permissions: 0000000002000000
+  _permissions: 00000000
 --- !u!20 &499271425 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 3363422157329644171, guid: e91d6d15f11cc4ad29bb1a41ae9aa381,
@@ -270,11 +270,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6953166bf302f450b97b7f657bb74c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OHcontroller: {fileID: 0}
-  PlaneManager: {fileID: 0}
-  Transition: 1
-  ShowPlaneHelper: 1
-  PlaneToTrack: 0
 --- !u!1001 &600729633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -295,7 +290,7 @@ PrefabInstance:
     - target: {fileID: 132679936271623893, guid: 0e3f675aa8d8342a79ff3b126774d4bd,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7292150920652065781, guid: 0e3f675aa8d8342a79ff3b126774d4bd,
         type: 3}

@@ -600,7 +600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _manageUsingUnityLifecycle: 1
   _camera: {fileID: 2055860222}
-  _tileSize: 0.15
+  _tileSize: 0.1
   _flatFloorTolerance: 0.2
   _maxSlope: 25
   _stepHeight: 0.1
@@ -608,7 +608,7 @@ MonoBehaviour:
   _scanRange: 1.5
   _layerMask:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 704
   _visualise: 1
 --- !u!1001 &355873224
 PrefabInstance:
@@ -2241,8 +2241,18 @@ PrefabInstance:
         type: 3}
       propertyPath: _meshPrefab
       value: 
-      objectReference: {fileID: 7791926914237628454, guid: d0183eaba3a4c44e9aafc695278e1e9d,
+      objectReference: {fileID: 2988715159741781419, guid: b79f4734d3e2462186a55d546e80cfb4,
         type: 3}
+    - target: {fileID: 7963815754292762357, guid: 9f82ecc5afc3c4c2695d9cf37d46f25c,
+        type: 3}
+      propertyPath: _targetBlockSize
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963815754292762357, guid: 9f82ecc5afc3c4c2695d9cf37d46f25c,
+        type: 3}
+      propertyPath: _targetFrameRate
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 7963815754292762357, guid: 9f82ecc5afc3c4c2695d9cf37d46f25c,
         type: 3}
       propertyPath: _useInvisibleMaterial
