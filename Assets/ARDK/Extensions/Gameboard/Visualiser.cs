@@ -110,7 +110,7 @@ namespace Niantic.ARDK.Extensions.Gameboard
       MeshRenderer renderer = debugMeshGameObject.AddComponent<MeshRenderer>();
       
       #if ARDK_HAS_URP
-      renderer.material.shader = Shader.Find("Universal Render Pipeline/Unlit");
+      renderer.material.shader = Shader.Find("Custom/SemanticShader");
       #else
       renderer.material.shader = Shader.Find("Unlit/Color");
       #endif

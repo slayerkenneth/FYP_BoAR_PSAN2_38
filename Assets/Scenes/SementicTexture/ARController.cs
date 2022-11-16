@@ -61,7 +61,7 @@ public class ARController : MonoBehaviour
         ARSessionFactory.SessionInitialized -= OnSessionInitialized;
         Destroy(_agentGameObject);
         _agentGameObject = null;
-        DebugText.text = "Debug: AR Session Disabled";
+        if (DebugText) DebugText.text = "Debug: AR Session Disabled";
     }
     
     /*
