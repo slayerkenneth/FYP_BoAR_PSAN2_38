@@ -263,8 +263,16 @@ namespace Niantic.ARDK.Extensions.Gameboard
       return result;
     }
 
+    // Re- defined Scan function
     public void Scan(Vector3 origin, float range)
     {
+      Scan(origin, range, 100); // limit need to 
+    }
+    
+    // Scan Function with customized limit of area
+    public void Scan(Vector3 origin, float range, float AreaLimit = 100)
+    {
+      if (Area > AreaLimit) return;
       HashSet<Vector2Int> nodesDeleted = _model.Scan(origin, range);
       RecalculateArea();
       GameboardUpdated?.Invoke(new GameboardUpdatedArgs(nodesDeleted, false));

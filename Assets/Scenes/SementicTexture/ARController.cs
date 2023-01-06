@@ -151,7 +151,10 @@ public class ARController : MonoBehaviour
         // The origin of the scan should be in front of the player
         var origin = playerPosition + Vector3.ProjectOnPlane(playerForward, Vector3.up).normalized;
 
-        _gameboard.Scan(origin, 5);
+        if (gameboardArea < 100)
+        {
+            _gameboard.Scan(origin, 5);
+        }
         gameboardArea = _gameboard.Area;
         AreaText.text = "Gameboard A: " + gameboardArea.ToString();
         
@@ -203,6 +206,7 @@ public class ARController : MonoBehaviour
 
     private void SpawnAgent(Vector3 hitPoint)
     {
+        if (_agentGameObject != null) return;
         // Instantiate the agent with the predefined prefab
         _agentGameObject = Instantiate(_agentPrefab);
         
@@ -214,8 +218,15 @@ public class ARController : MonoBehaviour
         _agentGameObject.transform.rotation = Quaternion.LookRotation(-rotation);
         
         // Set agent's state for navigation
-        _agent = _agentGameObject.GetComponent<WorkshopGameboardAgent>(); // TODO: A rework on gameboard agent is needed
-        _agent.State = WorkshopGameboardAgent.AgentNavigationState.Idle;
+        // _agent = _agentGameObject.GetComponent<WorkshopGameboardAgent>(); // TODO: A rework on gameboard agent is needed
+        // _agent.State = WorkshopGameboardAgent.AgentNavigationState.Idle;
+        _agentGameObject.GetComponent<CharacterMovementController>().ARController = this;
+        
         DebugText.text = "Debug: Spawned stuff";
+    }
+
+    public IGameboard GetActiveGameboard()
+    {
+        return _gameboard;
     }
 }

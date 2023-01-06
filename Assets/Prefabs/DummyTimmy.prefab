@@ -2035,8 +2035,8 @@ Transform:
   m_GameObject: {fileID: 7591547633202612116}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8152310224633166113}
   - {fileID: 698973091971988562}
@@ -2063,9 +2063,11 @@ MonoBehaviour:
   controller: {fileID: 1583515308066720754}
   characterState: 0
   animator: {fileID: 3814940455942113108}
-  joystickLayer: {fileID: 0}
-  joystickBgd: {fileID: 0}
-  joystick: {fileID: 0}
+  cameraTransform: {fileID: 0}
+  nearestBoardPosition: {x: 0, y: 0, z: 0}
+  ARController: {fileID: 0}
+  AllTilesList: []
+  debugLog: {fileID: 0}
 --- !u!95 &3814940455942113108
 Animator:
   serializedVersion: 4

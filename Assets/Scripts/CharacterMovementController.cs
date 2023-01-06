@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Niantic.ARDK.Extensions.Gameboard;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,6 +22,14 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] private int characterState;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform cameraTransform;
+    [SerializeField] private Vector3 nearestBoardPosition;
+
+    [Header("Gameboard environment reference")] 
+    [SerializeField] 
+    public ARController ARController;
+    public IGameboard _activeGameboard;
+    public List<Vector3> AllTilesList;
+    public Text debugLog;
     private void Awake()
     {
         mapper = new CharacterControlMap();
@@ -39,6 +48,8 @@ public class CharacterMovementController : MonoBehaviour
     private void Start()
     {
         cameraTransform = Camera.main.transform;
+        _activeGameboard = ARController.GetActiveGameboard();
+        debugLog = ARController.AreaText;
     }
 
     void Update()
@@ -63,6 +74,8 @@ public class CharacterMovementController : MonoBehaviour
         if (movementInput.magnitude != 0)
         {
             animator.Play("Run");
+            _activeGameboard.FindNearestFreePosition(transform.position, out nearestBoardPosition);
+            debugLog.text = debugLog.text + " Player nearest board pos " + nearestBoardPosition.ToString();
         }
 
         // Changes the height position of the player..
@@ -70,6 +83,22 @@ public class CharacterMovementController : MonoBehaviour
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
             animator.Play("Jump");
+            
+            Vector3 tempPosition = new Vector3();
+            _activeGameboard.FindRandomPosition(out tempPosition);
+
+            while (!AllTilesList.Contains(tempPosition))
+            {
+                AllTilesList.Add(tempPosition);
+                Vector3 temptemp;
+                _activeGameboard.FindRandomPosition(out temptemp);
+                if (temptemp != tempPosition) tempPosition = temptemp;
+            }
+
+            foreach (var vec in AllTilesList)
+            {
+                Debug.Log(vec.ToString());
+            }
         }
 
         playerVelocity.y += gravityValue * Time.deltaTime;
