@@ -292,5 +292,13 @@ namespace Niantic.ARDK.Extensions.Gameboard
       RecalculateArea();
       GameboardUpdated?.Invoke(new GameboardUpdatedArgs(new HashSet<Vector2Int>(), true));
     }
+
+    /// Return SpatialTree reference of current model
+    /// Originally Spatial Tree is internal sealed partial class
+    /// But manually changed to public sealed partial class so that to access to the Spatial Tree and its member functions
+    public SpatialTree GetSpatialTree()
+    {
+      return _model.SpatialTree;
+    }
   }
 }

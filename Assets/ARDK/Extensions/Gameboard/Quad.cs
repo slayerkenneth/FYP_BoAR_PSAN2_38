@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Niantic.ARDK.Extensions.Gameboard
 {
-  internal sealed partial class SpatialTree
+  public sealed partial class SpatialTree
   {
     private class Quad
     {

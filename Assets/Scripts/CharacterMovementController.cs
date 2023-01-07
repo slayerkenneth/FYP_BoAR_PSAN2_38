@@ -28,7 +28,7 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] 
     public ARController ARController;
     public IGameboard _activeGameboard;
-    public List<Vector3> AllTilesList;
+    [SerializeField] private SpatialTree SpatialTree;
     public Text debugLog;
     private void Awake()
     {
@@ -83,22 +83,12 @@ public class CharacterMovementController : MonoBehaviour
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
             animator.Play("Jump");
-            
+
             Vector3 tempPosition = new Vector3();
             _activeGameboard.FindRandomPosition(out tempPosition);
-
-            while (!AllTilesList.Contains(tempPosition))
-            {
-                AllTilesList.Add(tempPosition);
-                Vector3 temptemp;
-                _activeGameboard.FindRandomPosition(out temptemp);
-                if (temptemp != tempPosition) tempPosition = temptemp;
-            }
-
-            foreach (var vec in AllTilesList)
-            {
-                Debug.Log(vec.ToString());
-            }
+            
+            var srcPosition = Utils.PositionToTile(tempPosition, _activeGameboard.Settings.TileSize);
+            SpatialTree = _activeGameboard.GetSpatialTree();
         }
 
         playerVelocity.y += gravityValue * Time.deltaTime;

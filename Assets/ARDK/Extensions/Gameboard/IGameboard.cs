@@ -102,5 +102,9 @@ namespace Niantic.ARDK.Extensions.Gameboard
     /// Activates/Deactivates visualisation of Gameboard areas and agent paths
     /// @param active Activates visualisation if true, deactivates if false
     void SetVisualisationActive(bool active);
+
+    /// Get GetSpatialTree, Originally Spatial Tree is internal sealed partial class
+    /// But manually changed to public sealed partial class so that to access to the Spatial Tree and its member functions
+    SpatialTree GetSpatialTree();
   }
 }
