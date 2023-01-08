@@ -28,7 +28,11 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] 
     public ARController ARController;
     public IGameboard _activeGameboard;
-    [SerializeField] private SpatialTree SpatialTree;
+    private SpatialTree SpatialTree;
+
+    [SerializeField] public GameFlowController GameFlowController;
+    
+    [Header("Debug")]
     public Text debugLog;
     private void Awake()
     {
@@ -78,17 +82,11 @@ public class CharacterMovementController : MonoBehaviour
             debugLog.text = debugLog.text + " Player nearest board pos " + nearestBoardPosition.ToString();
         }
 
-        // Changes the height position of the player..
+        // Changes the height position of the player.. (Button for Testing)
         if (mapper.Player.Jump.triggered && groundedPlayer)
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
             animator.Play("Jump");
-
-            Vector3 tempPosition = new Vector3();
-            _activeGameboard.FindRandomPosition(out tempPosition);
-            
-            var srcPosition = Utils.PositionToTile(tempPosition, _activeGameboard.Settings.TileSize);
-            SpatialTree = _activeGameboard.GetSpatialTree();
         }
 
         playerVelocity.y += gravityValue * Time.deltaTime;

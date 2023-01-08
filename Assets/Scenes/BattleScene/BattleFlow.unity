@@ -1650,6 +1650,7 @@ MonoBehaviour:
     type: 3}
   _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
   _semanticManager: {fileID: 619056672}
+  GameFlowController: {fileID: 1451593558}
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
 --- !u!1 &622892559
@@ -2600,9 +2601,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arCamera: {fileID: 619056670}
-  ARController: {fileID: 619056682}
+  ARCtrl: {fileID: 619056682}
+  playerMovementCtrl: {fileID: 0}
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
+  AreaLimit: 100
+  AllGridNodeCoordinates: []
+  WallCoordinates: []
+  maxX: 0
+  minX: 0
+  maxZ: 0
+  minZ: 0
+  InvisibleWallPrefab: {fileID: 7956249560760963332, guid: 28ceaa8d497ec444eb7d3d313f7a89d7,
+    type: 3}
 --- !u!1 &1486486166
 GameObject:
   m_ObjectHideFlags: 0

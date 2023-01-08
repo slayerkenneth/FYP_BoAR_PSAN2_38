@@ -45,6 +45,7 @@ public class ARController : MonoBehaviour
     public ARSemanticSegmentationManager _semanticManager;
 
 
+    [SerializeField] public GameFlowController GameFlowController;
     [SerializeField] public Text DebugText;
     [SerializeField] public Text AreaText;
     
@@ -86,6 +87,7 @@ public class ARController : MonoBehaviour
     {
         _gameboard = args.Gameboard;
         _gameboard.GameboardDestroyed += OnGameboardDestroyed;
+        GameFlowController._activeGameboard = _gameboard;
         DebugText.text = "Debug: GB created";
     }
 
@@ -191,22 +193,26 @@ public class ARController : MonoBehaviour
             DebugText.text = "Debug: Hit" + touchCount.ToString();
             touchCount++;
             // if agent does not exist, spawn it!
-            if (_agent == null)
+            if (_agentGameObject == null)
             {
                 SpawnAgent(hit.point);
             }
             else
             {
-                // if agent does exist, set destination
-                _agent.SetDestination(hit.point);
-                DebugText.text = "Debug: SD Count" + touchCount.ToString();
+                // Test
+                var tempPos = new Vector3();
+                _gameboard.FindNearestFreePosition(hit.point, out tempPos);
+
+                var node = new GridNode();
+                if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node));
+                    DebugText.text = DebugText.text + " Raycast hit nearest board pos " + tempPos.ToString() + " GN node Coord" + node.Coordinates;
             }
         }
     }
 
     private void SpawnAgent(Vector3 hitPoint)
     {
-        if (_agentGameObject != null) return;
+        if (_agentGameObject != null || GameFlowController.PlayerSpawnActive == false) return;
         // Instantiate the agent with the predefined prefab
         _agentGameObject = Instantiate(_agentPrefab);
         
@@ -220,13 +226,19 @@ public class ARController : MonoBehaviour
         // Set agent's state for navigation
         // _agent = _agentGameObject.GetComponent<WorkshopGameboardAgent>(); // TODO: A rework on gameboard agent is needed
         // _agent.State = WorkshopGameboardAgent.AgentNavigationState.Idle;
-        _agentGameObject.GetComponent<CharacterMovementController>().ARController = this;
-        
+        var CharMoveCtrl = _agentGameObject.GetComponent<CharacterMovementController>();
+        CharMoveCtrl.ARController = this;
+        CharMoveCtrl.GameFlowController = GameFlowController;
         DebugText.text = "Debug: Spawned stuff";
     }
 
     public IGameboard GetActiveGameboard()
     {
         return _gameboard;
+    }
+
+    public CharacterMovementController GetActivePlayerMovementCtrl()
+    {
+        return _agentGameObject.GetComponent<CharacterMovementController>();
     }
 }
