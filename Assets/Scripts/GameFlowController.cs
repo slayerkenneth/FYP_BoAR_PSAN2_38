@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Niantic.ARDK.Extensions.Gameboard;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,6 +52,12 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] private int maxX = 0, minX = 0, maxZ = 0, minZ = 0;
 
     public GameObject InvisibleWallPrefab;
+
+    [Header("Enemy Related")] 
+    public EnemySpawner EnemySpawner;
+    public List<Vector3> EnemySpawnPositionList;
+    public int enemyRandomSpawnLocationsCount;
+    
     
     // Start is called before the first frame update
     void Start()
@@ -79,6 +86,8 @@ public class GameFlowController : MonoBehaviour
                 // make following function called once only
                 GetAllTileCoordinatesAndMarkWalls();
                 SetBoundaryColliders();
+                EnemySpawner.SetSpawner(true);
+                SetRandomEnemySpawnLocationVectors(enemyRandomSpawnLocationsCount);
             }
             PlayerSpawnActive = true;
         }
@@ -154,6 +163,25 @@ public class GameFlowController : MonoBehaviour
 
     public List<Vector3> GetEnemySpawnLocationVectorList()
     {
-        return new List<Vector3>();
+        battleSceneState = PVEBattleSceneState.SpawningEnemy;
+        return EnemySpawnPositionList;
+    }
+
+    public void SetRandomEnemySpawnLocationVectors(int MaxRandomSpawnPositionCount)
+    {
+        int count = 0;
+
+        var pos = new Vector3();
+        while (_activeGameboard.FindRandomPosition(out pos) && count != MaxRandomSpawnPositionCount)
+        {
+            var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
+            if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
+            {
+                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1, v.y * _activeGameboard.Settings.TileSize));
+                count++;
+            }
+        }
+
+        
     }
 }
