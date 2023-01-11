@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/ARMeshing.unity
     guid: 6b1d0a66c70ceb74098b67a30d9f25f1
   - enabled: 0
     path: Assets/ARDKExamples/ContextAwareness/Gameboard/Gameboard.unity
     guid: 1b7213c3fe5564515858f79a5dadc2f5
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SementicTexture/Sementics.unity
     guid: 57ea147a1d6b94603af6bba4297852ac
   - enabled: 0
