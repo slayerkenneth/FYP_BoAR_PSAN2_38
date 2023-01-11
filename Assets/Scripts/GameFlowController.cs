@@ -28,7 +28,7 @@ public class GameFlowController : MonoBehaviour
     }
 
     [Header("Game Flow variable")] 
-    [SerializeField] public static PVEBattleSceneState battleSceneState = PVEBattleSceneState.invalid;
+    [SerializeField] public PVEBattleSceneState battleSceneState = PVEBattleSceneState.invalid;
     public static bool PlayerSpawnActive = false;
     public PVEBattleSceneState BattleMode;
     
@@ -93,6 +93,7 @@ public class GameFlowController : MonoBehaviour
         }
     }
 
+    #region Maptiles, Map boundaries And Collider Setting
     void SetBoundaryColliders()
     {
         var WallSet = Instantiate(InvisibleWallPrefab, new Vector3(0, -0.1f, 0), new Quaternion());
@@ -160,14 +161,16 @@ public class GameFlowController : MonoBehaviour
     {
         return WallCoordinates;
     }
+    #endregion
 
+    #region Enemy Spawning
     public List<Vector3> GetEnemySpawnLocationVectorList()
     {
         battleSceneState = PVEBattleSceneState.SpawningEnemy;
         return EnemySpawnPositionList;
     }
 
-    public void SetRandomEnemySpawnLocationVectors(int MaxRandomSpawnPositionCount)
+    private void SetRandomEnemySpawnLocationVectors(int MaxRandomSpawnPositionCount)
     {
         int count = 0;
 
@@ -182,6 +185,31 @@ public class GameFlowController : MonoBehaviour
             }
         }
 
-        
+        battleSceneState = BattleMode;
     }
+    #endregion
+
+    #region CapturePoint / Defence Point
+    public bool GetTowerSpawnLocationVector(out Vector3 towerLocation)
+    {
+        if (BattleMode is PVEBattleSceneState.CapturePointMode or PVEBattleSceneState.DefencePointMode)
+        {
+            towerLocation = CalculateTowerLocation();
+            return true;
+        }
+
+        towerLocation = new Vector3();
+        return false;
+    }
+
+    private Vector3 CalculateTowerLocation()
+    {
+        float x, z;
+        var TPos = new Vector3();
+        x = (maxX + minX) / 2 * _activeGameboard.Settings.TileSize;
+        z = (maxZ + minZ) / 2 * _activeGameboard.Settings.TileSize;
+        _activeGameboard.FindNearestFreePosition(new Vector3(x, -1, z), out TPos);
+        return TPos;
+    }
+    #endregion
 }
