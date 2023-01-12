@@ -188,21 +188,23 @@ public class ARController : MonoBehaviour
         Ray ray = _arCamera.ScreenPointToRay(touch.position);
         
         RaycastHit hit;
+        var tempPos = new Vector3();
+        
         if (Physics.Raycast(ray, out hit))
         {
             DebugText.text = "Debug: Hit" + touchCount.ToString();
             touchCount++;
+            _gameboard.FindNearestFreePosition(hit.point, out tempPos);
             // if agent does not exist, spawn it!
             if (_agentGameObject == null)
             {
-                SpawnAgent(hit.point);
+                var node = new GridNode();
+                if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node));
+                SpawnAgent(new Vector3(node.Coordinates.x, 0.5f, node.Coordinates.y));
             }
             else
             {
                 // Test
-                var tempPos = new Vector3();
-                _gameboard.FindNearestFreePosition(hit.point, out tempPos);
-
                 var node = new GridNode();
                 if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node));
                     DebugText.text = DebugText.text + " Raycast hit nearest board pos " + tempPos.ToString() + " GN node Coord" + node.Coordinates;

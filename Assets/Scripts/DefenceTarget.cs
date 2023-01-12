@@ -24,6 +24,7 @@ public class DefenceTarget : MonoBehaviour
     void Update()
     {
         SpawnTower();
+        DefenceTimerUpdate();
     }
 
     private void SpawnTower()
@@ -32,5 +33,10 @@ public class DefenceTarget : MonoBehaviour
         {
             Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
         }
+    }
+
+    public IEnumerable DefenceTimerUpdate()
+    {
+        yield return new WaitForSeconds(1);
     }
 }

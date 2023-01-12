@@ -3758,6 +3758,11 @@ PrefabInstance:
       propertyPath: Channel
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5760349965259531221, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6099348129321202528, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
       propertyPath: Channel
