@@ -23,9 +23,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/GameboardWorkshop.unity
     guid: b563b3d6790974c3ba75b0037285427b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/BattleScene/BattleFlow.unity
     guid: c297c6b10a00cad4184628939805403c
+  - enabled: 1
+    path: Assets/Scenes/BattleScene/DefencePointBattleMode.unity
+    guid: 0ddd4f8d0325c23438ca566d9b452bf4
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 744b813df90924c169af73489b8325de,
       type: 2}
