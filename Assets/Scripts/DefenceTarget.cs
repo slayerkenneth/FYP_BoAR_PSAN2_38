@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Niantic.ARDK.Extensions.Gameboard;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DefenceTarget : MonoBehaviour
 {
@@ -17,14 +18,35 @@ public class DefenceTarget : MonoBehaviour
     public GameObject TowerPrefab;
     public Vector3 TowerPosition;
     [SerializeField] private float DefenceTime;
+    private bool stopWatchActive;
+    private float CurrentTime;
+    public int startMinute;
+    
 
     [Header("UI")] 
     public Canvas DefenceModeUICanvas;
+    public Text CurrentTimeText;
+
+    private void Start()
+    {
+        CurrentTime = DefenceTime;
+    }
 
     void Update()
     {
         SpawnTower();
-        DefenceTimerUpdate();
+        if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer) StartCountDown();
+        if (stopWatchActive == true)
+        {
+            CurrentTime = CurrentTime - Time.deltaTime;
+            if (CurrentTime <= 0)
+            {
+                stopWatchActive = false;
+                
+            }
+        }
+        TimeSpan timeSpan = TimeSpan.FromSeconds(CurrentTime);
+        CurrentTimeText.text = "Defense Time Remaining: " + timeSpan.ToString(@"mm\:ss");
     }
 
     private void SpawnTower()
@@ -35,8 +57,13 @@ public class DefenceTarget : MonoBehaviour
         }
     }
 
-    public IEnumerable DefenceTimerUpdate()
+    public void StartCountDown()
     {
-        yield return new WaitForSeconds(1);
+        stopWatchActive = true;
+    }
+
+    public void StopCountDown()
+    {
+        stopWatchActive = false;
     }
 }

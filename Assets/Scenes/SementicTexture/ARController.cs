@@ -201,6 +201,7 @@ public class ARController : MonoBehaviour
                 var node = new GridNode();
                 if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node));
                 SpawnAgent(new Vector3(node.Coordinates.x, 0.5f, node.Coordinates.y));
+                GameFlowController.battleSceneState = GameFlowController.PVEBattleSceneState.SpawningPlayer;
             }
             else
             {

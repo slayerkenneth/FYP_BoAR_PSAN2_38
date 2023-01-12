@@ -44,6 +44,7 @@ public class EnemySpawner : MonoBehaviour
     {
         var e = Instantiate(enemyPrefab, SpawnLocationVec, new Quaternion(0,0,0,0), EnemyParentObj.transform);
         e.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+        e.AddComponent<EnemyBehavior>();
         yield return new WaitForSeconds(time);
     }
 

@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 593859230819194797}
   m_Layer: 0
   m_Name: Obelisk_zodiac_low
-  m_TagString: Untagged
+  m_TagString: Tower(D)
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
