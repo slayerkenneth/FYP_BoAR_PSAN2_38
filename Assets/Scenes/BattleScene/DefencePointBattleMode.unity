@@ -2444,7 +2444,7 @@ MonoBehaviour:
   _layerMask:
     serializedVersion: 2
     m_Bits: 192
-  _visualise: 0
+  _visualise: 1
 --- !u!114 &619056682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5010,7 +5010,7 @@ PrefabInstance:
     - target: {fileID: 3298992325091424595, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3830538428042062264, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
