@@ -3793,6 +3793,7 @@ GameObject:
   - component: {fileID: 1451593557}
   - component: {fileID: 1451593558}
   - component: {fileID: 1451593559}
+  - component: {fileID: 1451593560}
   m_Layer: 0
   m_Name: GameManager (Battle)
   m_TagString: Untagged
@@ -3835,7 +3836,7 @@ MonoBehaviour:
   playerMovementCtrl: {fileID: 0}
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
-  AreaLimit: 100
+  AreaLimit: 20
   AllGridNodeCoordinates: []
   WallCoordinates: []
   maxX: 0
@@ -3846,7 +3847,7 @@ MonoBehaviour:
     type: 3}
   EnemySpawner: {fileID: 1451593559}
   EnemySpawnPositionList: []
-  enemyRandomSpawnLocationsCount: 5
+  enemyRandomSpawnLocationsCount: 2
 --- !u!114 &1451593559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3865,11 +3866,21 @@ MonoBehaviour:
   - {fileID: 1953271650171834, guid: dbf7a0c9d76b77a40af3104feac0641d, type: 3}
   - {fileID: 2066896392038628118, guid: 45288819fde2143449a96207b14db0bb, type: 3}
   - {fileID: 1248815240492774, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
-  - {fileID: 174418, guid: 36c38a65d57de7d4a9a582f9ee857701, type: 3}
-  - {fileID: 139696, guid: eb58e8f2831a51f45a44a261e6710cdd, type: 3}
   EnemyParentObj: {fileID: 1934517721}
-  MaxEnemyCount: 5
+  MaxEnemyCount: 2
   EnemySpawnLocationList: []
+--- !u!114 &1451593560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451593556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ce00f2d7f4aff41a0ff3ce5b839e92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1486486166
 GameObject:
   m_ObjectHideFlags: 0
