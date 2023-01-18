@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class CombatHandler : MonoBehaviour
 {
+    // Low Level Commands for combat related functionalities
     // Every Enemy, Player, maybe Tower, and anything interact with Central Battle Controller have this component
     [Header("Battle Parameters")] 
-    [SerializeField] public float hp;
-    [SerializeField] public float skillCoolDown;
-    [SerializeField] public List<Collider> AttackColliders;
+    [SerializeField] private float hp;
+    [SerializeField] private float skillCoolDown;
+    [SerializeField] private List<Collider> AttackColliders;
 
     [Header("Reference")] 
-    public ARController ARCtrl;
-    public GameFlowController GameFlowCtrl;
-    public CentralBattleController CentralBattleCtrl;
+    private ARController ARCtrl;
+    private GameFlowController GameFlowCtrl;
+    private CentralBattleController CentralBattleCtrl;
     
     // Start is called before the first frame update
     void Start()
@@ -27,13 +28,23 @@ public class CombatHandler : MonoBehaviour
         
     }
 
-    public void DoDamage(CombatHandler targetHitTarget)
+    public void DoDamage(CombatHandler targetHitTarget, float damageAmount)
     {
-        
+        CentralBattleCtrl.DamageTransfer(targetHitTarget, damageAmount);
     }
 
-    public void ReceiveDamage()
+    public void ReceiveDamage(float damageAmount)
     {
-        
+        var tempHP = hp - damageAmount;
+        if (hp <= 0)
+        {
+            hp = 0;
+        }
+        else hp = tempHP;
+    }
+
+    public float GetCurrentHP()
+    {
+        return hp;
     }
 }

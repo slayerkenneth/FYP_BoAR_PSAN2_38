@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class CentralBattleController : MonoBehaviour
 {
+    // Central Processor of Battle / Combat related Commands
+    
     // Start is called before the first frame update
-    void Start()
+    public void DamageTransfer(CombatHandler targetHitTarget, float damageAmount)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (targetHitTarget.GetCurrentHP() > 0)
+        {
+            targetHitTarget.ReceiveDamage(damageAmount);
+        }
     }
 }
