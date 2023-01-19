@@ -80,7 +80,7 @@ public class GameFlowController : MonoBehaviour
         if (_activeGameboard.Area >= AreaLimit)
         {
             SpatialTree = _activeGameboard.GetSpatialTree();
-            battleSceneState = PVEBattleSceneState.ScanCompleteForColliderBuilding;
+            battleSceneState = PVEBattleSceneState.DefencePointMode;
             if (PlayerSpawnActive == false)
             {
                 // make following function called once only
@@ -212,4 +212,9 @@ public class GameFlowController : MonoBehaviour
         return TPos;
     }
     #endregion
+
+    public CharacterMovementController getPlayerMovementCtrl ()
+    {
+        return ARCtrl.GetActivePlayerMovementCtrl();
+    }
 }

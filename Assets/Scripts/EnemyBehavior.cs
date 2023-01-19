@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyBehavior : MonoBehaviour
 {
-    
     void Start()
     {
         
@@ -13,6 +12,6 @@ public class EnemyBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

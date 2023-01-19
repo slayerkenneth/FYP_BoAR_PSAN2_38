@@ -92,4 +92,9 @@ public class CharacterMovementController : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
     }
+
+    public Vector3 getPlayerPosition()
+    {
+        return nearestBoardPosition;
+    }
 }
