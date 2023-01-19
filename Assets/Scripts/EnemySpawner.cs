@@ -17,6 +17,12 @@ public class EnemySpawner : MonoBehaviour
     public List<Vector3> EnemySpawnLocationList;
     private bool EnemySpawnEnable = false;
     private static int currentEnemyCount;
+
+    private Vector3 towerPosition;
+    public LayerMask whatIsGround; //ARDK_Gameboard
+    public LayerMask whatIsPlayer; //add a layer mask on player
+    public GameObject towerPrefab;
+    public GameObject playerPrefab;
     
     void Start()
     {
@@ -45,11 +51,22 @@ public class EnemySpawner : MonoBehaviour
         var e = Instantiate(enemyPrefab, SpawnLocationVec, new Quaternion(0,0,0,0), EnemyParentObj.transform);
         e.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         e.AddComponent<EnemyBehavior>();
+        e.AddComponent<EnemyPathfinding>();
+        e.GetComponent<EnemyPathfinding>().GameFlowCtrl = GameFlowCtrl;
+        e.GetComponent<EnemyPathfinding>().whatIsGround = whatIsGround;
+        e.GetComponent<EnemyPathfinding>().whatIsPlayer = whatIsPlayer;
+        e.GetComponent<EnemyPathfinding>().towerPrefab = towerPrefab;
+        e.GetComponent<EnemyPathfinding>().playerPrefab = playerPrefab;
         yield return new WaitForSeconds(time);
     }
 
     public void SetSpawner(bool sw)
     {
         EnemySpawnEnable = sw;
+    }
+
+    public Vector3 getTowerPosition()
+    {
+        return towerPosition;
     }
 }

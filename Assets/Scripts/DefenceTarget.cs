@@ -34,6 +34,7 @@ public class DefenceTarget : MonoBehaviour
 
     void Update()
     {
+        //Debug.Log(TowerPosition);
         SpawnTower();
         if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer) StartCountDown();
         if (stopWatchActive == true)
@@ -55,6 +56,11 @@ public class DefenceTarget : MonoBehaviour
         {
             Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
         }
+    }
+
+    public Vector3 getTowerPosition()
+    {
+        return TowerPosition;
     }
 
     public void StartCountDown()
