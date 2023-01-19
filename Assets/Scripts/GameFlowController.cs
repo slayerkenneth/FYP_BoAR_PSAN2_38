@@ -16,6 +16,7 @@ public class GameFlowController : MonoBehaviour
         ScanCompleteForColliderBuilding,
         ColliderBuilt,
         SpawningEnemy,
+        SpawningTower,
         SpawningGameObject,
         SpawningPlayer,
         GameModeSelection,
@@ -80,7 +81,7 @@ public class GameFlowController : MonoBehaviour
         if (_activeGameboard.Area >= AreaLimit)
         {
             SpatialTree = _activeGameboard.GetSpatialTree();
-            battleSceneState = PVEBattleSceneState.DefencePointMode;
+            battleSceneState = PVEBattleSceneState.ScanCompleteForColliderBuilding;
             if (PlayerSpawnActive == false)
             {
                 // make following function called once only
@@ -88,6 +89,7 @@ public class GameFlowController : MonoBehaviour
                 SetBoundaryColliders();
                 EnemySpawner.SetSpawner(true);
                 SetRandomEnemySpawnLocationVectors(enemyRandomSpawnLocationsCount);
+                battleSceneState = PVEBattleSceneState.SpawningTower;
             }
             PlayerSpawnActive = true;
         }

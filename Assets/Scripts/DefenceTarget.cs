@@ -20,6 +20,7 @@ public class DefenceTarget : MonoBehaviour
     [SerializeField] private float DefenceTime;
     private bool stopWatchActive;
     private float CurrentTime;
+    private bool hasTowerSpawned = false;
     public int startMinute;
     
 
@@ -52,13 +53,15 @@ public class DefenceTarget : MonoBehaviour
 
     private void SpawnTower()
     {
-        if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.DefencePointMode)
+        if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningTower && !hasTowerSpawned)
         {
             Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
+            GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.DefencePointMode;
+            hasTowerSpawned = true;
         }
     }
 
-    public Vector3 getTowerPosition()
+    public Vector3 GetTowerPosition()
     {
         return TowerPosition;
     }
