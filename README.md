@@ -38,3 +38,13 @@ SDK Tools:
 - SDK: Min SDK Level 24, target 30
 - NDK: 21.3.6528147 (r21d)
 #### Emulator: Not recommended, use your own device
+- Gradle: 6.7.1 or above for ARDK V2.3.0
+  
+### Blender version: ?
+
+## Build Guide
+### MUST!! Change the gradle and android setting according to the [website] (https://lightship.dev/docs/ardk/ardk_fundamentals/building_android.html#building-android-api-31) of ARDK
+
+### Pure Unity
+
+### Unity Export to Android Studio to build Android .apk file to install in the phone
