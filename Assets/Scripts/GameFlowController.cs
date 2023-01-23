@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeMonkey.HealthSystemCM;
 using Niantic.ARDK.Extensions.Gameboard;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -58,7 +59,9 @@ public class GameFlowController : MonoBehaviour
     public EnemySpawner EnemySpawner;
     public List<Vector3> EnemySpawnPositionList;
     public int enemyRandomSpawnLocationsCount;
-    
+
+    [Header("UI / Canvas elements")] 
+    public HealthBarUI PlayerHealthBarUI;
     
     // Start is called before the first frame update
     void Start()

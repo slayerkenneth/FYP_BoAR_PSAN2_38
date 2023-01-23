@@ -9,13 +9,17 @@ public class CombatHandler : MonoBehaviour
     [Header("Battle Parameters")] 
     [SerializeField] private float hp;
     [SerializeField] private float skillCoolDown;
-    [SerializeField] private List<Collider> AttackColliders;
+    [SerializeField] private List<Collider> AttackingColliders;
+    [SerializeField] private List<Collider> DamageTakingColliders;
+    [SerializeField] private CombatHandler AttackTarget;
+    [SerializeField] private CombatHandler DamageSource;
 
+    
     [Header("Reference")] 
     private ARController ARCtrl;
     private GameFlowController GameFlowCtrl;
     private CentralBattleController CentralBattleCtrl;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,5 +50,11 @@ public class CombatHandler : MonoBehaviour
     public float GetCurrentHP()
     {
         return hp;
+    }
+    
+    // Only called in initialization
+    public void InitHP(float initHP)
+    {
+        hp = initHP;
     }
 }

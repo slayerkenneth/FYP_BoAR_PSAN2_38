@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeMonkey.HealthSystemCM;
 using Niantic.ARDK.Extensions.Gameboard;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -31,6 +32,11 @@ public class CharacterMovementController : MonoBehaviour
     private SpatialTree SpatialTree;
 
     [SerializeField] public GameFlowController GameFlowController;
+
+    [Header("Battle / Combat related reference and variables")]
+    [SerializeField] private CombatHandler playerOwnCombatHandler;
+    [SerializeField] private HealthSystemComponent playerOwnHealthSystem;
+    [SerializeField] private float maxHP;
     
     [Header("Debug")]
     public Text debugLog;
@@ -54,6 +60,8 @@ public class CharacterMovementController : MonoBehaviour
         cameraTransform = Camera.main.transform;
         _activeGameboard = ARController.GetActiveGameboard();
         debugLog = ARController.AreaText;
+        maxHP = playerOwnHealthSystem.GetHealthSystem().GetHealthMax();
+        playerOwnCombatHandler.InitHP(maxHP);
     }
 
     void Update()

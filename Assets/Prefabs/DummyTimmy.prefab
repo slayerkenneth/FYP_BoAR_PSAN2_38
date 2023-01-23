@@ -2015,6 +2015,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7066509509015870766}
   - component: {fileID: 4846157162836895959}
+  - component: {fileID: 719979751149006510}
+  - component: {fileID: 6956780532181165809}
   - component: {fileID: 3814940455942113108}
   - component: {fileID: 1583515308066720754}
   m_Layer: 8
@@ -2065,7 +2067,42 @@ MonoBehaviour:
   nearestBoardPosition: {x: 0, y: 0, z: 0}
   ARController: {fileID: 0}
   GameFlowController: {fileID: 0}
+  playerOwnCombatHandler: {fileID: 6956780532181165809}
+  playerOwnHealthSystem: {fileID: 719979751149006510}
+  maxHP: 100
   debugLog: {fileID: 0}
+--- !u!114 &719979751149006510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7591547633202612116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb9aa7183709da429076edc5294507b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthAmountMax: 100
+  startingHealthAmount: 100
+--- !u!114 &6956780532181165809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7591547633202612116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ce00f2d7f4aff41a0ff3ce5b839e92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 100
+  skillCoolDown: 5
+  AttackingColliders: []
+  DamageTakingColliders: []
+  AttackTarget: {fileID: 0}
+  DamageSource: {fileID: 0}
 --- !u!95 &3814940455942113108
 Animator:
   serializedVersion: 4
