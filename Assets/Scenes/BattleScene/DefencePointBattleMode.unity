@@ -2271,7 +2271,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619056668}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -144.8}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2462,17 +2462,17 @@ MonoBehaviour:
   _agentPrefab: {fileID: 7591547633202612116, guid: 9d8ff95812c144ae2b6ae5ec1d272bff,
     type: 3}
   HitTestType: -1
+  _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
+  _semanticManager: {fileID: 619056672}
+  GameFlowController: {fileID: 1451593558}
+  DebugText: {fileID: 1486486168}
+  AreaText: {fileID: 1023190698}
   PlacementObjectPf: {fileID: 1286568860655052, guid: a5a90e4ee8f7647c4a0f2f394f2fda71,
     type: 3}
   boxContainer: {fileID: 1716172311}
   boxPrefab: {fileID: 5347304568407062166, guid: efb33e49a6005c544b4a82223b9e2a13,
     type: 3}
   yolov5Detector: {fileID: 2052250690}
-  _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
-  _semanticManager: {fileID: 619056672}
-  GameFlowController: {fileID: 1451593558}
-  DebugText: {fileID: 1486486168}
-  AreaText: {fileID: 1023190698}
 --- !u!1 &622892559
 GameObject:
   m_ObjectHideFlags: 0
@@ -3859,7 +3859,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1429391862}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -144.8}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3914,7 +3914,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1451593556}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -144.8}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5385,7 +5385,7 @@ PrefabInstance:
     - target: {fileID: 3298992325091424595, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3830538428042062264, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
