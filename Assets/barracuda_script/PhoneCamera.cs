@@ -14,9 +14,11 @@ public class PhoneCamera : MonoBehaviour
     private static Texture2D boxOutlineTexture;
     public GameObject rects;
 
-    public Color colorTag1 = new Color(0.3843137f, 0, 0.9333333f, 0.1f);
-    public Color colorTag2 = new Color(0.3843137f, 0, 0.9333333f, 0.1f);
-    public Color colorTag3 = new Color(0.3843137f, 0, 0.9333333f, 0.1f);
+    public Color colorTag1 = new Color(0.3843137f, 0, 0.9333333f, 1.0f);
+    public Color colorTag2 = new Color(0.3843137f, 0, 0.9333333f, 1.0f);
+    public Color colorTag3 = new Color(0.3843137f, 0, 0.9333333f, 1.0f);
+    Color[] colorArray = new Color[] { Color.red, Color.green, Color.blue, Color.cyan, Color.magenta, Color.yellow };
+
 
     public RawImage bckg;
     public AspectRatioFitter fit;
@@ -32,11 +34,23 @@ public class PhoneCamera : MonoBehaviour
     private float timeCount = 0.0f;
     private float refreshTime = 1.0f;
     public float fps = 0.0f;
+    struct Label
+    {
+        public string text;
+        public Rect rect;
+    }
 
+    private RectTransform relative;
+    private RectTransform rootCanvas;
+
+    List<Label> labels = new List<Label>();
+    GUIStyle style;
 
     // Start is called before the first frame update
     void Start()
     {
+        style = new GUIStyle { fontSize = 20, normal = new GUIStyleState { textColor = Color.white } };
+
         bckgDefault = bckg.texture;
         WebCamDevice[] devices = WebCamTexture.devices;
 
@@ -104,13 +118,22 @@ public class PhoneCamera : MonoBehaviour
 
             for (int i = 0; i < boxes.Count; i++)
             {
-                Debug.Log(boxes[i].ToString());
+                Debug.Log("x: " + boxes[i].Rect.x + "y: " + boxes[i].Rect.y + "w: " + boxes[i].Rect.width + "h: " + boxes[i].Rect.height + new Vector3(boxes[i].Rect.x - WINDOW_SIZE / 2, boxes[i].Rect.y - WINDOW_SIZE / 2) + new Vector2(boxes[i].Rect.width / 100, boxes[i].Rect.height / 100));
                 GameObject newBox = Instantiate(boxPrefab);
                 newBox.name = boxes[i].Label + " " + boxes[i].Confidence;
-                newBox.GetComponent<Image>().color = boxes[i].Label == "QR" ? colorTag1 : (boxes[i].Label == "ArUco" ? colorTag2 : colorTag3);
+                //newBox.GetComponent<Image>().color = boxes[i].Label == "QR" ? colorTag1 : (boxes[i].Label == "ArUco" ? colorTag2 : colorTag3);
+                newBox.GetComponent<Image>().color = colorTag2;
                 newBox.transform.parent = boxContainer.transform;
+                
                 newBox.transform.localPosition = new Vector3(boxes[i].Rect.x - WINDOW_SIZE/2, boxes[i].Rect.y - WINDOW_SIZE/2);
                 newBox.transform.localScale = new Vector2(boxes[i].Rect.width/100, boxes[i].Rect.height/100);
+
+
+                //Rect rect = new Rect(boxes[i].Rect.x - WINDOW_SIZE / 2, boxes[i].Rect.y - WINDOW_SIZE / 2, boxes[i].Rect.width, boxes[i].Rect.height);
+                Rect rect = new Rect(boxes[i].Rect.x - WINDOW_SIZE / 2, boxes[i].Rect.y - WINDOW_SIZE / 2, 150, 100);
+                labels.Add(new Label { text = boxes[i].Label + " " + boxes[i].Confidence, rect = rect });
+
+
             }
         }));
 
@@ -128,10 +151,19 @@ public class PhoneCamera : MonoBehaviour
         else
         {
             fps = (float)framesCount / timeCount;
-            Debug.Log("FPS: " + fps);
+            //Debug.Log("FPS: " + fps);
             text.text = "FPS: " + fps;
             framesCount = 0;
             timeCount = 0.0f;
         }
     }
+
+    private void OnGUI()
+    {
+        foreach (var label in labels)
+        {
+            GUI.Label(label.rect, label.text, style);
+        }
+    }
+
 }

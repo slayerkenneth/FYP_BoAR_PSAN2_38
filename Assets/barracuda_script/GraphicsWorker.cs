@@ -30,13 +30,15 @@ public class GraphicsWorker : MonoBehaviour
             //Vulkan on Android supports GPU
             //However, ARCore does not currently support Vulkan, when it does, this line will work
             var workerType = WorkerFactory.Type.ComputePrecompiled; // GPU
-            worker = WorkerFactory.CreateWorker(workerType, model);
+            var additionalOutputs = new string[] { "Identity", "Identity_1", "Identity_2" };
+            worker = WorkerFactory.CreateWorker(workerType, model, additionalOutputs, false);
         }
         else
         {
             //If not vulkan, fall back to CPU
             var workerType = WorkerFactory.Type.CSharpBurst;  // CPU
-            worker = WorkerFactory.CreateWorker(workerType, model);
+            var additionalOutputs = new string[] { "Identity", "Identity_1", "Identity_2" };
+            worker = WorkerFactory.CreateWorker(workerType, model, additionalOutputs, false);
         }
 
 #elif UNITY_WEBGL //Only WebGL

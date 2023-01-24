@@ -16,7 +16,9 @@ namespace Assets.Scripts
 
         public int IMAGE_SIZE = 416;
         public int CLASS_COUNT = 3;
-        public int OUTPUT_ROWS = 10647;
+        public int OUTPUT1_SIZE = 10647;
+        public int OUTPUT2_SIZE = 10647;
+        public int OUTPUT3_SIZE = 10647;
         public float MINIMUM_CONFIDENCE = 0.25f;
         public int OBJECTS_LIMIT = 20;
 
@@ -28,26 +30,40 @@ namespace Assets.Scripts
 
         private const int IMAGE_MEAN = 0;
         private const float IMAGE_STD = 255.0F;
+        private Tensor anchor;
+
 
         public void Start()
         {
             this.labels = Regex.Split(this.labelsFile.text, "\n|\r|\r\n")
-                .Where(s => !String.IsNullOrEmpty(s)).ToArray();
+                .Where(s => !String.IsNullOrEmpty(s)).ToArray();  
             var model = ModelLoader.Load(this.modelFile);
             this.worker = GraphicsWorker.GetWorker(model);
+            int[] array1 = new int[] { 1, 3, 3, 2 };
+            float[] array2 = new float[] { 12, 16, 19, 36, 40, 28, 36, 75, 76, 55, 72, 146, 142, 110, 192, 243, 459, 401 };
+            anchor = new Tensor(array1, array2);
         }
 
         public IEnumerator Detect(Color32[] picture, int width, System.Action<IList<BoundingBox>> callback)
         {
+
             using (var tensor = TransformInput(picture, IMAGE_SIZE, IMAGE_SIZE, width))
             {
                 var inputs = new Dictionary<string, Tensor>();
+                var layer = new Dictionary<int, Tensor>();
                 inputs.Add(INPUT_NAME, tensor);
+                Debug.Log("1");
                 yield return StartCoroutine(worker.StartManualSchedule(inputs));
-                var output = worker.PeekOutput("output");
-                var results = ParseYoloV5Output(output, MINIMUM_CONFIDENCE);
 
+                layer.Add(OUTPUT1_SIZE, worker.PeekOutput("Identity"));
+                layer.Add(OUTPUT2_SIZE, worker.PeekOutput("Identity_1"));
+                layer.Add(OUTPUT3_SIZE, worker.PeekOutput("Identity_2"));
+                Debug.Log("2");
+                var results = ParseYoloV5Output(layer, MINIMUM_CONFIDENCE);
                 var boxes = FilterBoundingBoxes(results, OBJECTS_LIMIT, MINIMUM_CONFIDENCE);
+                Debug.Log(boxes.Count);
+                foreach (KeyValuePair<int, Tensor> l in layer) l.Value.Dispose();
+                tensor.Dispose();
                 callback(boxes);
             }
         }
@@ -75,63 +91,85 @@ namespace Assets.Scripts
         }
 
 
-        private IList<BoundingBox> ParseYoloV5Output(Tensor tensor, float thresholdMax)
+        private IList<BoundingBox> ParseYoloV5Output(Dictionary<int, Tensor> tensor, float thresholdMax)
         {
             var boxes = new List<BoundingBox>();
-
-            for (int i = 0; i < OUTPUT_ROWS; i++)
+            int layer_num = 0;
+            foreach (KeyValuePair<int, Tensor> layer in tensor)
             {
-                float confidence = GetConfidence(tensor, i);
-                if (confidence < thresholdMax)
-                    continue;
-
-                BoundingBoxDimensions dimensions = ExtractBoundingBoxDimensionsYolov5(tensor, i);
-                (int classIdx, float maxClass) = GetClassIdx(tensor, i);
-
-                float maxScore = confidence * maxClass;
-
-                if (maxScore < thresholdMax)
-                    continue;
-
-                boxes.Add(new BoundingBox
+                for (int x = 0; x < layer.Key; x++)
                 {
-                    Dimensions = MapBoundingBoxToCell(dimensions),
-                    Confidence = confidence,
-                    Label = labels[classIdx]
-                });
-            }
+                    for (int y = 0; y < layer.Key; y++)
+                    {
+                        for (int a = 0; a < 3; a++)
+                        {
+                            float confidence = GetConfidence(layer.Value, x, y, a);
+                            if (confidence < thresholdMax)
+                                continue;
+                            Debug.Log("confidence");
+                            BoundingBoxDimensions dimensions = ExtractBoundingBoxDimensionsYolov5(layer.Value, x, y, a, layer_num);
+                            (int classIdx, float maxClass) = GetClassIdx(layer.Value, x, y, a);
 
+                            float maxScore = confidence * maxClass;
+
+                            if (maxScore < thresholdMax)
+                                continue;
+
+                            boxes.Add(new BoundingBox
+                            {
+                                Dimensions = MapBoundingBoxToCell(dimensions),
+                                Confidence = confidence,
+                                Label = labels[classIdx]
+                            });
+                        }
+                    }
+                }
+                layer_num++;
+            }
             return boxes;
         }
 
-        private BoundingBoxDimensions ExtractBoundingBoxDimensionsYolov5(Tensor tensor, int row)
+        private BoundingBoxDimensions ExtractBoundingBoxDimensionsYolov5(Tensor tensor, int x, int y, int a, int layer)
         {
+            Func<float, float> expit = (x) => 1 / (1 + (float)Math.Exp(-x));            
+            int[] STRIDES = new int[] { 8, 16, 32 };
+            float[] XYSCALE = new float[] { 1.2F, 1.1F, 1.05F };
+            var conv_raw_dx = tensor[0, 0, 0, 0, x, y, a, 0];
+            var conv_raw_dy = tensor[0, 0, 0, 0, x, y, a, 1];
+            var conv_raw_dw = tensor[0, 0, 0, 0, x, y, a, 2];
+            var conv_raw_dh = tensor[0, 0, 0, 0, x, y, a, 3];
+
+            float pred_x = ((expit(conv_raw_dx) * XYSCALE[layer]) - 0.5F * (XYSCALE[layer] - 1) + x) * STRIDES[layer];
+            float pred_y = ((expit(conv_raw_dy) * XYSCALE[layer]) - 0.5F * (XYSCALE[layer] - 1) + y) * STRIDES[layer];
+            float pred_w = (float)Math.Exp(conv_raw_dw) * anchor[0, layer, a, 0];
+            float pred_h = (float)Math.Exp(conv_raw_dh) * anchor[0, layer, a, 1];
+
             return new BoundingBoxDimensions
             {
-                X = tensor[0, 0, 0, row],
-                Y = tensor[0, 0, 1, row],
-                Width = tensor[0, 0, 2, row],
-                Height = tensor[0, 0, 3, row]
-            };
+                X = pred_x,
+                Y = pred_y,
+                Width = pred_w,
+                Height = pred_h
+            };            
         }
 
-        private float GetConfidence(Tensor tensor, int row)
+        private float GetConfidence(Tensor tensor, int x, int y, int a)
         {
-            float tConf = tensor[0, 0, 4, row];
+            float tConf = tensor[0, 0, 0, 0, x, y, a, 4];
             return Sigmoid(tConf);
         }
 
-        private ValueTuple<int, float> GetClassIdx(Tensor tensor, int row)
+        private ValueTuple<int, float> GetClassIdx(Tensor tensor, int x, int y, int a)
         {
             int classIdx = 0;
 
-            float maxConf = tensor[0, 0, 5, row];
+            float maxConf = tensor[0, 0, 0, 0, x, y, a, 5];
 
             for (int i = 0; i < CLASS_COUNT; i++)
             {
-                if (tensor[0, 0, 5 + i, row] > maxConf)
+                if (tensor[0, 0, 0, 0, x, y, a, 5 + i] > maxConf)
                 {
-                    maxConf = tensor[0, 0, 5 + i, row];
+                    maxConf = tensor[0, 0, 0, 0, x, y, a, 5 + i];
                     classIdx = i;
                 }
             }
@@ -149,10 +187,10 @@ namespace Assets.Scripts
         {
             return new BoundingBoxDimensions
             {
-                X = (boxDimensions.X) * (IMAGE_SIZE / IMAGE_SIZE),
-                Y = (boxDimensions.Y) * (IMAGE_SIZE / IMAGE_SIZE),
-                Width = boxDimensions.Width * (IMAGE_SIZE / IMAGE_SIZE),
-                Height = boxDimensions.Height * (IMAGE_SIZE / IMAGE_SIZE),
+                X = (boxDimensions.X),
+                Y = (boxDimensions.Y),
+                Width = boxDimensions.Width,
+                Height = boxDimensions.Height,
             };
         }
 
@@ -227,5 +265,7 @@ namespace Assets.Scripts
 
             return intersectionArea / (areaA + areaB - intersectionArea);
         }
+
+        
     }
 }
