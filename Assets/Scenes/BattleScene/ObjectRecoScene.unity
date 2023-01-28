@@ -3953,6 +3953,7 @@ MonoBehaviour:
   EnemySpawner: {fileID: 1451593559}
   EnemySpawnPositionList: []
   enemyRandomSpawnLocationsCount: 5
+  PlayerHealthBarUI: {fileID: 0}
 --- !u!114 &1451593559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3976,6 +3977,15 @@ MonoBehaviour:
   EnemyParentObj: {fileID: 1934517721}
   MaxEnemyCount: 5
   EnemySpawnLocationList: []
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 0
+  towerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,
+    type: 3}
+  playerPrefab: {fileID: 0}
 --- !u!1 &1486486166
 GameObject:
   m_ObjectHideFlags: 0
