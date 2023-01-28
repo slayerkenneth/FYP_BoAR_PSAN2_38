@@ -14,6 +14,10 @@ using Niantic.ARDK.Utilities.Input.Legacy;
 using Niantic.ARDK.AR.Configuration;
 using Niantic.ARDK.AR.Awareness;
 using Niantic.ARDK.AR.Awareness.Semantics;
+using Niantic.ARDK.AR.HitTest;
+using Niantic.ARDK.External;
+using Assets.Scripts;
+using System.IO;
 
 public class ARController : MonoBehaviour
 {
@@ -34,8 +38,16 @@ public class ARController : MonoBehaviour
     private IARSession _arSession; // the AR session started by ARDK
     private int touchCount = 0;
     private float gameboardArea = 0;
+
     
+    [EnumFlagAttribute]
+    public ARHitTestResultType HitTestType = ARHitTestResultType.ExistingPlane;
+
+    /// A list of placed game objects to be destroyed in the OnDestroy method.
+    private List<GameObject> _placedObjects = new List<GameObject>();
+
     
+
     /*
      * Global variable for handling semantic texture and shaders
      */
@@ -48,7 +60,13 @@ public class ARController : MonoBehaviour
     [SerializeField] public GameFlowController GameFlowController;
     [SerializeField] public Text DebugText;
     [SerializeField] public Text AreaText;
-    
+
+    [Header("object reconition")]
+    public GameObject PlacementObjectPf;
+    public GameObject boxContainer;
+    public GameObject boxPrefab;
+    public Yolov5Detector yolov5Detector;
+
     private void OnEnable()
     {
         //add a callback for catching the updated semantic buffer
@@ -150,6 +168,7 @@ public class ARController : MonoBehaviour
         var playerPosition = cameraTransform.position;
         var playerForward = cameraTransform.forward;
 
+        
         // The origin of the scan should be in front of the player
         var origin = playerPosition + Vector3.ProjectOnPlane(playerForward, Vector3.up).normalized;
 
@@ -168,8 +187,9 @@ public class ARController : MonoBehaviour
             OnTouchScreen(touch);
             touchCount++;
         }
+        
     }
-    
+
     // Process the touch to see if it landed on a gameboard tile
     private void OnTouchScreen(Touch touch)
     {
@@ -184,22 +204,24 @@ public class ARController : MonoBehaviour
             return;
         }
 
+
         //as we are using meshing we can use a standard ray cast
         Ray ray = _arCamera.ScreenPointToRay(touch.position);
         
         RaycastHit hit;
         var tempPos = new Vector3();
-        
+        Debug.Log(touch.position);
         if (Physics.Raycast(ray, out hit))
         {
             DebugText.text = "Debug: Hit" + touchCount.ToString();
             touchCount++;
             _gameboard.FindNearestFreePosition(hit.point, out tempPos);
             // if agent does not exist, spawn it!
+            
             if (_agentGameObject == null)
             {
                 var node = new GridNode();
-                if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node));
+                if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node))
                 SpawnAgent(new Vector3(node.Coordinates.x, 0.5f, node.Coordinates.y));
                 GameFlowController.battleSceneState = GameFlowController.PVEBattleSceneState.SpawningPlayer;
             }
@@ -207,10 +229,85 @@ public class ARController : MonoBehaviour
             {
                 // Test
                 var node = new GridNode();
-                if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node));
+                if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node))
                     DebugText.text = DebugText.text + " Raycast hit nearest board pos " + tempPos.ToString() + " GN node Coord" + node.Coordinates;
             }
         }
+        
+        RenderTexture rt = new RenderTexture(_arCamera.pixelWidth, _arCamera.pixelHeight, 24);
+        _arCamera.targetTexture = rt;
+        Texture2D screenShot = new Texture2D(_arCamera.pixelWidth, _arCamera.pixelHeight, TextureFormat.RGB24, false);
+        _arCamera.Render();
+        RenderTexture.active = rt;
+        screenShot.ReadPixels(new Rect(0, 0, _arCamera.pixelWidth, _arCamera.pixelHeight), 0, 0);
+        _arCamera.targetTexture = null;
+        RenderTexture.active = null; // JC: added to avoid errors
+        Destroy(rt);
+
+
+
+
+        //byte[] bytes = screenShot.EncodeToPNG();
+        //var dirPath = Application.dataPath + "/../SaveImages/";
+        //if (!Directory.Exists(dirPath))
+        //{
+        //    Directory.CreateDirectory(dirPath);
+        //}
+        //File.WriteAllBytes(dirPath + "Image1" + ".png", bytes);
+
+        Rect texR = new Rect(0, 0, 416, 416);
+        _gpu_scale(screenShot, 416, 416, FilterMode.Trilinear);
+
+        //Get rendered data back to a new texture
+        Texture2D result = new Texture2D(416, 416, TextureFormat.RGB24, true);
+        result.Reinitialize(416, 416);
+        result.ReadPixels(texR, 0, 0, true);
+
+        var dirPath = Application.dataPath + "/../SaveImages/";
+        byte[] bytes = result.EncodeToPNG();
+        if (!Directory.Exists(dirPath))
+        {
+            Directory.CreateDirectory(dirPath);
+        }
+        File.WriteAllBytes(dirPath + "Image2" + ".png", bytes);
+
+        DebugText.text = "start model inference";
+        StartCoroutine(yolov5Detector.Detect(result.GetPixels32(), 416, boxes =>
+        {
+            Resources.UnloadUnusedAssets();
+
+            foreach (Transform child in boxContainer.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            Debug.Log("3");
+            DebugText.text = "finish model inference: " + boxes.Count;
+            for (int i = 0; i < boxes.Count; i++)
+            {
+                GameObject newBox = Instantiate(boxPrefab);
+                newBox.name = boxes[i].Label + " " + boxes[i].Confidence;
+                newBox.GetComponent<Image>().color = new Color(0.3843137f, 0, 0.9333333f, 1.0f);
+                newBox.transform.parent = boxContainer.transform;
+
+                var pred_x = boxes[i].Rect.x;
+                var pred_y = boxes[i].Rect.y;
+
+
+
+                var org_h = boxContainer.GetComponent<RectTransform>().rect.height;
+                var org_w = boxContainer.GetComponent<RectTransform>().rect.width;
+
+                Debug.Log(boxes[i].Label + "  x: " + boxes[i].Rect.x + "y: " + boxes[i].Rect.y + "w: " + boxes[i].Rect.width + "h: " + boxes[i].Rect.height
+                    + new Vector3(boxes[i].Rect.x * org_w / 416, org_h - (boxes[i].Rect.y * org_h / 416) - 0.5f * org_h)
+                    + new Vector2(boxes[i].Rect.width * org_w / 100 / 416, boxes[i].Rect.height * org_h / 100 / 416));
+
+                newBox.transform.localPosition = new Vector3(boxes[i].Rect.x * org_w / 416, org_h - (boxes[i].Rect.y * org_h / 416) - 0.5f * org_h);
+                newBox.transform.localScale = new Vector2(boxes[i].Rect.width * org_w / 100 / 416, boxes[i].Rect.height * org_h / 100 / 416);
+
+                SpawnLandscape(new Vector2(boxes[i].Rect.x * Screen.width / 416, Screen.height - boxes[i].Rect.y * Screen.height / 416));
+            }
+
+        }));
     }
 
     private void SpawnAgent(Vector3 hitPoint)
@@ -243,5 +340,41 @@ public class ARController : MonoBehaviour
     public CharacterMovementController GetActivePlayerMovementCtrl()
     {
         return _agentGameObject.GetComponent<CharacterMovementController>();
+    }
+
+    public void SpawnLandscape(Vector2 position) {
+        var ray = _arCamera.ScreenPointToRay(position); ;
+
+        // Intersect the Gameboard with the ray
+        if (_gameboard.RayCast(ray, out Vector3 hitPoint))
+        {
+            // Check whether the object can be fit in the resulting position
+            if (_gameboard.CheckFit(center: hitPoint, 0.1f))
+            {
+                var landscape = Instantiate(PlacementObjectPf, hitPoint, Quaternion.identity);
+                landscape.transform.localScale = new Vector3(3, 3, 3);
+                _placedObjects.Add(landscape);
+            }
+        }
+    }
+
+    void _gpu_scale(Texture2D src, int width, int height, FilterMode fmode)
+    {
+        //We need the source texture in VRAM because we render with it
+        src.filterMode = fmode;
+        src.Apply(true);
+
+        //Using RTT for best quality and performance. Thanks, Unity 5
+        RenderTexture rtt = new RenderTexture(width, height, 32);
+
+        //Set the RTT in order to render to it
+        Graphics.SetRenderTarget(rtt);
+
+        //Setup 2D matrix in range 0..1, so nobody needs to care about sized
+        GL.LoadPixelMatrix(0, 1, 1, 0);
+
+        //Then clear & draw the texture to fill the entire RTT.
+        GL.Clear(true, true, new Color(0, 0, 0, 0));
+        Graphics.DrawTexture(new Rect(0, 0, 1, 1), src);
     }
 }
