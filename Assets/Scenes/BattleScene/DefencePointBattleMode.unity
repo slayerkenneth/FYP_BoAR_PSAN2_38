@@ -3358,7 +3358,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1211082266}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
   m_Name: 
@@ -4024,6 +4024,7 @@ MonoBehaviour:
     type: 3}
   yolov5Detector: {fileID: 409333505}
   DebugText: {fileID: 4098587496407768986}
+  IsCapturingEnv: 0
 --- !u!1 &1486486166
 GameObject:
   m_ObjectHideFlags: 0
@@ -5024,12 +5025,12 @@ PrefabInstance:
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1037.0887
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1843.7134
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
@@ -5089,7 +5090,7 @@ PrefabInstance:
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 931.77014
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
@@ -6886,7 +6887,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1318473032765351930}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1451593560}
+        m_TargetAssemblyTypeName: ObjectRecognitionController, Assembly-CSharp
+        m_MethodName: CaptureCurrentReality
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1318473032765351935
 GameObject:
   m_ObjectHideFlags: 0

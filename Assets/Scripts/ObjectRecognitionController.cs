@@ -22,11 +22,13 @@ public class ObjectRecognitionController : MonoBehaviour
     /// A list of placed game objects to be destroyed in the OnDestroy method.
     private List<GameObject> _placedObjects = new List<GameObject>();
     
-    [Header("Debug")]
+    [Header("Debug and check status")]
     [SerializeField] public Text DebugText;
+    [SerializeField] private bool IsCapturingEnv = false;
 
     public void CaptureCurrentReality()
     {
+        IsCapturingEnv = true;
         RenderTexture rt = new RenderTexture(_arCamera.pixelWidth, _arCamera.pixelHeight, 24);
         _arCamera.targetTexture = rt;
         Texture2D screenShot = new Texture2D(_arCamera.pixelWidth, _arCamera.pixelHeight, TextureFormat.RGB24, false);
@@ -98,6 +100,8 @@ public class ObjectRecognitionController : MonoBehaviour
             }
 
         }));
+
+        IsCapturingEnv = false;
     }
     
     public void SpawnSceneItem(Vector2 position) {
