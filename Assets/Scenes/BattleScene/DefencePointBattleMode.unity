@@ -2458,7 +2458,7 @@ MonoBehaviour:
   _maxSlope: 20
   _stepHeight: 0.2
   _scanInterval: 0.15
-  _scanRange: 3
+  _scanRange: 50
   _layerMask:
     serializedVersion: 2
     m_Bits: 192
