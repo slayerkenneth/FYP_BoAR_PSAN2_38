@@ -28,6 +28,7 @@ public class ObjectRecognitionController : MonoBehaviour
 
     public void CaptureCurrentReality()
     {
+        if (IsCapturingEnv) return;
         IsCapturingEnv = true;
         RenderTexture rt = new RenderTexture(_arCamera.pixelWidth, _arCamera.pixelHeight, 24);
         _arCamera.targetTexture = rt;
@@ -105,10 +106,12 @@ public class ObjectRecognitionController : MonoBehaviour
     }
     
     public void SpawnSceneItem(Vector2 position) {
-        var ray = _arCamera.ScreenPointToRay(position); ;
+        var ray = _arCamera.ScreenPointToRay(position);
+        var hitPoint = new Vector3();
 
+        var b = _gameboard.RayCast(ray, out hitPoint);      // Null Object reference 
         // Intersect the Gameboard with the ray
-        if (_gameboard.RayCast(ray, out Vector3 hitPoint))
+        if (b)
         {
             // Check whether the object can be fit in the resulting position
             if (_gameboard.CheckFit(center: hitPoint, 0.1f))
