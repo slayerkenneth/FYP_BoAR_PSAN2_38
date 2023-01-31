@@ -16,9 +16,9 @@ public class CombatHandler : MonoBehaviour
 
     
     [Header("Reference")] 
-    private ARController ARCtrl;
-    private GameFlowController GameFlowCtrl;
-    private CentralBattleController CentralBattleCtrl;
+    [SerializeField] private ARController ARCtrl;
+    [SerializeField] private GameFlowController GameFlowCtrl;
+    [SerializeField] private CentralBattleController CentralBattleCtrl;
 
     // Start is called before the first frame update
     void Start()
@@ -56,5 +56,20 @@ public class CombatHandler : MonoBehaviour
     public void InitHP(float initHP)
     {
         hp = initHP;
+    }
+
+    public void SetCentralCombatHandler(CentralBattleController cbc)
+    {
+        CentralBattleCtrl = cbc;
+    }
+
+    public List<Collider> GetAttackingColliders()
+    {
+        return AttackingColliders;
+    }
+    
+    public List<Collider> GetDamageReceivingColliders()
+    {
+        return DamageTakingColliders;
     }
 }

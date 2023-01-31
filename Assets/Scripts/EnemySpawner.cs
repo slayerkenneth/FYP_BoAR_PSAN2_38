@@ -9,6 +9,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private ARController ARCtrl;
     [SerializeField] private GameFlowController GameFlowCtrl;
     private IGameboard _activeGameboard;
+    [SerializeField] private CentralBattleController centralBattleCtrl;
 
     [Header("Spawner Setting")] 
     [SerializeField] public List<GameObject> EnemySpawnPrefabList;
@@ -50,13 +51,13 @@ public class EnemySpawner : MonoBehaviour
     {
         var e = Instantiate(enemyPrefab, SpawnLocationVec, new Quaternion(0,0,0,0), EnemyParentObj.transform);
         e.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-        e.AddComponent<EnemyBehavior>();
         e.AddComponent<EnemyPathfinding>();
         e.GetComponent<EnemyPathfinding>().GameFlowCtrl = GameFlowCtrl;
         e.GetComponent<EnemyPathfinding>().whatIsGround = whatIsGround;
         e.GetComponent<EnemyPathfinding>().whatIsPlayer = whatIsPlayer;
         e.GetComponent<EnemyPathfinding>().towerPrefab = towerPrefab;
         e.GetComponent<EnemyPathfinding>().playerPrefab = playerPrefab;
+        e.GetComponent<CombatHandler>().SetCentralCombatHandler(centralBattleCtrl);
         yield return new WaitForSeconds(time);
     }
 

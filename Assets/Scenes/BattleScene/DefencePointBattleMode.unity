@@ -2476,7 +2476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _arCamera: {fileID: 619056670}
-  _agentPrefab: {fileID: 7591547633202612116, guid: 9d8ff95812c144ae2b6ae5ec1d272bff,
+  _agentPrefab: {fileID: 1556040939566342, guid: 8fffc8111ceddc044a92c1d13747c5bb,
     type: 3}
   HitTestType: 16
   _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
@@ -3914,6 +3914,7 @@ GameObject:
   - component: {fileID: 1451593558}
   - component: {fileID: 1451593559}
   - component: {fileID: 1451593560}
+  - component: {fileID: 1451593561}
   m_Layer: 0
   m_Name: GameManager (Battle)
   m_TagString: Untagged
@@ -3956,7 +3957,7 @@ MonoBehaviour:
   playerMovementCtrl: {fileID: 0}
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
-  AreaLimit: 25
+  AreaLimit: 50
   AllGridNodeCoordinates: []
   WallCoordinates: []
   maxX: 0
@@ -3983,12 +3984,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ARCtrl: {fileID: 619056682}
   GameFlowCtrl: {fileID: 1451593558}
+  centralBattleCtrl: {fileID: 1451593561}
   EnemySpawnPrefabList:
-  - {fileID: 1953271650171834, guid: dbf7a0c9d76b77a40af3104feac0641d, type: 3}
-  - {fileID: 2066896392038628118, guid: 45288819fde2143449a96207b14db0bb, type: 3}
-  - {fileID: 1248815240492774, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
-  - {fileID: 1879581886640764, guid: 8a98dc7c3255b1f43b1885fecabf80f2, type: 3}
-  - {fileID: 1000011046516534, guid: 2a4adfdefdadd7048a18bb7e7cc5b23b, type: 3}
+  - {fileID: 2066896392038628118, guid: 0e78427fcb4fc1c4b932e4db99bdbdcc, type: 3}
+  - {fileID: 100048, guid: 223a357fa58b6ee4f9fdaf63abb637ec, type: 3}
+  - {fileID: 100048, guid: ed555ad10d4b22b46b2839f56410b9ca, type: 3}
+  - {fileID: 7487410016656624447, guid: d5e8785ac420c8a4d86ea77525af60f5, type: 3}
+  - {fileID: 6860756994242604922, guid: 9e48bd9c7f40b0744a756f68c92112c9, type: 3}
   EnemyParentObj: {fileID: 1934517721}
   MaxEnemyCount: 5
   EnemySpawnLocationList: []
@@ -4000,8 +4002,7 @@ MonoBehaviour:
     m_Bits: 256
   towerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,
     type: 3}
-  playerPrefab: {fileID: 7591547633202612116, guid: 9d8ff95812c144ae2b6ae5ec1d272bff,
-    type: 3}
+  playerPrefab: {fileID: 0}
 --- !u!114 &1451593560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4025,6 +4026,18 @@ MonoBehaviour:
   yolov5Detector: {fileID: 409333505}
   DebugText: {fileID: 4098587496407768986}
   IsCapturingEnv: 0
+--- !u!114 &1451593561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451593556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12097863352abc5438c997d72b4f0de1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1486486166
 GameObject:
   m_ObjectHideFlags: 0
