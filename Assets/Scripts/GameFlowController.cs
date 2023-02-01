@@ -38,6 +38,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] private Camera arCamera;
     [SerializeField] private ARController ARCtrl;
     [SerializeField] private CharacterMovementController playerMovementCtrl;
+    [SerializeField] private CentralBattleController CentralBattleCtrl;
     
     [Header("Debug logs")] 
     [SerializeField] private Text DebugText;
@@ -218,8 +219,13 @@ public class GameFlowController : MonoBehaviour
     }
     #endregion
 
-    public CharacterMovementController getPlayerMovementCtrl ()
+    public CharacterMovementController GetPlayerMovementCtrl ()
     {
         return ARCtrl.GetActivePlayerMovementCtrl();
+    }
+
+    public CentralBattleController GetCentralBattleController()
+    {
+        return CentralBattleCtrl;
     }
 }

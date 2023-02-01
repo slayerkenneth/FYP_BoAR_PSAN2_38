@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeMonkey.HealthSystemCM;
 using UnityEngine;
 
 public class CombatHandler : MonoBehaviour
@@ -13,6 +14,7 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] private List<Collider> DamageTakingColliders;
     [SerializeField] private CombatHandler AttackTarget;
     [SerializeField] private CombatHandler DamageSource;
+    [SerializeField] private HealthSystemComponent healthSystemComponent;
 
     
     [Header("Reference")] 
@@ -45,6 +47,7 @@ public class CombatHandler : MonoBehaviour
             hp = 0;
         }
         else hp = tempHP;
+        healthSystemComponent.GetHealthSystem().Damage(damageAmount);
     }
 
     public float GetCurrentHP()
@@ -71,5 +74,10 @@ public class CombatHandler : MonoBehaviour
     public List<Collider> GetDamageReceivingColliders()
     {
         return DamageTakingColliders;
+    }
+
+    public HealthSystemComponent GetHealthSystemComponent()
+    {
+        return healthSystemComponent;
     }
 }

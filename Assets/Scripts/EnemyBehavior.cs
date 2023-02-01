@@ -30,8 +30,19 @@ public class EnemyBehavior : MonoBehaviour
         {
             if (other.transform.CompareTag("Player"))
             {
-                CombatHandler.DoDamage(other.transform.GetComponent<CombatHandler>(), 100f);
+                CombatHandler.DoDamage(other.transform.GetComponent<CombatHandler>(), 10f);
             }
         }
     }
+
+    // private void OnTriggerStay(Collider other)
+    // {
+    //     if (!AttackingColliders.Contains(other) && !DamageTakingColliders.Contains(other))
+    //     {
+    //         if (other.transform.CompareTag("Player"))
+    //         {
+    //             CombatHandler.DoDamage(other.transform.GetComponent<CombatHandler>(), 10f);
+    //         }
+    //     }
+    // }
 }

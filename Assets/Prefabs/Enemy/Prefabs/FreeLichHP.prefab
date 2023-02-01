@@ -823,6 +823,7 @@ GameObject:
   - component: {fileID: 2472664781086905375}
   - component: {fileID: 6750892124478517533}
   - component: {fileID: 7008728696327942602}
+  - component: {fileID: 8046081987116645538}
   m_Layer: 0
   m_Name: FreeLichHP
   m_TagString: Untagged
@@ -902,6 +903,7 @@ MonoBehaviour:
   - {fileID: 7008728696327942602}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
+  healthSystemComponent: {fileID: 8046081987116645538}
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}
@@ -913,9 +915,23 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100048}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 1
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0.1}
+--- !u!114 &8046081987116645538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb9aa7183709da429076edc5294507b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthAmountMax: 100
+  startingHealthAmount: 100

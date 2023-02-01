@@ -2458,7 +2458,7 @@ MonoBehaviour:
   _maxSlope: 20
   _stepHeight: 0.2
   _scanInterval: 0.15
-  _scanRange: 50
+  _scanRange: 20
   _layerMask:
     serializedVersion: 2
     m_Bits: 192
@@ -3955,6 +3955,7 @@ MonoBehaviour:
   arCamera: {fileID: 619056670}
   ARCtrl: {fileID: 619056682}
   playerMovementCtrl: {fileID: 0}
+  CentralBattleCtrl: {fileID: 1451593561}
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
   AreaLimit: 50
@@ -7360,7 +7361,7 @@ GameObject:
   - component: {fileID: 3450456932979435718}
   - component: {fileID: 3450456932979435717}
   - component: {fileID: 3450456932979435716}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7488,9 +7489,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3450456933373103429}
   - component: {fileID: 3450456933373103428}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlayerUIBottom
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7614,7 +7615,7 @@ GameObject:
   - component: {fileID: 3450456933576585158}
   - component: {fileID: 3450456933576585157}
   - component: {fileID: 3450456933576585156}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7651,9 +7652,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3450456933618736478}
   - component: {fileID: 3450456933618736479}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlayerUI
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7819,7 +7820,7 @@ GameObject:
   - component: {fileID: 3450456933830606813}
   - component: {fileID: 3450456933830606814}
   - component: {fileID: 3450456933830606815}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8003,7 +8004,7 @@ GameObject:
   - component: {fileID: 3450456934276790493}
   - component: {fileID: 3450456934276790494}
   - component: {fileID: 3450456934276790495}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8470,7 +8471,7 @@ GameObject:
   - component: {fileID: 4098587495416551634}
   - component: {fileID: 4098587495416551636}
   - component: {fileID: 4098587495416551635}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TowerHPText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13496,7 +13497,7 @@ GameObject:
   - component: {fileID: 4098587495535413288}
   - component: {fileID: 4098587495535413290}
   - component: {fileID: 4098587495535413289}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlayerHPText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19569,7 +19570,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4098587496593559733
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19884,7 +19885,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4098587496766710850
 Transform:
   m_ObjectHideFlags: 0
@@ -20057,7 +20058,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4098587496955094439
 RectTransform:
   m_ObjectHideFlags: 0

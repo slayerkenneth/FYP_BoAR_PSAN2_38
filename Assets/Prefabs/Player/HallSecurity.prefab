@@ -972,6 +972,7 @@ GameObject:
   - component: {fileID: 5116796284199322122}
   - component: {fileID: 2307288010640410552}
   - component: {fileID: -2254473632788976857}
+  - component: {fileID: -4026942973404576995}
   m_Layer: 8
   m_Name: HallSecurity
   m_TagString: Player
@@ -1098,6 +1099,24 @@ MonoBehaviour:
   - {fileID: 5116796284199322122}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
+  healthSystemComponent: {fileID: 2307288010640410552}
+  ARCtrl: {fileID: 0}
+  GameFlowCtrl: {fileID: 0}
+  CentralBattleCtrl: {fileID: 0}
+--- !u!136 &-4026942973404576995
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7830203463684231489}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &7830203463684231491
 GameObject:
   m_ObjectHideFlags: 0

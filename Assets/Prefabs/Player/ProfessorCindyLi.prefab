@@ -2277,6 +2277,7 @@ GameObject:
   - component: {fileID: 4107456148009102222}
   - component: {fileID: -6390358997438491074}
   - component: {fileID: 3276981404916579627}
+  - component: {fileID: 7651870370338978087}
   m_Layer: 8
   m_Name: ProfessorCindyLi
   m_TagString: Player
@@ -2403,6 +2404,24 @@ MonoBehaviour:
   - {fileID: 4107456148009102222}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
+  healthSystemComponent: {fileID: -6390358997438491074}
+  ARCtrl: {fileID: 0}
+  GameFlowCtrl: {fileID: 0}
+  CentralBattleCtrl: {fileID: 0}
+--- !u!136 &7651870370338978087
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647134206250791342}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &7667767699941656935
 GameObject:
   m_ObjectHideFlags: 0

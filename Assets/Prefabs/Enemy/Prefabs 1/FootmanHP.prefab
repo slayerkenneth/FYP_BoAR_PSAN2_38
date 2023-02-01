@@ -855,6 +855,7 @@ GameObject:
   - component: {fileID: 4545591192432722176}
   - component: {fileID: 6648586720052623577}
   - component: {fileID: 7256580693890250708}
+  - component: {fileID: 4994458117732575418}
   m_Layer: 0
   m_Name: FootmanHP
   m_TagString: Untagged
@@ -912,6 +913,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CombatHandler: {fileID: 6648586720052623577}
+  AttackingColliders: []
+  DamageTakingColliders: []
 --- !u!114 &6648586720052623577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -930,6 +933,7 @@ MonoBehaviour:
   DamageTakingColliders: []
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
+  healthSystemComponent: {fileID: 4994458117732575418}
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}
@@ -941,9 +945,23 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100048}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 1
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0.1}
+--- !u!114 &4994458117732575418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb9aa7183709da429076edc5294507b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthAmountMax: 100
+  startingHealthAmount: 100

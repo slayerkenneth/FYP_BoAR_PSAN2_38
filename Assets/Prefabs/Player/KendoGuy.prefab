@@ -1546,6 +1546,7 @@ GameObject:
   - component: {fileID: 8893153715369008413}
   - component: {fileID: -3798238779284867034}
   - component: {fileID: -2058255866417811186}
+  - component: {fileID: -3881848197012541022}
   m_Layer: 8
   m_Name: KendoGuy
   m_TagString: Player
@@ -1669,6 +1670,24 @@ MonoBehaviour:
   - {fileID: 8893153715369008413}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
+  healthSystemComponent: {fileID: -3798238779284867034}
+  ARCtrl: {fileID: 0}
+  GameFlowCtrl: {fileID: 0}
+  CentralBattleCtrl: {fileID: 0}
+--- !u!136 &-3881848197012541022
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556040939566342}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0

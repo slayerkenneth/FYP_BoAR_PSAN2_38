@@ -18,6 +18,7 @@ using Niantic.ARDK.AR.HitTest;
 using Niantic.ARDK.External;
 using Assets.Scripts;
 using System.IO;
+using CodeMonkey.HealthSystemCM;
 
 public class ARController : MonoBehaviour
 {
@@ -314,22 +315,38 @@ public class ARController : MonoBehaviour
     {
         if (_agentGameObject != null || GameFlowController.PlayerSpawnActive == false) return;
         // Instantiate the agent with the predefined prefab
-        _agentGameObject = Instantiate(_agentPrefab);
+        Vector3 spawnPoint = GameFlowController.GetEnemySpawnLocationVectorList()[(int) GameFlowController.GetEnemySpawnLocationVectorList().Count/2];
         
-        // Set the position of the agent as the raycast hit result
-        _agentGameObject.transform.position = hitPoint;
+        spawnPoint = new Vector3(spawnPoint.x * _gameboard.Settings.TileSize, spawnPoint.y, spawnPoint.z * _gameboard.Settings.TileSize);
         
         // Have the prefab face towards camera
         var rotation = Vector3.ProjectOnPlane(_arCamera.transform.forward, Vector3.up).normalized;
-        _agentGameObject.transform.rotation = Quaternion.LookRotation(-rotation);
+        var QRot = Quaternion.LookRotation(-rotation);
         
+        _agentGameObject = Instantiate(_agentPrefab, spawnPoint, QRot);
+        
+        // Set the position of the agent as the raycast hit result
+        // _agentGameObject.transform.position = hitPoint;
+
         // Set agent's state for navigation
         // _agent = _agentGameObject.GetComponent<WorkshopGameboardAgent>(); // TODO: A rework on gameboard agent is needed
         // _agent.State = WorkshopGameboardAgent.AgentNavigationState.Idle;
         var CharMoveCtrl = _agentGameObject.GetComponent<CharacterMovementController>();
         CharMoveCtrl.ARController = this;
         CharMoveCtrl.GameFlowController = GameFlowController;
-        DebugText.text = "Debug: Spawned stuff";
+
+        var charCombat = _agentGameObject.GetComponent<CombatHandler>();
+        charCombat.SetCentralCombatHandler(GameFlowController.GetCentralBattleController());
+        DebugText.text = "Debug: Spawned Player";
+
+        var healthBarUI = FindObjectsOfType<HealthBarUI>();
+        foreach (var ui in healthBarUI)
+        {
+            if (ui.tag == "Player")
+            {
+                ui.SetHealthSystem(charCombat.GetHealthSystemComponent().GetHealthSystem());
+            }
+        }
     }
 
     public IGameboard GetActiveGameboard()
