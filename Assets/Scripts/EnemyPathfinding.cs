@@ -143,7 +143,7 @@ public class EnemyPathfinding : MonoBehaviour
 
     public void ChasePlayer()
     {
-        SetDestination(GameFlowCtrl.GetPlayerMovementCtrl().getPlayerPosition());
+        SetDestination(GameFlowCtrl.GetPlayerMovementCtrl().GetPlayerPosition());
         attackTower = false;
     }
 

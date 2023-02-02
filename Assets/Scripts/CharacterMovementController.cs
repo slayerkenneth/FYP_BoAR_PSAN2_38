@@ -37,6 +37,7 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] private CombatHandler playerOwnCombatHandler;
     [SerializeField] private HealthSystemComponent playerOwnHealthSystem;
     [SerializeField] private float maxHP;
+    [SerializeField] private PlayerWeaponSkillController PlayerWeaponSkillCtrl;
     
     [Header("Debug")]
     public Text debugLog;
@@ -99,10 +100,38 @@ public class CharacterMovementController : MonoBehaviour
 
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+        
+        if (mapper.Player.NormalAttack.triggered)
+        {
+            NormalAttack();
+        }
+        else if (mapper.Player.Defense.triggered)
+        {
+            Defense();
+        } else if (mapper.Player.CastSkill.triggered)
+        {
+            CastSkill();
+        }
+
     }
 
-    public Vector3 getPlayerPosition()
+    public Vector3 GetPlayerPosition()
     {
         return nearestBoardPosition;
+    }
+
+    public void NormalAttack()
+    {
+        animator.Play("NormalAttack1");
+    }
+
+    public void Defense()
+    {
+        animator.Play("ReceiveDamage");
+    }
+
+    public void CastSkill()
+    {
+        
     }
 }

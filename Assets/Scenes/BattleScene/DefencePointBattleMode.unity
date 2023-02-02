@@ -6711,6 +6711,7 @@ GameObject:
   - component: {fileID: 1068038021823712117}
   - component: {fileID: 1068038021823712010}
   - component: {fileID: 1068038021823712011}
+  - component: {fileID: 1068038021823712118}
   m_Layer: 0
   m_Name: middleActionButton
   m_TagString: Untagged
@@ -6800,6 +6801,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1068038021823712009}
   m_CullTransparentMesh: 1
+--- !u!114 &1068038021823712118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068038021823712009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d54531977ecb194c95e2d3aa7a5d72a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ControlPath: <Gamepad>/buttonSouth
 --- !u!114 &1318473032765351930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6926,6 +6940,7 @@ GameObject:
   - component: {fileID: 1318473032765351931}
   - component: {fileID: 1318473032765351930}
   - component: {fileID: 1318473032765351933}
+  - component: {fileID: 1318473032765351936}
   m_Layer: 0
   m_Name: topActionButton
   m_TagString: Untagged
@@ -6933,6 +6948,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1318473032765351936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318473032765351935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d54531977ecb194c95e2d3aa7a5d72a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ControlPath: <Gamepad>/buttonNorth
 --- !u!1 &1793135473082958416
 GameObject:
   m_ObjectHideFlags: 0
@@ -20470,6 +20498,7 @@ GameObject:
   - component: {fileID: 7271484600433217299}
   - component: {fileID: 7271484600433217296}
   - component: {fileID: 4098587496651932250}
+  - component: {fileID: 7271484600433217303}
   m_Layer: 0
   m_Name: bottomActionButton
   m_TagString: Untagged
@@ -20477,6 +20506,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7271484600433217303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7271484600433217302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d54531977ecb194c95e2d3aa7a5d72a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ControlPath: <Gamepad>/buttonWest
 --- !u!222 &7398752954733028566
 CanvasRenderer:
   m_ObjectHideFlags: 0

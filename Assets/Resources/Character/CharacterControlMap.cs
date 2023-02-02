@@ -44,6 +44,33 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NormalAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""ac7685db-f89d-4bda-b9e2-e8a18e09aa03"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CastSkill"",
+                    ""type"": ""Button"",
+                    ""id"": ""d0edd144-0b79-455a-af87-d6fc4b4e1a26"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Defense"",
+                    ""type"": ""Button"",
+                    ""id"": ""0bfad257-8516-40c7-bf0c-a623b736a796"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -134,6 +161,39 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea26d7a2-425b-4463-885a-8bb052c8a322"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NormalAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7860a820-9e1b-4491-8fb0-8026dd120ff6"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CastSkill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c532231c-9adf-4018-8378-20ba90b43a64"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Defense"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -144,6 +204,9 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_NormalAttack = m_Player.FindAction("NormalAttack", throwIfNotFound: true);
+        m_Player_CastSkill = m_Player.FindAction("CastSkill", throwIfNotFound: true);
+        m_Player_Defense = m_Player.FindAction("Defense", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -205,12 +268,18 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_NormalAttack;
+    private readonly InputAction m_Player_CastSkill;
+    private readonly InputAction m_Player_Defense;
     public struct PlayerActions
     {
         private @CharacterControlMap m_Wrapper;
         public PlayerActions(@CharacterControlMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @NormalAttack => m_Wrapper.m_Player_NormalAttack;
+        public InputAction @CastSkill => m_Wrapper.m_Player_CastSkill;
+        public InputAction @Defense => m_Wrapper.m_Player_Defense;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -226,6 +295,15 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @NormalAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNormalAttack;
+                @NormalAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNormalAttack;
+                @NormalAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNormalAttack;
+                @CastSkill.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCastSkill;
+                @CastSkill.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCastSkill;
+                @CastSkill.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCastSkill;
+                @Defense.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDefense;
+                @Defense.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDefense;
+                @Defense.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDefense;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -236,6 +314,15 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @NormalAttack.started += instance.OnNormalAttack;
+                @NormalAttack.performed += instance.OnNormalAttack;
+                @NormalAttack.canceled += instance.OnNormalAttack;
+                @CastSkill.started += instance.OnCastSkill;
+                @CastSkill.performed += instance.OnCastSkill;
+                @CastSkill.canceled += instance.OnCastSkill;
+                @Defense.started += instance.OnDefense;
+                @Defense.performed += instance.OnDefense;
+                @Defense.canceled += instance.OnDefense;
             }
         }
     }
@@ -244,5 +331,8 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnNormalAttack(InputAction.CallbackContext context);
+        void OnCastSkill(InputAction.CallbackContext context);
+        void OnDefense(InputAction.CallbackContext context);
     }
 }
