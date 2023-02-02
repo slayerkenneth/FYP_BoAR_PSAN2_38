@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 4518362133102338}
   - component: {fileID: 33084644472669152}
   - component: {fileID: 23305035852080942}
+  - component: {fileID: 1617286096694393844}
   m_Layer: 8
   m_Name: Sword
   m_TagString: Untagged
@@ -277,6 +278,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &1617286096694393844
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076420036850812}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 64564c9f5e409974297b87494cbe4731, type: 3}
 --- !u!1 &1079146182250078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1547,6 +1562,7 @@ GameObject:
   - component: {fileID: -3798238779284867034}
   - component: {fileID: -2058255866417811186}
   - component: {fileID: -3881848197012541022}
+  - component: {fileID: 3736411471065533042}
   m_Layer: 8
   m_Name: KendoGuy
   m_TagString: Player
@@ -1618,6 +1634,7 @@ MonoBehaviour:
   playerOwnCombatHandler: {fileID: -2058255866417811186}
   playerOwnHealthSystem: {fileID: -3798238779284867034}
   maxHP: 100
+  PlayerWeaponSkillCtrl: {fileID: 0}
   debugLog: {fileID: 0}
 --- !u!143 &8893153715369008413
 CharacterController:
@@ -1665,7 +1682,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 100
   skillCoolDown: 5
-  AttackingColliders: []
+  AttackingColliders:
+  - {fileID: 1617286096694393844}
   DamageTakingColliders:
   - {fileID: 8893153715369008413}
   AttackTarget: {fileID: 0}
@@ -1688,6 +1706,27 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &3736411471065533042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556040939566342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 094894578fe03314b83712c7b61faa8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 95922273507661854}
+  combatHandler: {fileID: -2058255866417811186}
+  GameFlowCtrl: {fileID: 0}
+  Weapon: {fileID: 1076420036850812}
+  NormalAttackDamage: 100
+  SkillDamage: 200
+  normalAttackCount: 0
+  ValidHit: 0
+  currentAttackingTarget: {fileID: 0}
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0

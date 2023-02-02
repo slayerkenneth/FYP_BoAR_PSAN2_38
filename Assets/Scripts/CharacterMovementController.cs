@@ -63,6 +63,7 @@ public class CharacterMovementController : MonoBehaviour
         debugLog = ARController.AreaText;
         maxHP = playerOwnHealthSystem.GetHealthSystem().GetHealthMax();
         playerOwnCombatHandler.InitHP(maxHP);
+        PlayerWeaponSkillCtrl = FindObjectOfType<PlayerWeaponSkillController>();
     }
 
     void Update()
@@ -123,15 +124,17 @@ public class CharacterMovementController : MonoBehaviour
     public void NormalAttack()
     {
         animator.Play("NormalAttack1");
+        PlayerWeaponSkillCtrl.NormalAttack();
     }
 
     public void Defense()
     {
         animator.Play("ReceiveDamage");
+        PlayerWeaponSkillCtrl.Defense();
     }
 
     public void CastSkill()
     {
-        
+        PlayerWeaponSkillCtrl.CastSkill();
     }
 }

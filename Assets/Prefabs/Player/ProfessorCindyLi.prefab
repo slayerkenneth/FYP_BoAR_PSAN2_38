@@ -2352,6 +2352,7 @@ MonoBehaviour:
   playerOwnCombatHandler: {fileID: 3276981404916579627}
   playerOwnHealthSystem: {fileID: -6390358997438491074}
   maxHP: 100
+  PlayerWeaponSkillCtrl: {fileID: 0}
   debugLog: {fileID: 0}
 --- !u!143 &4107456148009102222
 CharacterController:
@@ -2884,6 +2885,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7554983441368287154}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6767091442817321933 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3832907126045494399, guid: 3617e4093ca8d5145986d37c89cfd692,
+    type: 3}
+  m_PrefabInstance: {fileID: 7554983441368287154}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &3142774737931291942
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6767091442817321933}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5426684885162492598, guid: 8e583e9185af1be4e9dd6f501e6fe7d4, type: 3}
 --- !u!1001 &8213640977909219065
 PrefabInstance:
   m_ObjectHideFlags: 0
