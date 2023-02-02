@@ -52,16 +52,13 @@ namespace Assets.Scripts
                 var inputs = new Dictionary<string, Tensor>();
                 var layer = new Dictionary<int, Tensor>();
                 inputs.Add(INPUT_NAME, tensor);
-                Debug.Log("1");
                 yield return StartCoroutine(worker.StartManualSchedule(inputs));
 
                 layer.Add(OUTPUT1_SIZE, worker.PeekOutput("Identity"));
                 layer.Add(OUTPUT2_SIZE, worker.PeekOutput("Identity_1"));
                 layer.Add(OUTPUT3_SIZE, worker.PeekOutput("Identity_2"));
-                Debug.Log("2");
                 var results = ParseYoloV5Output(layer, MINIMUM_CONFIDENCE);
                 var boxes = FilterBoundingBoxes(results, OBJECTS_LIMIT, MINIMUM_CONFIDENCE);
-                Debug.Log(boxes.Count);
                 foreach (KeyValuePair<int, Tensor> l in layer) l.Value.Dispose();
                 tensor.Dispose();
                 callback(boxes);
@@ -106,7 +103,6 @@ namespace Assets.Scripts
                             float confidence = GetConfidence(layer.Value, x, y, a);
                             if (confidence < thresholdMax)
                                 continue;
-                            Debug.Log("confidence");
                             BoundingBoxDimensions dimensions = ExtractBoundingBoxDimensionsYolov5(layer.Value, x, y, a, layer_num);
                             (int classIdx, float maxClass) = GetClassIdx(layer.Value, x, y, a);
 

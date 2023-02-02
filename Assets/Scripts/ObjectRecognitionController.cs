@@ -11,8 +11,7 @@ public class ObjectRecognitionController : MonoBehaviour
     [Header("Controller Reference")] 
     public ARController ARCtrl;
     public GameFlowController GameFlowCtrl;
-    public Camera _arCamera;
-    public IGameboard _gameboard;
+    public Camera arCamera;
     
     [Header("Object Recognition")]
     public GameObject PlacementObjectPf;
@@ -30,13 +29,13 @@ public class ObjectRecognitionController : MonoBehaviour
     {
         if (IsCapturingEnv) return;
         IsCapturingEnv = true;
-        RenderTexture rt = new RenderTexture(_arCamera.pixelWidth, _arCamera.pixelHeight, 24);
-        _arCamera.targetTexture = rt;
-        Texture2D screenShot = new Texture2D(_arCamera.pixelWidth, _arCamera.pixelHeight, TextureFormat.RGB24, false);
-        _arCamera.Render();
+        RenderTexture rt = new RenderTexture(arCamera.pixelWidth, arCamera.pixelHeight, 24);
+        arCamera.targetTexture = rt;
+        Texture2D screenShot = new Texture2D(arCamera.pixelWidth, arCamera.pixelHeight, TextureFormat.RGB24, false);
+        arCamera.Render();
         RenderTexture.active = rt;
-        screenShot.ReadPixels(new Rect(0, 0, _arCamera.pixelWidth, _arCamera.pixelHeight), 0, 0);
-        _arCamera.targetTexture = null;
+        screenShot.ReadPixels(new Rect(0, 0, arCamera.pixelWidth, arCamera.pixelHeight), 0, 0);
+        arCamera.targetTexture = null;
         RenderTexture.active = null; // JC: added to avoid errors
         Destroy(rt);
         
@@ -64,6 +63,11 @@ public class ObjectRecognitionController : MonoBehaviour
         }
         File.WriteAllBytes(dirPath + "Image2" + ".png", bytes);
 
+
+        var r1 = arCamera.ScreenPointToRay(new Vector2(0,0));
+        var r2 = arCamera.ScreenPointToRay(new Vector2(Screen.width, Screen.height));
+        var r3 = arCamera.ScreenPointToRay(new Vector2(Screen.width, 0));
+
         DebugText.text = "start model inference";
         StartCoroutine(yolov5Detector.Detect(result.GetPixels32(), 416, boxes =>
         {
@@ -73,8 +77,14 @@ public class ObjectRecognitionController : MonoBehaviour
             {
                 Destroy(child.gameObject);
             }
-            Debug.Log("3");
-            DebugText.text = "finish model inference: " + boxes.Count;
+
+            Vector3 d = r1.direction;                      //origin of r1
+            Vector3 o = r1.origin;                         //direction of r1
+            Vector3 dw = r3.direction - r1.direction;      //width vector of direction
+            Vector3 ow = r3.origin - r1.origin;            //width vector of origin
+            Vector3 dh = r2.direction - r3.direction;      //height vector of direction
+            Vector3 oh = r2.origin - r3.origin;            //height vector of origin
+
             for (int i = 0; i < boxes.Count; i++)
             {
                 GameObject newBox = Instantiate(boxPrefab);
@@ -97,24 +107,27 @@ public class ObjectRecognitionController : MonoBehaviour
                 newBox.transform.localPosition = new Vector3(boxes[i].Rect.x * org_w / 416, org_h - (boxes[i].Rect.y * org_h / 416) - 0.5f * org_h);
                 newBox.transform.localScale = new Vector2(boxes[i].Rect.width * org_w / 100 / 416, boxes[i].Rect.height * org_h / 100 / 416);
 
-                SpawnSceneItem(new Vector2(boxes[i].Rect.x * Screen.width / 416, Screen.height - boxes[i].Rect.y * Screen.height / 416));
-            }
+                float w = boxes[i].Rect.x / 416;
+                float h = 1.0F - boxes[i].Rect.y / 416;
+                var ray = new Ray(o + w * ow + h * oh, (d + w * dw + h * dh).normalized);
+
+                SpawnSceneItem(ray);
+    }
 
         }));
 
         IsCapturingEnv = false;
     }
     
-    public void SpawnSceneItem(Vector2 position) {
-        var ray = _arCamera.ScreenPointToRay(position);
+    public void SpawnSceneItem(Ray ray) {
         var hitPoint = new Vector3();
-
-        var b = _gameboard.RayCast(ray, out hitPoint);      // Null Object reference 
+        var gameboard = ARCtrl.GetGameboard();
+        var b = gameboard.RayCast(ray, out hitPoint);      // Null Object reference 
         // Intersect the Gameboard with the ray
         if (b)
         {
             // Check whether the object can be fit in the resulting position
-            if (_gameboard.CheckFit(center: hitPoint, 0.1f))
+            if (gameboard.CheckFit(center: hitPoint, 0.01f))
             {
                 var landscape = Instantiate(PlacementObjectPf, hitPoint, Quaternion.identity);
                 landscape.transform.localScale = new Vector3(3, 3, 3);
