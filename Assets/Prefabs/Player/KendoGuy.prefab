@@ -1634,7 +1634,7 @@ MonoBehaviour:
   playerOwnCombatHandler: {fileID: -2058255866417811186}
   playerOwnHealthSystem: {fileID: -3798238779284867034}
   maxHP: 100
-  PlayerWeaponSkillCtrl: {fileID: 0}
+  PlayerWeaponSkillCtrl: {fileID: 3736411471065533042}
   debugLog: {fileID: 0}
 --- !u!143 &8893153715369008413
 CharacterController:
@@ -1722,7 +1722,7 @@ MonoBehaviour:
   combatHandler: {fileID: -2058255866417811186}
   GameFlowCtrl: {fileID: 0}
   Weapon: {fileID: 1076420036850812}
-  NormalAttackDamage: 100
+  NormalAttackDamage: 20
   SkillDamage: 200
   normalAttackCount: 0
   ValidHit: 0

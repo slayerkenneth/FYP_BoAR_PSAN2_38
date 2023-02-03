@@ -22,6 +22,7 @@ public class DefenceTarget : MonoBehaviour
     private float CurrentTime;
     private bool hasTowerSpawned = false;
     public int startMinute;
+    public CombatHandler towerCombatHandler;
     
 
     [Header("UI")] 
@@ -31,6 +32,7 @@ public class DefenceTarget : MonoBehaviour
     private void Start()
     {
         CurrentTime = DefenceTime;
+        GameFlowCtrl.SetDefenseTower(this);
     }
 
     void Update()
@@ -74,5 +76,10 @@ public class DefenceTarget : MonoBehaviour
     public void StopCountDown()
     {
         stopWatchActive = false;
+    }
+
+    public float GetRemainingTime()
+    {
+        return CurrentTime;
     }
 }

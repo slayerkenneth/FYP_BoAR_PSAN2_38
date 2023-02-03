@@ -121,6 +121,11 @@ public class CharacterMovementController : MonoBehaviour
         return nearestBoardPosition;
     }
 
+    public CombatHandler GetPlayerCombatHandler()
+    {
+        return playerOwnCombatHandler;
+    }
+
     public void NormalAttack()
     {
         animator.Play("NormalAttack1");

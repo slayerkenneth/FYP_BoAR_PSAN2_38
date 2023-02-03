@@ -26,7 +26,9 @@ public class GameFlowController : MonoBehaviour
         CapturePointMode,
         DefencePointMode,
         DungeonMode,
-        BossFight
+        BossFight,
+        Win,
+        Loss
     }
 
     [Header("Game Flow variable")] 
@@ -39,6 +41,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] private ARController ARCtrl;
     [SerializeField] private CharacterMovementController playerMovementCtrl;
     [SerializeField] private CentralBattleController CentralBattleCtrl;
+    [SerializeField] private CombatHandler playerOwnCombatHandler;
     
     [Header("Debug logs")] 
     [SerializeField] private Text DebugText;
@@ -61,8 +64,13 @@ public class GameFlowController : MonoBehaviour
     public List<Vector3> EnemySpawnPositionList;
     public int enemyRandomSpawnLocationsCount;
 
+    [Header("Defense Point reference")] 
+    public DefenceTarget Tower;
+
     [Header("UI / Canvas elements")] 
     public HealthBarUI PlayerHealthBarUI;
+    public HealthBarUI EnemyHealthBarUI;
+
     
     // Start is called before the first frame update
     void Start()
@@ -79,6 +87,7 @@ public class GameFlowController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckGameEndCondition();
         // var srcPosition = Utils.PositionToTile(tempPosition, _activeGameboard.Settings.TileSize);
         if (_activeGameboard == null) return;
 
@@ -219,6 +228,47 @@ public class GameFlowController : MonoBehaviour
     }
     #endregion
 
+    #region Flow Condition Check
+
+    private void CheckGameEndCondition()
+    {
+        if (playerMovementCtrl == null) return;
+        if (playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP() <= 0)
+        {
+            battleSceneState = PVEBattleSceneState.Loss;
+            return;
+        }
+        
+        if (BattleMode == PVEBattleSceneState.CapturePointMode)
+        {
+            
+        }
+        else if (BattleMode == PVEBattleSceneState.DefencePointMode)
+        {
+            if (Tower.GetRemainingTime() == 0)
+            {
+                battleSceneState = PVEBattleSceneState.Win;
+                return;
+            }
+            
+        }
+        else if (BattleMode == PVEBattleSceneState.DungeonMode)
+        {
+            
+        }
+        else if (BattleMode == PVEBattleSceneState.PushCarBattleMode)
+        {
+            
+        }
+        else
+        {
+            // not possible
+        }
+    }
+
+    #endregion
+    
+    #region Getter / Setter
     public CharacterMovementController GetPlayerMovementCtrl ()
     {
         return ARCtrl.GetActivePlayerMovementCtrl();
@@ -227,5 +277,16 @@ public class GameFlowController : MonoBehaviour
     public CentralBattleController GetCentralBattleController()
     {
         return CentralBattleCtrl;
+    }
+
+    public void SetDefenseTower(DefenceTarget tower)
+    {
+        Tower = tower;
+    }
+    #endregion
+
+    public void SetCurrentEnemyBeenAttacked(CombatHandler enemyCombatHandler)
+    {
+        EnemyHealthBarUI.SetHealthSystem(enemyCombatHandler.GetHealthSystemComponent().GetHealthSystem());
     }
 }
