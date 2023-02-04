@@ -88,10 +88,11 @@ public class GameFlowController : MonoBehaviour
     void Update()
     {
         CheckGameEndCondition();
+        AreaText.text = "A * tile:" + _activeGameboard.Area * _activeGameboard.Settings.TileSize + " A / tile: " + _activeGameboard.Area / _activeGameboard.Settings.TileSize;
         // var srcPosition = Utils.PositionToTile(tempPosition, _activeGameboard.Settings.TileSize);
         if (_activeGameboard == null) return;
 
-        if (_activeGameboard.Area >= AreaLimit)
+        if (_activeGameboard.Area / _activeGameboard.Settings.TileSize >= 1)
         {
             SpatialTree = _activeGameboard.GetSpatialTree();
             battleSceneState = PVEBattleSceneState.ScanCompleteForColliderBuilding;
@@ -118,7 +119,7 @@ public class GameFlowController : MonoBehaviour
             var wall = Instantiate(InvisibleWallPrefab, new Vector3(nodeCoord.x * _activeGameboard.Settings.TileSize,
                                                                                         0, 
                                                                                         nodeCoord.y * _activeGameboard.Settings.TileSize), new Quaternion(), WallSet.transform);
-            wall.transform.localScale = new Vector3(1, 1, 1);
+            wall.transform.localScale = new Vector3(1f,1f,1f);
             var wallBox = wall.GetComponent<BoxCollider>();
             wallBox.size = new Vector3(_activeGameboard.Settings.TileSize, 30, _activeGameboard.Settings.TileSize);
             wallBox.center = new Vector3(_activeGameboard.Settings.TileSize / 2, 0, _activeGameboard.Settings.TileSize / 2);
@@ -126,7 +127,7 @@ public class GameFlowController : MonoBehaviour
         battleSceneState = PVEBattleSceneState.ColliderBuilt;
     }
 
-    public void GetAllTileCoordinatesAndMarkWalls()
+    public void GetAllTileCoordinatesAndMarkWalls() // Problematic if Area < 4, from the beginning is buggy and wrong to use the AreaLimit
     {
         if (SpatialTree == null || MapCoordinatesConfirmed) return;
 

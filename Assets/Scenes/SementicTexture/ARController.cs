@@ -32,7 +32,7 @@ public class ARController : MonoBehaviour
 
     [SerializeField] [Tooltip("GameObject to instantiate as the agent")]
     private GameObject _agentPrefab; // the prefab we will be spawning as our agent
-
+    [SerializeField] private GameObject playerSpawnParent;
     private IGameboard _gameboard; // ARDK's Gameboard object to handle smart placement and navigation
     private GameObject _agentGameObject; // the game object of the spawned agent 
     private WorkshopGameboardAgent _agent; // the agent that can navigate the gameboard
@@ -124,7 +124,7 @@ public class ARController : MonoBehaviour
         //get the current buffer
         ISemanticBuffer semanticBuffer = args.Sender.AwarenessBuffer;
         //get the index for sky
-        int channel = semanticBuffer.GetChannelIndex("ground");
+        int channel = semanticBuffer.GetChannelIndex("ground"); //ground
 
         semanticBuffer.CreateOrUpdateTextureARGB32(
             ref _semanticTexture, channel, FilterMode.Trilinear
@@ -323,8 +323,8 @@ public class ARController : MonoBehaviour
         var rotation = Vector3.ProjectOnPlane(_arCamera.transform.forward, Vector3.up).normalized;
         var QRot = Quaternion.LookRotation(-rotation);
         
-        _agentGameObject = Instantiate(_agentPrefab, spawnPoint, QRot);
-        
+        _agentGameObject = Instantiate(_agentPrefab, spawnPoint, QRot, playerSpawnParent.transform);
+        playerSpawnParent.transform.localScale = new Vector3(1f, 1f, 1f);
         // Set the position of the agent as the raycast hit result
         // _agentGameObject.transform.position = hitPoint;
 

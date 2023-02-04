@@ -2151,8 +2151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerVelocity: {x: 0, y: 0, z: 0}
-  playerSpeed: 2
-  jumpHeight: 0.4
+  playerSpeed: 1
+  jumpHeight: 0.01
   gravityValue: -9.81
   groundedPlayer: 0
   controller: {fileID: -1727449749190540293}
@@ -2165,6 +2165,7 @@ MonoBehaviour:
   playerOwnCombatHandler: {fileID: 7547920880089263539}
   playerOwnHealthSystem: {fileID: 748061111693293710}
   maxHP: 100
+  PlayerWeaponSkillCtrl: {fileID: 0}
   debugLog: {fileID: 0}
 --- !u!143 &-1727449749190540293
 CharacterController:
@@ -2180,7 +2181,7 @@ CharacterController:
   m_Height: 2.1
   m_Radius: 0.72
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.03
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}

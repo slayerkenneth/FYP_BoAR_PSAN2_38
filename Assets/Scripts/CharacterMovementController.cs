@@ -141,5 +141,6 @@ public class CharacterMovementController : MonoBehaviour
     public void CastSkill()
     {
         PlayerWeaponSkillCtrl.CastSkill();
+        transform.position = new Vector3(0, 1, 0);
     }
 }
