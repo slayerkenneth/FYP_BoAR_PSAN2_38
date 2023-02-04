@@ -249,6 +249,7 @@ public class GameFlowController : MonoBehaviour
             if (Tower.GetRemainingTime() == 0)
             {
                 battleSceneState = PVEBattleSceneState.Win;
+                DebugText.text = " Player Win !";
                 return;
             }
             
@@ -272,7 +273,9 @@ public class GameFlowController : MonoBehaviour
     #region Getter / Setter
     public CharacterMovementController GetPlayerMovementCtrl ()
     {
-        return ARCtrl.GetActivePlayerMovementCtrl();
+        var movementCtrl = ARCtrl.GetActivePlayerMovementCtrl();
+        playerMovementCtrl = movementCtrl;
+        return movementCtrl;
     }
 
     public CentralBattleController GetCentralBattleController()

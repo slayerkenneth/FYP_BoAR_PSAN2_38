@@ -17,7 +17,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] public int MaxEnemyCount;
     public List<Vector3> EnemySpawnLocationList;
     private bool EnemySpawnEnable = false;
-    private static int currentEnemyCount;
+    public static int currentEnemyCount;
 
     private Vector3 towerPosition;
     public LayerMask whatIsGround; //ARDK_Gameboard
