@@ -62,7 +62,8 @@ public class ARController : MonoBehaviour
     [SerializeField] public Text DebugText;
     [SerializeField] public Text AreaText;
 
-    [Header("object reconition")]
+    [Header("object reconition")] 
+    public ObjectRecognitionController ObjectRecognitionCtrl;
     public GameObject PlacementObjectPf;
     public GameObject boxContainer;
     public GameObject boxPrefab;

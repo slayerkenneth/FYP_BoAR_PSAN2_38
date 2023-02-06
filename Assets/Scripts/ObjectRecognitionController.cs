@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -27,9 +28,18 @@ public class ObjectRecognitionController : MonoBehaviour
 
     [Header("Scene Objects")] 
     [SerializeField] public List<Ray> SceneItemsLocations;
+    [SerializeField] public List<GameObject> RecognitionBoxes;
+
+    private void Start()
+    {
+        SceneItemsLocations = new List<Ray>();
+        RecognitionBoxes = new List<GameObject>();
+
+    }
 
     public void CaptureCurrentReality()
     {
+        // if (FindObjectOfType<CharacterMovementController>()) return;
         if (IsCapturingEnv) return;
         IsCapturingEnv = true;
         RenderTexture rt = new RenderTexture(arCamera.pixelWidth, arCamera.pixelHeight, 24);
@@ -71,7 +81,7 @@ public class ObjectRecognitionController : MonoBehaviour
         var r2 = arCamera.ScreenPointToRay(new Vector2(Screen.width, Screen.height));
         var r3 = arCamera.ScreenPointToRay(new Vector2(Screen.width, 0));
 
-        DebugText.text = "start model inference";
+        DebugText.text = "start model inference, DO NOT move the camera!!";
         StartCoroutine(yolov5Detector.Detect(result.GetPixels32(), 416, boxes =>
         {
             Resources.UnloadUnusedAssets();
@@ -115,11 +125,11 @@ public class ObjectRecognitionController : MonoBehaviour
                 var ray = new Ray(o + w * ow + h * oh, (d + w * dw + h * dh).normalized);
 
                 // SpawnSceneItem(ray);
-                SceneItemsLocations.Add(ray);
-    }   
-
+                RecognitionBoxes.Add(newBox);
+                SceneItemsLocations.Add(ray); 
+            }
         }));
-
+        DebugText.text = "Finish model inference, Blue box detection";
         IsCapturingEnv = false;
     }
     
@@ -140,11 +150,12 @@ public class ObjectRecognitionController : MonoBehaviour
         }
     }
 
-    public void SpawnSceneItems(List<Ray> rays)
+    public void SpawnSceneItems()
     {
+        if (SceneItemsLocations.Capacity == 0) return;
         var hitPoint = new Vector3();
         var gameboard = ARCtrl.GetGameboard();
-        foreach (var ray in rays)
+        foreach (var ray in SceneItemsLocations)
         {
             var b = gameboard.RayCast(ray, out hitPoint);      // Null Object reference 
             // Intersect the Gameboard with the ray
@@ -154,11 +165,19 @@ public class ObjectRecognitionController : MonoBehaviour
                 if (gameboard.CheckFit(center: hitPoint, 0.01f))
                 {
                     var landscape = Instantiate(PlacementObjectPf, hitPoint, Quaternion.identity);
-                    landscape.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+                    landscape.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     _placedObjects.Add(landscape);
                 }
             }
         }
+
+        foreach (var box in RecognitionBoxes)
+        {
+            RecognitionBoxes.Remove(box);
+            Destroy(box);
+        }
+        
+        DebugText.text = "Scene items generated";
     }
     
     void _gpu_scale(Texture2D src, int width, int height, FilterMode fmode)

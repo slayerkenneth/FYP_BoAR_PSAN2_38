@@ -2485,6 +2485,7 @@ MonoBehaviour:
   GameFlowController: {fileID: 1451593558}
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
+  ObjectRecognitionCtrl: {fileID: 1451593560}
   PlacementObjectPf: {fileID: 1537502993957880, guid: 30bdbf2b9c0bd8446af70e5b67b0dfc8,
     type: 3}
   boxContainer: {fileID: 1211082266}
@@ -3389,7 +3390,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &1210880208
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4004,7 +4005,7 @@ Transform:
   m_GameObject: {fileID: 1429391862}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -4160,8 +4161,9 @@ MonoBehaviour:
   boxPrefab: {fileID: 5347304568407062166, guid: efb33e49a6005c544b4a82223b9e2a13,
     type: 3}
   yolov5Detector: {fileID: 409333505}
-  DebugText: {fileID: 4098587496407768986}
+  DebugText: {fileID: 4098587495805698984}
   IsCapturingEnv: 0
+  RecognitionBoxes: []
 --- !u!114 &1451593561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5486,7 +5488,7 @@ PrefabInstance:
     - target: {fileID: 3298992325091424595, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3830538428042062264, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
@@ -5773,7 +5775,7 @@ Transform:
   m_GameObject: {fileID: 1934517721}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1451593557}
@@ -6929,7 +6931,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1068038021823712010}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1451593560}
+        m_TargetAssemblyTypeName: ObjectRecognitionController, Assembly-CSharp
+        m_MethodName: SpawnSceneItems
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &1068038021823712117
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7052,19 +7066,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1318473032765351930}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1451593560}
-        m_TargetAssemblyTypeName: ObjectRecognitionController, Assembly-CSharp
-        m_MethodName: CaptureCurrentReality
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &1318473032765351935
 GameObject:
   m_ObjectHideFlags: 0
@@ -20563,7 +20565,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7271484600433217299}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1451593560}
+        m_TargetAssemblyTypeName: ObjectRecognitionController, Assembly-CSharp
+        m_MethodName: CaptureCurrentReality
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!224 &7271484600433217297
 RectTransform:
   m_ObjectHideFlags: 0
