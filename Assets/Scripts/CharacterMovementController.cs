@@ -105,4 +105,5 @@ public class CharacterMovementController : MonoBehaviour
     {
         return nearestBoardPosition;
     }
+
 }

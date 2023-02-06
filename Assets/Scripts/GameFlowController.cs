@@ -38,6 +38,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] private Camera arCamera;
     [SerializeField] private ARController ARCtrl;
     [SerializeField] private CharacterMovementController playerMovementCtrl;
+    [SerializeField] private DefenceTarget DefTarget;
     
     [Header("Debug logs")] 
     [SerializeField] private Text DebugText;
@@ -62,6 +63,8 @@ public class GameFlowController : MonoBehaviour
 
     [Header("UI / Canvas elements")] 
     public HealthBarUI PlayerHealthBarUI;
+
+    private GameObject cloneTower;
     
     // Start is called before the first frame update
     void Start()
@@ -200,6 +203,7 @@ public class GameFlowController : MonoBehaviour
         if (BattleMode is PVEBattleSceneState.CapturePointMode or PVEBattleSceneState.DefencePointMode)
         {
             towerLocation = CalculateTowerLocation();
+            cloneTower = DefTarget.GetSpawnedTower();
             return true;
         }
 
@@ -222,4 +226,15 @@ public class GameFlowController : MonoBehaviour
     {
         return ARCtrl.GetActivePlayerMovementCtrl();
     }
+
+    public GameObject GetCloneTower()
+    {
+        return cloneTower;
+    }
+
+    public ARController getARCtrl()
+    {
+        return ARCtrl;
+    }
+
 }

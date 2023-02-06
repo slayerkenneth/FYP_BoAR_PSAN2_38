@@ -377,4 +377,9 @@ public class ARController : MonoBehaviour
         GL.Clear(true, true, new Color(0, 0, 0, 0));
         Graphics.DrawTexture(new Rect(0, 0, 1, 1), src);
     }
+
+    public GameObject getClonePlayer()
+    {
+        return _agentGameObject;
+    }
 }

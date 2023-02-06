@@ -21,6 +21,7 @@ public class EnemySpawner : MonoBehaviour
     private Vector3 towerPosition;
     public LayerMask whatIsGround; //ARDK_Gameboard
     public LayerMask whatIsPlayer; //add a layer mask on player
+    public LayerMask whatIsEnemy;
     public GameObject towerPrefab;
     public GameObject playerPrefab;
     
@@ -55,8 +56,8 @@ public class EnemySpawner : MonoBehaviour
         e.GetComponent<EnemyPathfinding>().GameFlowCtrl = GameFlowCtrl;
         e.GetComponent<EnemyPathfinding>().whatIsGround = whatIsGround;
         e.GetComponent<EnemyPathfinding>().whatIsPlayer = whatIsPlayer;
-        e.GetComponent<EnemyPathfinding>().towerPrefab = towerPrefab;
-        e.GetComponent<EnemyPathfinding>().playerPrefab = playerPrefab;
+        // e.GetComponent<EnemyPathfinding>().playerPrefab = playerPrefab;
+        e.GetComponent<EnemyPathfinding>().whatIsEnemy = whatIsEnemy;
         yield return new WaitForSeconds(time);
     }
 
