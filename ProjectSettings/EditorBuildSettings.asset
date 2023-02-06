@@ -27,8 +27,8 @@ EditorBuildSettings:
     path: Assets/Scenes/BattleScene/BattleFlow.unity
     guid: c297c6b10a00cad4184628939805403c
   - enabled: 1
-    path: Assets/Scenes/BattleScene/DefencePointBattleMode.unity
-    guid: 0ddd4f8d0325c23438ca566d9b452bf4
+    path: Assets/Scenes/TitleScene/StartGameMenu.unity
+    guid: 122aacce5ea9bf440abf54e4e77c5a4a
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 744b813df90924c169af73489b8325de,
       type: 2}
