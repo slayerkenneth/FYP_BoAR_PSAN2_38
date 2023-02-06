@@ -25,6 +25,9 @@ public class ObjectRecognitionController : MonoBehaviour
     [SerializeField] public Text DebugText;
     [SerializeField] private bool IsCapturingEnv = false;
 
+    [Header("Scene Objects")] 
+    [SerializeField] public List<Ray> SceneItemsLocations;
+
     public void CaptureCurrentReality()
     {
         if (IsCapturingEnv) return;
@@ -111,8 +114,9 @@ public class ObjectRecognitionController : MonoBehaviour
                 float h = 1.0F - boxes[i].Rect.y / 416;
                 var ray = new Ray(o + w * ow + h * oh, (d + w * dw + h * dh).normalized);
 
-                SpawnSceneItem(ray);
-    }
+                // SpawnSceneItem(ray);
+                SceneItemsLocations.Add(ray);
+    }   
 
         }));
 
@@ -130,8 +134,29 @@ public class ObjectRecognitionController : MonoBehaviour
             if (gameboard.CheckFit(center: hitPoint, 0.01f))
             {
                 var landscape = Instantiate(PlacementObjectPf, hitPoint, Quaternion.identity);
-                landscape.transform.localScale = new Vector3(3, 3, 3);
+                landscape.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
                 _placedObjects.Add(landscape);
+            }
+        }
+    }
+
+    public void SpawnSceneItems(List<Ray> rays)
+    {
+        var hitPoint = new Vector3();
+        var gameboard = ARCtrl.GetGameboard();
+        foreach (var ray in rays)
+        {
+            var b = gameboard.RayCast(ray, out hitPoint);      // Null Object reference 
+            // Intersect the Gameboard with the ray
+            if (b)
+            {
+                // Check whether the object can be fit in the resulting position
+                if (gameboard.CheckFit(center: hitPoint, 0.01f))
+                {
+                    var landscape = Instantiate(PlacementObjectPf, hitPoint, Quaternion.identity);
+                    landscape.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+                    _placedObjects.Add(landscape);
+                }
             }
         }
     }
