@@ -211,7 +211,6 @@ public class ARController : MonoBehaviour
         
         RaycastHit hit;
         var tempPos = new Vector3();
-        Debug.Log(touch.position);
         if (Physics.Raycast(ray, out hit))
         {
             DebugText.text = "Debug: Hit" + touchCount.ToString();
@@ -393,5 +392,9 @@ public class ARController : MonoBehaviour
         //Then clear & draw the texture to fill the entire RTT.
         GL.Clear(true, true, new Color(0, 0, 0, 0));
         Graphics.DrawTexture(new Rect(0, 0, 1, 1), src);
+    }
+
+    public IGameboard GetGameboard() {
+        return _gameboard;
     }
 }
