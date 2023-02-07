@@ -317,7 +317,7 @@ public class ARController : MonoBehaviour
         // Instantiate the agent with the predefined prefab
         Vector3 spawnPoint = GameFlowController.GetEnemySpawnLocationVectorList()[(int) GameFlowController.GetEnemySpawnLocationVectorList().Count/2];
         
-        spawnPoint = new Vector3(spawnPoint.x * _gameboard.Settings.TileSize, spawnPoint.y, spawnPoint.z * _gameboard.Settings.TileSize);
+        spawnPoint = new Vector3(spawnPoint.x * _gameboard.Settings.TileSize, 0, spawnPoint.z * _gameboard.Settings.TileSize);
         
         // Have the prefab face towards camera
         var rotation = Vector3.ProjectOnPlane(_arCamera.transform.forward, Vector3.up).normalized;

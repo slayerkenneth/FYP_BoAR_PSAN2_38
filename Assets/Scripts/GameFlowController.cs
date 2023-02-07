@@ -196,7 +196,7 @@ public class GameFlowController : MonoBehaviour
             var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
             if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
             {
-                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, 0, v.y * _activeGameboard.Settings.TileSize));
+                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, 1f, v.y * _activeGameboard.Settings.TileSize));
                 count++;
             }
         }
@@ -217,7 +217,7 @@ public class GameFlowController : MonoBehaviour
                 var v = Utils.PositionToTile(towerLocation, _activeGameboard.Settings.TileSize);
                 if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
                 {
-                    towerLocation = new Vector3(v.x * _activeGameboard.Settings.TileSize, 0, v.y * _activeGameboard.Settings.TileSize); 
+                    towerLocation = new Vector3(v.x * _activeGameboard.Settings.TileSize, -1, v.y * _activeGameboard.Settings.TileSize); 
                 }
             
             return true;
@@ -254,7 +254,7 @@ public class GameFlowController : MonoBehaviour
         }
         else if (BattleMode == PVEBattleSceneState.DefencePointMode)
         {
-            if (Tower.GetRemainingTime() == 0)
+            if (Tower.GetRemainingTime() <= 0)
             {
                 battleSceneState = PVEBattleSceneState.Win;
                 DebugText.text = " Player Win !";
