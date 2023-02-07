@@ -196,7 +196,7 @@ public class GameFlowController : MonoBehaviour
             var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
             if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
             {
-                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1, v.y * _activeGameboard.Settings.TileSize));
+                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, 0, v.y * _activeGameboard.Settings.TileSize));
                 count++;
             }
         }
@@ -208,13 +208,21 @@ public class GameFlowController : MonoBehaviour
     #region CapturePoint / Defence Point
     public bool GetTowerSpawnLocationVector(out Vector3 towerLocation)
     {
+        towerLocation = new Vector3();
         if (BattleMode is PVEBattleSceneState.CapturePointMode or PVEBattleSceneState.DefencePointMode)
         {
-            towerLocation = CalculateTowerLocation();
+            // towerLocation = CalculateTowerLocation();
+            _activeGameboard.FindRandomPosition(out towerLocation);
+            
+                var v = Utils.PositionToTile(towerLocation, _activeGameboard.Settings.TileSize);
+                if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
+                {
+                    towerLocation = new Vector3(v.x * _activeGameboard.Settings.TileSize, 0, v.y * _activeGameboard.Settings.TileSize); 
+                }
+            
             return true;
         }
 
-        towerLocation = new Vector3();
         return false;
     }
 
