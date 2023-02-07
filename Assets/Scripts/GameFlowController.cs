@@ -245,6 +245,7 @@ public class GameFlowController : MonoBehaviour
         if (playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP() <= 0)
         {
             battleSceneState = PVEBattleSceneState.Loss;
+            DebugText.text = " Player Died and loss! Back to Start Point";
             return;
         }
         
