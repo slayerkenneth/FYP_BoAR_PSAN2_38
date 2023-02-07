@@ -92,7 +92,7 @@ public class GameFlowController : MonoBehaviour
         // var srcPosition = Utils.PositionToTile(tempPosition, _activeGameboard.Settings.TileSize);
         if (_activeGameboard == null) return;
 
-        if (_activeGameboard.Area / _activeGameboard.Settings.TileSize >= 1)
+        if (_activeGameboard.Area / _activeGameboard.Settings.TileSize >= 60)
         {
             SpatialTree = _activeGameboard.GetSpatialTree();
             battleSceneState = PVEBattleSceneState.ScanCompleteForColliderBuilding;
