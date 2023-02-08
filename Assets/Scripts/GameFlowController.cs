@@ -51,6 +51,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] public static IGameboard _activeGameboard; //Consider make a getter setter function instead
     [SerializeField] public SpatialTree SpatialTree;
     [SerializeField] private float AreaLimit = 100f;
+    public float testScanArea;
     public List<Vector2Int> AllGridNodeCoordinates;
     public Dictionary<Vector2Int, List<Vector2Int>> CoordinatesAdjacencyList;
     public List<Vector2Int> WallCoordinates;
@@ -92,7 +93,7 @@ public class GameFlowController : MonoBehaviour
         // var srcPosition = Utils.PositionToTile(tempPosition, _activeGameboard.Settings.TileSize);
         if (_activeGameboard == null) return;
 
-        if (_activeGameboard.Area / _activeGameboard.Settings.TileSize >= 60)
+        if (_activeGameboard.Area / _activeGameboard.Settings.TileSize >= testScanArea)
         {
             SpatialTree = _activeGameboard.GetSpatialTree();
             battleSceneState = PVEBattleSceneState.ScanCompleteForColliderBuilding;
@@ -131,9 +132,9 @@ public class GameFlowController : MonoBehaviour
     {
         if (SpatialTree == null || MapCoordinatesConfirmed) return;
 
-        for (var i = -AreaLimit; i < AreaLimit; i++)
+        for (var i = -AreaLimit*2; i < AreaLimit*2; i++)
         {
-            for (var j = -AreaLimit; j < AreaLimit; j++)
+            for (var j = -AreaLimit*2; j < AreaLimit*2; j++)
             {
                 var node = new GridNode();
                 if (SpatialTree.GetElement(new Vector2Int((int) i, (int)j), out node))

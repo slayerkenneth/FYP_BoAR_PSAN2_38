@@ -2288,7 +2288,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619056668}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.83, z: -1}
+  m_LocalPosition: {x: 0, y: -0.8, z: -6.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2457,8 +2457,8 @@ MonoBehaviour:
   _flatFloorTolerance: 1
   _maxSlope: 10
   _stepHeight: 0.1
-  _scanInterval: 0.18
-  _scanRange: 25
+  _scanInterval: 0.2
+  _scanRange: 1
   _layerMask:
     serializedVersion: 2
     m_Bits: 192
@@ -4092,7 +4092,8 @@ MonoBehaviour:
   playerOwnCombatHandler: {fileID: 0}
   DebugText: {fileID: 4098587495805698984}
   AreaText: {fileID: 4098587496407768986}
-  AreaLimit: 250
+  AreaLimit: 500
+  testScanArea: 1000
   AllGridNodeCoordinates: []
   WallCoordinates: []
   maxX: 0
