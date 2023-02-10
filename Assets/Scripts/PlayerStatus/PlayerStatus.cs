@@ -1,0 +1,46 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+abstract class ActicveClass : ScriptableObject
+{
+    public float skillCD;
+    public abstract void skill(GameObject player);
+}
+
+abstract class PassiveClass : ScriptableObject
+{
+    public abstract void StartPassive(GameObject player);
+
+    public abstract void EndPassive(GameObject player);
+}
+
+class PlayerStatus : ScriptableObject
+{
+    public int HP, money, speed, normalAttackDamage, specialAttackDamage, currentLevel;
+    public ActicveClass acticveClass;
+    public PassiveClass passiveClass;
+
+    private static PlayerStatus _currentPlayer;
+
+    public static PlayerStatus CurrentPlayer
+    {
+        get {
+            if (!_currentPlayer) {
+                _currentPlayer = ScriptableObject.CreateInstance<PlayerStatus>();
+                _currentPlayer.HP = 100;
+                _currentPlayer.money = 0;
+                _currentPlayer.speed = 1;
+                _currentPlayer.normalAttackDamage = 20;
+                _currentPlayer.specialAttackDamage = 200;
+                _currentPlayer.currentLevel = 0;
+                _currentPlayer.acticveClass = null;
+                _currentPlayer.passiveClass = null;
+                _currentPlayer.hideFlags = HideFlags.HideAndDontSave;
+            }
+            return _currentPlayer;
+        }
+    }
+
+   
+}
