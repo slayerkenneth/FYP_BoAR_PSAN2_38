@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract class ActicveClass : ScriptableObject
+abstract class ActiveClass : ScriptableObject
 {
     public float skillCD;
     public abstract void skill(GameObject player);
@@ -18,7 +18,7 @@ abstract class PassiveClass : ScriptableObject
 class PlayerStatus : ScriptableObject
 {
     public int HP, money, speed, normalAttackDamage, specialAttackDamage, currentLevel;
-    public ActicveClass acticveClass;
+    public ActiveClass activeClass;
     public PassiveClass passiveClass;
 
     private static PlayerStatus _currentPlayer;
@@ -34,7 +34,7 @@ class PlayerStatus : ScriptableObject
                 _currentPlayer.normalAttackDamage = 20;
                 _currentPlayer.specialAttackDamage = 200;
                 _currentPlayer.currentLevel = 0;
-                _currentPlayer.acticveClass = null;
+                _currentPlayer.activeClass = null;
                 _currentPlayer.passiveClass = null;
                 _currentPlayer.hideFlags = HideFlags.HideAndDontSave;
             }
