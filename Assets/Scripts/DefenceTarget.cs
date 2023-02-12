@@ -23,7 +23,7 @@ public class DefenceTarget : MonoBehaviour
     private bool hasTowerSpawned = false;
     public int startMinute;
     public CombatHandler towerCombatHandler;
-    public GameObject activeTower;
+    private GameObject SpawnedTower;
     
 
     [Header("UI")] 
@@ -58,7 +58,7 @@ public class DefenceTarget : MonoBehaviour
     {
         if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningTower && !hasTowerSpawned)
         {
-            activeTower = Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
+            SpawnedTower = Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
             GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.DefencePointMode;
             hasTowerSpawned = true;
         }
@@ -69,6 +69,11 @@ public class DefenceTarget : MonoBehaviour
         //     if (CalibrateY <= 0)
         //         activeTower.transform.localPosition = new Vector3(activeTower.transform.localPosition.x, CalibrateY, activeTower.transform.localPosition.z);
         // }
+    }
+
+    public GameObject GetSpawnedTower()
+    {
+        return SpawnedTower;
     }
 
     public Vector3 GetTowerPosition()

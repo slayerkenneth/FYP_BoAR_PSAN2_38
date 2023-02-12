@@ -397,5 +397,8 @@ public class ARController : MonoBehaviour
 
     public IGameboard GetGameboard() {
         return _gameboard;
+    public GameObject getClonePlayer()
+    {
+        return _agentGameObject;
     }
 }

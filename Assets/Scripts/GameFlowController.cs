@@ -42,6 +42,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] private CharacterMovementController playerMovementCtrl;
     [SerializeField] private CentralBattleController CentralBattleCtrl;
     [SerializeField] private CombatHandler playerOwnCombatHandler;
+    [SerializeField] private DefenceTarget DefTarget;
     
     [Header("Debug logs")] 
     [SerializeField] private Text DebugText;
@@ -72,6 +73,8 @@ public class GameFlowController : MonoBehaviour
     public HealthBarUI PlayerHealthBarUI;
     public HealthBarUI EnemyHealthBarUI;
 
+
+    private GameObject cloneTower;
     
     // Start is called before the first frame update
     void Start()
@@ -221,6 +224,8 @@ public class GameFlowController : MonoBehaviour
                     towerLocation = new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.15f, v.y * _activeGameboard.Settings.TileSize); 
                 }
             
+            towerLocation = CalculateTowerLocation();
+            cloneTower = DefTarget.GetSpawnedTower();
             return true;
         }
 
@@ -303,4 +308,15 @@ public class GameFlowController : MonoBehaviour
     {
         EnemyHealthBarUI.SetHealthSystem(enemyCombatHandler.GetHealthSystemComponent().GetHealthSystem());
     }
+
+    public GameObject GetCloneTower()
+    {
+        return cloneTower;
+    }
+
+    public ARController getARCtrl()
+    {
+        return ARCtrl;
+    }
+
 }
