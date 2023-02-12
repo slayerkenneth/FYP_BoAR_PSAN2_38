@@ -174,7 +174,7 @@ public class ARController : MonoBehaviour
         // The origin of the scan should be in front of the player
         var origin = playerPosition + Vector3.ProjectOnPlane(playerForward, Vector3.up).normalized;
 
-        if (gameboardArea < 100)
+        if (gameboardArea < GameFlowController.AreaLimit)
         {
             _gameboard.Scan(origin, 5);
         }

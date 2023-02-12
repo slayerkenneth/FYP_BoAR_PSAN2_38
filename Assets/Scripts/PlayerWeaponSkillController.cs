@@ -80,5 +80,6 @@ public class PlayerWeaponSkillController : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         ValidHit = false;
+        // shd be after animation end and depends on collider of the weapon
     }
 }

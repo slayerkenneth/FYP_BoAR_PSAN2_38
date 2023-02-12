@@ -50,7 +50,7 @@ public class EnemySpawner : MonoBehaviour
     public IEnumerator SpawnEnemyAfterWaiting(float time, GameObject enemyPrefab, Vector3 SpawnLocationVec)
     {
         var e = Instantiate(enemyPrefab, SpawnLocationVec, new Quaternion(0,0,0,0), EnemyParentObj.transform);
-        e.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        e.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
         e.AddComponent<EnemyPathfinding>();
         e.GetComponent<EnemyPathfinding>().GameFlowCtrl = GameFlowCtrl;
         e.GetComponent<EnemyPathfinding>().whatIsGround = whatIsGround;
