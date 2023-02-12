@@ -56,8 +56,8 @@ public class EnemySpawner : MonoBehaviour
         e.GetComponent<EnemyPathfinding>().GameFlowCtrl = GameFlowCtrl;
         e.GetComponent<EnemyPathfinding>().whatIsGround = whatIsGround;
         e.GetComponent<EnemyPathfinding>().whatIsPlayer = whatIsPlayer;
-        e.GetComponent<EnemyPathfinding>().towerPrefab = towerPrefab;
-        e.GetComponent<EnemyPathfinding>().playerPrefab = playerPrefab;
+        // e.GetComponent<EnemyPathfinding>().towerPrefab = towerPrefab;
+        // e.GetComponent<EnemyPathfinding>().playerPrefab = playerPrefab;
         e.GetComponent<CombatHandler>().SetCentralCombatHandler(centralBattleCtrl);
         // e.GetComponent<EnemyPathfinding>().playerPrefab = playerPrefab;
         e.GetComponent<EnemyPathfinding>().whatIsEnemy = whatIsEnemy;

@@ -32,15 +32,15 @@ public class EnemyPathfinding : MonoBehaviour
 
 
     //State
-    private float sightRange = 3.0f;
-    private float attackRange = 1.0f;
-    private bool playerInSightRange;
-    private bool playerInAttackRange;
-    private bool towerInAttackRange;
+    [SerializeField] private float sightRange = 1.0f;
+    [SerializeField] private float attackRange = 0.2f;
+    [SerializeField] private bool playerInSightRange;
+    [SerializeField] private bool playerInAttackRange;
+    [SerializeField] private bool towerInAttackRange;
 
     // [Header("Agent Settings")]
     // [SerializeField]
-    private float walkingSpeed = 3.0f;
+    [SerializeField] private float walkingSpeed = 3.0f;
     
     private float jumpDistance = 1;
     
@@ -123,7 +123,7 @@ public class EnemyPathfinding : MonoBehaviour
 
         if (!playerInSightRange && !playerInAttackRange)
         {
-            if (!attackTower)
+            if (!attackTower && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer)
                 GoToTower();
             else
                 AttackTower();
@@ -206,7 +206,7 @@ public class EnemyPathfinding : MonoBehaviour
     {
         //attack (need to change)
         transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
-        Debug.Log(this.name + " Attacking Tower");
+        // Debug.Log(this.name + " Attacking Tower");
     }
 
     public void ChasePlayer()

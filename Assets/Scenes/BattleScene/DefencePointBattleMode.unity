@@ -4032,8 +4032,7 @@ MonoBehaviour:
   DefenceTime: 60
   startMinute: 0
   towerCombatHandler: {fileID: 0}
-  activeTower: {fileID: 0}
-  DefenceModeUICanvas: {fileID: 133362076}
+  DefenceModeUICanvas: {fileID: 4098587496591411372}
   CurrentTimeText: {fileID: 4098587496175638028}
 --- !u!1 &1451593556
 GameObject:
@@ -4092,6 +4091,7 @@ MonoBehaviour:
   playerMovementCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 1451593561}
   playerOwnCombatHandler: {fileID: 0}
+  DefTarget: {fileID: 1429391864}
   DebugText: {fileID: 4098587495805698984}
   AreaText: {fileID: 4098587496407768986}
   AreaLimit: 500
@@ -4107,9 +4107,10 @@ MonoBehaviour:
   EnemySpawner: {fileID: 1451593559}
   EnemySpawnPositionList: []
   enemyRandomSpawnLocationsCount: 5
-  Tower: {fileID: 0}
+  Tower: {fileID: 1429391864}
   PlayerHealthBarUI: {fileID: 3450456933618736479}
   EnemyHealthBarUI: {fileID: 3450456933082368580}
+  cloneTower: {fileID: 0}
 --- !u!114 &1451593559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4140,6 +4141,9 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 256
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 512
   towerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,
     type: 3}
   playerPrefab: {fileID: 0}
@@ -5491,7 +5495,7 @@ PrefabInstance:
     - target: {fileID: 3298992325091424595, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3830538428042062264, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}

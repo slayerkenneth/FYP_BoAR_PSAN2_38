@@ -143,4 +143,9 @@ public class CharacterMovementController : MonoBehaviour
         PlayerWeaponSkillCtrl.CastSkill();
         transform.position = new Vector3(0, 1, 0);
     }
+
+    public Vector3 getPlayerPosition()
+    {
+        return transform.localPosition;
+    }
 }

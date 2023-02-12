@@ -347,6 +347,8 @@ public class ARController : MonoBehaviour
                 ui.SetHealthSystem(charCombat.GetHealthSystemComponent().GetHealthSystem());
             }
         }
+        
+        GameFlowController.SetPlayerMovementCtrl(CharMoveCtrl);
     }
 
     public IGameboard GetActiveGameboard()
@@ -395,8 +397,11 @@ public class ARController : MonoBehaviour
         Graphics.DrawTexture(new Rect(0, 0, 1, 1), src);
     }
 
-    public IGameboard GetGameboard() {
+    public IGameboard GetGameboard()
+    {
         return _gameboard;
+    }
+
     public GameObject getClonePlayer()
     {
         return _agentGameObject;

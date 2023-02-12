@@ -74,7 +74,7 @@ public class GameFlowController : MonoBehaviour
     public HealthBarUI EnemyHealthBarUI;
 
 
-    private GameObject cloneTower;
+    public GameObject cloneTower;
     
     // Start is called before the first frame update
     void Start()
@@ -217,18 +217,15 @@ public class GameFlowController : MonoBehaviour
         {
             // towerLocation = CalculateTowerLocation();
             _activeGameboard.FindRandomPosition(out towerLocation);
-            
                 var v = Utils.PositionToTile(towerLocation, _activeGameboard.Settings.TileSize);
                 if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
                 {
                     towerLocation = new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.15f, v.y * _activeGameboard.Settings.TileSize); 
                 }
-            
             towerLocation = CalculateTowerLocation();
-            cloneTower = DefTarget.GetSpawnedTower();
+            // if (DefTarget.GetSpawnedTower() != null) cloneTower = DefTarget.GetSpawnedTower();
             return true;
         }
-
         return false;
     }
 
@@ -317,6 +314,16 @@ public class GameFlowController : MonoBehaviour
     public ARController getARCtrl()
     {
         return ARCtrl;
+    }
+
+    public CharacterMovementController getPlayerMovementCtrl()
+    {
+        return playerMovementCtrl;
+    }
+
+    public void SetPlayerMovementCtrl(CharacterMovementController cmc)
+    {
+        playerMovementCtrl = cmc;
     }
 
 }
