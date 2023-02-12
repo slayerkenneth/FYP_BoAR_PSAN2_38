@@ -5,6 +5,7 @@ using System.IO;
 using Assets.Scripts;
 using Niantic.ARDK.Extensions.Gameboard;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ObjectRecognitionController : MonoBehaviour

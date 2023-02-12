@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeMonkey.HealthSystemCM;
 using UnityEngine;
+using Assets.Scripts;
 
 public class CombatHandler : MonoBehaviour
 {
@@ -58,7 +59,8 @@ public class CombatHandler : MonoBehaviour
     // Only called in initialization
     public void InitHP(float initHP)
     {
-        hp = initHP;
+        //hp = initHP;
+        hp = PlayerStatus.CurrentPlayer.HP;
     }
 
     public void SetCentralCombatHandler(CentralBattleController cbc)
