@@ -53,7 +53,7 @@ public class MapController : MonoBehaviour
         currentMap.pos2Id = new Dictionary<Vector2, int>();
         float width = graphContainer.rect.width;
         float height = graphContainer.rect.height;
-        var points = FastPoissonDiskSampling.Sampling(new Vector2(20, 70), new Vector2(width - 20, height - 70), 70);
+        var points = FastPoissonDiskSampling.Sampling(new Vector2(-70, 70), new Vector2(width - 10, height - 50), 130);
         var startPoint = new Vector2(width / 2, 25);
         var endPoint = new Vector2(width / 2, height - 25);
         points.Add(startPoint);
