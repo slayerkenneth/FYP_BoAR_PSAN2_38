@@ -127,6 +127,9 @@ public class GameFlowController : MonoBehaviour
             var wallBox = wall.GetComponent<BoxCollider>();
             wallBox.size = new Vector3(_activeGameboard.Settings.TileSize, 30, _activeGameboard.Settings.TileSize);
             wallBox.center = new Vector3(_activeGameboard.Settings.TileSize / 2, 0, _activeGameboard.Settings.TileSize / 2);
+            
+            // disable all border control like what government did (sorry actually becoz it's buggy
+            wall.SetActive(false);
         }
         battleSceneState = PVEBattleSceneState.ColliderBuilt;
     }
