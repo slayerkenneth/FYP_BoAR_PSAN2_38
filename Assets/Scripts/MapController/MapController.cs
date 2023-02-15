@@ -124,6 +124,8 @@ public class MapController : MonoBehaviour
             {
                 PlayerStatus.CurrentPlayer.currentLevel = id;
                 SceneManager.LoadScene(currentMap.levels[id].levelType.ToString());
+                // Testing (Shop UI Scene)
+                // SceneManager.LoadScene(3);
             }
         }
     }

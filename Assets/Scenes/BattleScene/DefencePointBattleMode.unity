@@ -4029,7 +4029,7 @@ MonoBehaviour:
   TowerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,
     type: 3}
   TowerPosition: {x: 0, y: 0, z: 0}
-  DefenceTime: 60
+  DefenceTime: 10
   startMinute: 0
   towerCombatHandler: {fileID: 0}
   DefenceModeUICanvas: {fileID: 4098587496591411372}
@@ -4110,6 +4110,9 @@ MonoBehaviour:
   Tower: {fileID: 1429391864}
   PlayerHealthBarUI: {fileID: 3450456933618736479}
   EnemyHealthBarUI: {fileID: 3450456933082368580}
+  WinPopUpWindow: {fileID: 0}
+  LossPopUpWindow: {fileID: 0}
+  playerGlobalStatus: {fileID: 0}
   cloneTower: {fileID: 0}
 --- !u!114 &1451593559
 MonoBehaviour:

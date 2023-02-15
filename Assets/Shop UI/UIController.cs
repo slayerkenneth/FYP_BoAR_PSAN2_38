@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
+    [Header("Global Reference")] [SerializeField]
+    public PlayerStatus PlayerStatus;
+    
     public Button QuitButton;
     public Button RestoreButton;
     public Button UpHealthButton;
@@ -50,6 +53,7 @@ public class UIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InitShopUI();
         var root = GetComponent<UIDocument>().rootVisualElement;
 
         MainMenu = root.Q<VisualElement>("Main_Menu");
@@ -228,4 +232,15 @@ public class UIController : MonoBehaviour
         Item5Text.style.display = DisplayStyle.None;
     }
 
+    void InitShopUI()
+    {
+        PlayerStatus = PlayerStatus.CurrentPlayer;
+        if (PlayerStatus== null) return;
+        recentHealth = PlayerStatus.HP;
+        totalHealth = PlayerStatus.HP;
+        recentMoney = PlayerStatus.money;
+        recentWeaponLV = PlayerStatus.normalAttackDamage;
+        recentClass1LV = PlayerStatus.normalAttackDamage;
+        recentClass2LV = PlayerStatus.specialAttackDamage;
+    }
 }

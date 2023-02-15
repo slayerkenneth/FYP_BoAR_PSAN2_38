@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract class ActiveClass : ScriptableObject
+public abstract class ActiveClass : ScriptableObject
 {
     public float skillCD;
     public abstract void skill(GameObject player);
 }
 
-abstract class PassiveClass : ScriptableObject
+public abstract class PassiveClass : ScriptableObject
 {
     public abstract void StartPassive(GameObject player);
 
     public abstract void EndPassive(GameObject player);
 }
 
-class PlayerStatus : ScriptableObject
+public class PlayerStatus : ScriptableObject
 {
     public int HP, money, speed, normalAttackDamage, specialAttackDamage, currentLevel;
     public ActiveClass activeClass;

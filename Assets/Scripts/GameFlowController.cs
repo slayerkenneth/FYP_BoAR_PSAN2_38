@@ -6,6 +6,7 @@ using CodeMonkey.HealthSystemCM;
 using Niantic.ARDK.Extensions.Gameboard;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameFlowController : MonoBehaviour
@@ -72,6 +73,14 @@ public class GameFlowController : MonoBehaviour
     [Header("UI / Canvas elements")] 
     public HealthBarUI PlayerHealthBarUI;
     public HealthBarUI EnemyHealthBarUI;
+    public GameObject WinPopUpWindow;
+    public GameObject LossPopUpWindow;
+
+    [Header("Global Player status")]
+    [SerializeField] public PlayerStatus playerGlobalStatus;
+    [SerializeField] public static int EnemyKillCount = 0;
+
+    
 
 
     public GameObject cloneTower;
@@ -79,6 +88,7 @@ public class GameFlowController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerGlobalStatus = PlayerStatus.CurrentPlayer;
         if (_activeGameboard != null)
         {
             battleSceneState = PVEBattleSceneState.Scanning;
@@ -252,6 +262,8 @@ public class GameFlowController : MonoBehaviour
         {
             battleSceneState = PVEBattleSceneState.Loss;
             DebugText.text = " Player Died and loss! Back to Start Point";
+            playerGlobalStatus.currentLevel = 0;
+            LossRestartFromBeginning();
             return;
         }
         
@@ -265,6 +277,7 @@ public class GameFlowController : MonoBehaviour
             {
                 battleSceneState = PVEBattleSceneState.Win;
                 DebugText.text = " Player Win !";
+                RewardNextStage();
                 return;
             }
             
@@ -302,7 +315,6 @@ public class GameFlowController : MonoBehaviour
     {
         Tower = tower;
     }
-    #endregion
 
     public void SetCurrentEnemyBeenAttacked(CombatHandler enemyCombatHandler)
     {
@@ -328,5 +340,34 @@ public class GameFlowController : MonoBehaviour
     {
         playerMovementCtrl = cmc;
     }
+    #endregion
 
+    #region End Battle Sequence (Reward or Die to return start)
+
+    public void RewardNextStage()
+    {
+        playerGlobalStatus.money++;
+        playerGlobalStatus.speed++;
+        playerGlobalStatus.HP++;
+        // playerGlobalStatus.currentLevel++; // cannot change this
+        playerGlobalStatus.normalAttackDamage++;
+        playerGlobalStatus.specialAttackDamage++;
+        
+        WinPopUpWindow.SetActive(true);
+        ReturningToMapScene();
+    }
+
+    public void LossRestartFromBeginning()
+    {
+        LossPopUpWindow.SetActive(true);
+    }
+
+
+    public void ReturningToMapScene()
+    {
+        WinPopUpWindow.SetActive(false);
+        LossPopUpWindow.SetActive(false);
+        SceneManager.LoadScene(1);
+    }
+    #endregion
 }
