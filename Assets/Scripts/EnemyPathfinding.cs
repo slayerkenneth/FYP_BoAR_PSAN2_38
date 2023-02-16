@@ -212,7 +212,7 @@ public class EnemyPathfinding : MonoBehaviour
 
     public void ChasePlayer()
     {   
-        transform.LookAt(GameFlowCtrl.getARCtrl().getClonePlayer().transform);
+        transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
         SetDestination(GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition());
         attackTower = false;
     }
@@ -221,7 +221,7 @@ public class EnemyPathfinding : MonoBehaviour
     {
         //Make sure enemy doesn't move
         StopMoving();
-        transform.LookAt(GameFlowCtrl.getARCtrl().getClonePlayer().transform);
+        transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
  
         //attack (need to change)
         Debug.Log(this.name + " Attacking Player");

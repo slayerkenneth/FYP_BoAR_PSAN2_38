@@ -60,7 +60,7 @@ public class CombatHandler : MonoBehaviour
     public void InitHP(float initHP)
     {
         //hp = initHP;
-        hp = PlayerStatus.CurrentPlayer.HP;
+        hp = PlayerStatus.CurrentPlayer.currentHP;
     }
 
     public void SetCentralCombatHandler(CentralBattleController cbc)

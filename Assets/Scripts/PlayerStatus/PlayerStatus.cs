@@ -17,7 +17,7 @@ public abstract class PassiveClass : ScriptableObject
 
 public class PlayerStatus : ScriptableObject
 {
-    public int HP, money, speed, normalAttackDamage, specialAttackDamage, currentLevel;
+    public int currentHP, maxHP, money, speed, normalAttackDamage, specialAttackDamage, currentLevel;
     public ActiveClass activeClass;
     public PassiveClass passiveClass;
 
@@ -28,7 +28,8 @@ public class PlayerStatus : ScriptableObject
         get {
             if (!_currentPlayer) {
                 _currentPlayer = ScriptableObject.CreateInstance<PlayerStatus>();
-                _currentPlayer.HP = 100;
+                _currentPlayer.currentHP = 100;
+                _currentPlayer.maxHP = 100;
                 _currentPlayer.money = 0;
                 _currentPlayer.speed = 1;
                 _currentPlayer.normalAttackDamage = 20;

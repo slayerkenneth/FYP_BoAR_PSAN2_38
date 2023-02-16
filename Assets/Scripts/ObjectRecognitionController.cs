@@ -136,7 +136,7 @@ public class ObjectRecognitionController : MonoBehaviour
     
     public void SpawnSceneItem(Ray ray) {
         var hitPoint = new Vector3();
-        var gameboard = ARCtrl.GetGameboard();
+        var gameboard = ARCtrl.GetActiveGameboard();
         var b = gameboard.RayCast(ray, out hitPoint);      // Null Object reference 
         // Intersect the Gameboard with the ray
         if (b)
@@ -155,7 +155,7 @@ public class ObjectRecognitionController : MonoBehaviour
     {
         if (SceneItemsLocations.Capacity == 0) return;
         var hitPoint = new Vector3();
-        var gameboard = ARCtrl.GetGameboard();
+        var gameboard = ARCtrl.GetActiveGameboard();
         foreach (var ray in SceneItemsLocations)
         {
             var b = gameboard.RayCast(ray, out hitPoint);      // Null Object reference 
