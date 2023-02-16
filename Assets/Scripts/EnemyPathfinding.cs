@@ -112,14 +112,15 @@ public class EnemyPathfinding : MonoBehaviour
         
         //using check capsules
         Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, 0.3f, whatIsEnemy);
-        for (int i = 0; i < hitColliders.Length; ++i)
-        {
-            if (hitColliders[i].gameObject != this.gameObject)
-            {
-                Debug.Log(this.name + " " + hitColliders[i].gameObject.name);
-                DealWithOverlap(hitColliders[i]);
-            }
-        }
+        // hide For Performance
+        // for (int i = 0; i < hitColliders.Length; ++i)
+        // {
+        //     if (hitColliders[i].gameObject != this.gameObject)
+        //     {
+        //         Debug.Log(this.name + " " + hitColliders[i].gameObject.name);
+        //         DealWithOverlap(hitColliders[i]);
+        //     }
+        // }
 
         if (!playerInSightRange && !playerInAttackRange)
         {
