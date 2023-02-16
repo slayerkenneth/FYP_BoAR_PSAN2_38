@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Tower(D)
   - Tower(C)
+  - WinUI
+  - LoseUI
   layers:
   - Default
   - TransparentFX

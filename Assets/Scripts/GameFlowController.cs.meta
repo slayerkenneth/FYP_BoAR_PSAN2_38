@@ -3,7 +3,26 @@ guid: 9664df5b6642fee4ebd81f02e876b920
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - arCamera: {instanceID: 0}
+  - ARCtrl: {instanceID: 0}
+  - playerMovementCtrl: {instanceID: 0}
+  - CentralBattleCtrl: {instanceID: 0}
+  - playerOwnCombatHandler: {instanceID: 0}
+  - DefTarget: {instanceID: 0}
+  - DebugText: {instanceID: 0}
+  - AreaText: {instanceID: 0}
+  - InvisibleWallPrefab: {instanceID: 0}
+  - EnemySpawner: {instanceID: 0}
+  - Tower: {instanceID: 0}
+  - PlayerHealthBarUI: {instanceID: 0}
+  - EnemyHealthBarUI: {instanceID: 0}
+  - WinPopUpWindow: {fileID: 1477375551673176880, guid: f2611c46bce81b04d96d2e65ed5bc451,
+      type: 3}
+  - LossPopUpWindow: {fileID: 738138234692081156, guid: dfebc9e3a67774b4a99099e4b1a7f832,
+      type: 3}
+  - playerGlobalStatus: {instanceID: 0}
+  - cloneTower: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
