@@ -354,7 +354,6 @@ public class GameFlowController : MonoBehaviour
         playerGlobalStatus.specialAttackDamage++;
         
         WinPopUpWindow.SetActive(true);
-        ReturningToMapScene();
     }
 
     public void LossRestartFromBeginning()
