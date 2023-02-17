@@ -29,7 +29,8 @@ public class GameFlowController : MonoBehaviour
         DungeonMode,
         BossFight,
         Win,
-        Loss
+        Loss,
+        WaitingReturnMap
     }
 
     [Header("Game Flow variable")] 
@@ -257,13 +258,14 @@ public class GameFlowController : MonoBehaviour
 
     private void CheckGameEndCondition()
     {
-        if (playerMovementCtrl == null) return;
+        if (playerMovementCtrl == null || battleSceneState == PVEBattleSceneState.WaitingReturnMap) return;
         if (playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP() <= 0)
         {
             battleSceneState = PVEBattleSceneState.Loss;
             DebugText.text = " Player Died and loss! Back to Start Point";
             playerGlobalStatus.currentLevel = 0;
             LossRestartFromBeginning();
+            battleSceneState = PVEBattleSceneState.WaitingReturnMap;
             return;
         }
         
@@ -278,6 +280,8 @@ public class GameFlowController : MonoBehaviour
                 battleSceneState = PVEBattleSceneState.Win;
                 DebugText.text = " Player Win !";
                 RewardNextStage();
+                battleSceneState = PVEBattleSceneState.WaitingReturnMap;
+
                 return;
             }
             

@@ -57,6 +57,7 @@ public class UIController : MonoBehaviour
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
 
+        Debug.Log(root);
         MainMenu = root.Q<VisualElement>("Main_Menu");
         HPBar = root.Q<ProgressBar>("HPBar");
         QuitButton = root.Q<Button>("Quit_Button");
@@ -122,56 +123,75 @@ public class UIController : MonoBehaviour
     {
         MainMenu.style.opacity = 0.5f;
         Item5Text.style.display = DisplayStyle.Flex;
+        Debug.Log("Exit pressed");
         SceneController.LoadMapScene();
     }
 
     void RestoreButtonPressed() 
     {
         //increase recent health
+        Debug.Log("Restore pressed");
+
     }
 
     void UpHealthButtonPressed() 
     {
         //increase recent and total health
+        Debug.Log("UpHealth pressed");
+
     }
 
     void UpWeaponButtonPressed() 
     {
         //increase weapon lv
+        Debug.Log("increase weapon lv pressed");
+
     }
 
     void UpClass1ButtonPressed() 
     {
         //increase class 1 lv
+        Debug.Log("increase class 1 lv pressed");
+
     }
 
     void UpClass2ButtonPressed() 
     {
         //increase class 2 lv
+        Debug.Log("increase class 2 lv pressed");
+
     }
 
     void Item1ButtonPressed() 
     {
         MainMenu.style.opacity = 0.5f;
         Item1Text.style.display = DisplayStyle.Flex;
+        Debug.Log("Item1ButtonPressed");
+
     }
 
     void Item2ButtonPressed() 
     {
         MainMenu.style.opacity = 0.5f;
         Item2Text.style.display = DisplayStyle.Flex;
+        Debug.Log("Item2ButtonPressed");
+
     }
 
     void Item3ButtonPressed() 
     {
         MainMenu.style.opacity = 0.5f;
         Item3Text.style.display = DisplayStyle.Flex;
+        Debug.Log("Item3ButtonPressed");
+
     }
 
     void Item4ButtonPressed() 
     {
         MainMenu.style.opacity = 0.5f;
         Item4Text.style.display = DisplayStyle.Flex;
+        Debug.Log("Item4ButtonPressed");
+
     }
 
     void Confirm1ButtonPressed()
@@ -179,6 +199,8 @@ public class UIController : MonoBehaviour
         MainMenu.style.opacity = 1.0f;
         Item1Text.style.display = DisplayStyle.None;
         //buy something, rencent money decrease
+        Debug.Log("Confirm1ButtonPressed");
+
     }
 
     void Confirm2ButtonPressed()
@@ -186,6 +208,8 @@ public class UIController : MonoBehaviour
         MainMenu.style.opacity = 1.0f;
         Item2Text.style.display = DisplayStyle.None;
         //buy something, rencent money decrease
+        Debug.Log("Confirm2ButtonPressed");
+
     }
 
     void Confirm3ButtonPressed()
@@ -193,6 +217,7 @@ public class UIController : MonoBehaviour
         MainMenu.style.opacity = 1.0f;
         Item3Text.style.display = DisplayStyle.None;
         //buy something, rencent money decrease
+        Debug.Log("Confirm3ButtonPressed");
     }
 
     void Confirm4ButtonPressed()
@@ -200,41 +225,52 @@ public class UIController : MonoBehaviour
         MainMenu.style.opacity = 1.0f;
         Item4Text.style.display = DisplayStyle.None;
         //buy something, rencent money decrease
+        Debug.Log("Confirm4ButtonPressed");
     }
 
     void Confirm5ButtonPressed()
     {
         //change to map scene
+        Debug.Log("Confirm5ButtonPressed");
+
     }
 
     void Cancel1ButtonPressed()
     {
         MainMenu.style.opacity = 1.0f;
         Item1Text.style.display = DisplayStyle.None;
+        Debug.Log("Cancel1ButtonPressed");
+
     }
 
     void Cancel2ButtonPressed()
     {
         MainMenu.style.opacity = 1.0f;
         Item2Text.style.display = DisplayStyle.None;
+        Debug.Log("Cancel2ButtonPressed");
+
     }
 
     void Cancel3ButtonPressed()
     {
         MainMenu.style.opacity = 1.0f;
         Item3Text.style.display = DisplayStyle.None;
+        Debug.Log("Cancel3ButtonPressed");
+
     }
 
     void Cancel4ButtonPressed()
     {
         MainMenu.style.opacity = 1.0f;
         Item4Text.style.display = DisplayStyle.None;
+        Debug.Log("Cancel4ButtonPressed");
     }
 
     void Cancel5ButtonPressed()
     {
         MainMenu.style.opacity = 1.0f;
         Item5Text.style.display = DisplayStyle.None;
+        Debug.Log("Cancel5ButtonPressed");
     }
 
     void InitShopUI()
