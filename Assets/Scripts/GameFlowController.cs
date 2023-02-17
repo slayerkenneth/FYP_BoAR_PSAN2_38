@@ -6,6 +6,7 @@ using CodeMonkey.HealthSystemCM;
 using Niantic.ARDK.Extensions.Gameboard;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameFlowController : MonoBehaviour
@@ -26,18 +27,23 @@ public class GameFlowController : MonoBehaviour
         CapturePointMode,
         DefencePointMode,
         DungeonMode,
-        BossFight
+        BossFight,
+        Win,
+        Loss,
+        WaitingReturnMap
     }
 
     [Header("Game Flow variable")] 
     [SerializeField] public PVEBattleSceneState battleSceneState = PVEBattleSceneState.invalid;
-    public static bool PlayerSpawnActive = false;
+    public bool PlayerSpawnActive = false;
     public PVEBattleSceneState BattleMode;
     
     [Header("Other Controller Reference")] 
     [SerializeField] private Camera arCamera;
     [SerializeField] private ARController ARCtrl;
     [SerializeField] private CharacterMovementController playerMovementCtrl;
+    [SerializeField] private CentralBattleController CentralBattleCtrl;
+    [SerializeField] private CombatHandler playerOwnCombatHandler;
     [SerializeField] private DefenceTarget DefTarget;
     
     [Header("Debug logs")] 
@@ -47,7 +53,8 @@ public class GameFlowController : MonoBehaviour
     [Header("Gameboard environment reference")] 
     [SerializeField] public static IGameboard _activeGameboard; //Consider make a getter setter function instead
     [SerializeField] public SpatialTree SpatialTree;
-    [SerializeField] private float AreaLimit = 100f;
+    [SerializeField] public float AreaLimit = 100f;
+    public float testScanArea;
     public List<Vector2Int> AllGridNodeCoordinates;
     public Dictionary<Vector2Int, List<Vector2Int>> CoordinatesAdjacencyList;
     public List<Vector2Int> WallCoordinates;
@@ -61,14 +68,28 @@ public class GameFlowController : MonoBehaviour
     public List<Vector3> EnemySpawnPositionList;
     public int enemyRandomSpawnLocationsCount;
 
+    [Header("Defense Point reference")] 
+    public DefenceTarget Tower;
+
     [Header("UI / Canvas elements")] 
     public HealthBarUI PlayerHealthBarUI;
+    public HealthBarUI EnemyHealthBarUI;
+    public GameObject WinPopUpWindow;
+    public GameObject LossPopUpWindow;
 
-    private GameObject cloneTower;
+    [Header("Global Player status")]
+    [SerializeField] public PlayerStatus playerGlobalStatus;
+    [SerializeField] public static int EnemyKillCount = 0;
+
+    
+
+
+    public GameObject cloneTower;
     
     // Start is called before the first frame update
     void Start()
     {
+        playerGlobalStatus = PlayerStatus.CurrentPlayer;
         if (_activeGameboard != null)
         {
             battleSceneState = PVEBattleSceneState.Scanning;
@@ -81,16 +102,18 @@ public class GameFlowController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckGameEndCondition();
+        AreaText.text = "A:" + _activeGameboard.Area + " A / tile: " + _activeGameboard.Area / _activeGameboard.Settings.TileSize + battleSceneState;
         // var srcPosition = Utils.PositionToTile(tempPosition, _activeGameboard.Settings.TileSize);
         if (_activeGameboard == null) return;
 
-        if (_activeGameboard.Area >= AreaLimit)
+        if (_activeGameboard.Area / _activeGameboard.Settings.TileSize >= testScanArea)
         {
             SpatialTree = _activeGameboard.GetSpatialTree();
-            battleSceneState = PVEBattleSceneState.ScanCompleteForColliderBuilding;
             if (PlayerSpawnActive == false)
             {
                 // make following function called once only
+                battleSceneState = PVEBattleSceneState.ScanCompleteForColliderBuilding;
                 GetAllTileCoordinatesAndMarkWalls();
                 SetBoundaryColliders();
                 EnemySpawner.SetSpawner(true);
@@ -111,15 +134,18 @@ public class GameFlowController : MonoBehaviour
             var wall = Instantiate(InvisibleWallPrefab, new Vector3(nodeCoord.x * _activeGameboard.Settings.TileSize,
                                                                                         0, 
                                                                                         nodeCoord.y * _activeGameboard.Settings.TileSize), new Quaternion(), WallSet.transform);
-            wall.transform.localScale = new Vector3(1, 1, 1);
+            wall.transform.localScale = new Vector3(1f,1f,1f);
             var wallBox = wall.GetComponent<BoxCollider>();
             wallBox.size = new Vector3(_activeGameboard.Settings.TileSize, 30, _activeGameboard.Settings.TileSize);
             wallBox.center = new Vector3(_activeGameboard.Settings.TileSize / 2, 0, _activeGameboard.Settings.TileSize / 2);
+            
+            // disable all border control like what government did (sorry actually becoz it's buggy
+            wall.SetActive(false);
         }
         battleSceneState = PVEBattleSceneState.ColliderBuilt;
     }
 
-    public void GetAllTileCoordinatesAndMarkWalls()
+    public void GetAllTileCoordinatesAndMarkWalls() // Problematic if Area < 4, from the beginning is buggy and wrong to use the AreaLimit
     {
         if (SpatialTree == null || MapCoordinatesConfirmed) return;
 
@@ -188,7 +214,7 @@ public class GameFlowController : MonoBehaviour
             var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
             if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
             {
-                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1, v.y * _activeGameboard.Settings.TileSize));
+                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1f, v.y * _activeGameboard.Settings.TileSize));
                 count++;
             }
         }
@@ -200,14 +226,20 @@ public class GameFlowController : MonoBehaviour
     #region CapturePoint / Defence Point
     public bool GetTowerSpawnLocationVector(out Vector3 towerLocation)
     {
+        towerLocation = new Vector3();
         if (BattleMode is PVEBattleSceneState.CapturePointMode or PVEBattleSceneState.DefencePointMode)
         {
+            // towerLocation = CalculateTowerLocation();
+            _activeGameboard.FindRandomPosition(out towerLocation);
+                var v = Utils.PositionToTile(towerLocation, _activeGameboard.Settings.TileSize);
+                if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
+                {
+                    towerLocation = new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.15f, v.y * _activeGameboard.Settings.TileSize); 
+                }
             towerLocation = CalculateTowerLocation();
-            cloneTower = DefTarget.GetSpawnedTower();
+            // if (DefTarget.GetSpawnedTower() != null) cloneTower = DefTarget.GetSpawnedTower();
             return true;
         }
-
-        towerLocation = new Vector3();
         return false;
     }
 
@@ -222,9 +254,75 @@ public class GameFlowController : MonoBehaviour
     }
     #endregion
 
-    public CharacterMovementController getPlayerMovementCtrl ()
+    #region Flow Condition Check
+
+    private void CheckGameEndCondition()
     {
-        return ARCtrl.GetActivePlayerMovementCtrl();
+        if (playerMovementCtrl == null || battleSceneState == PVEBattleSceneState.WaitingReturnMap) return;
+        if (playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP() <= 0)
+        {
+            battleSceneState = PVEBattleSceneState.Loss;
+            DebugText.text = " Player Died and loss! Back to Start Point";
+            playerGlobalStatus.currentLevel = 0;
+            LossRestartFromBeginning();
+            battleSceneState = PVEBattleSceneState.WaitingReturnMap;
+            return;
+        }
+        
+        if (BattleMode == PVEBattleSceneState.CapturePointMode)
+        {
+            
+        }
+        else if (BattleMode == PVEBattleSceneState.DefencePointMode)
+        {
+            if (Tower.GetRemainingTime() <= 0)
+            {
+                battleSceneState = PVEBattleSceneState.Win;
+                DebugText.text = " Player Win !";
+                RewardNextStage();
+                battleSceneState = PVEBattleSceneState.WaitingReturnMap;
+
+                return;
+            }
+            
+        }
+        else if (BattleMode == PVEBattleSceneState.DungeonMode)
+        {
+            
+        }
+        else if (BattleMode == PVEBattleSceneState.PushCarBattleMode)
+        {
+            
+        }
+        else
+        {
+            // not possible
+        }
+    }
+
+    #endregion
+    
+    #region Getter / Setter
+    public CharacterMovementController GetPlayerMovementCtrl ()
+    {
+        var movementCtrl = ARCtrl.GetActivePlayerMovementCtrl();
+        playerMovementCtrl = movementCtrl;
+        return movementCtrl;
+    }
+
+    public CentralBattleController GetCentralBattleController()
+    {
+        return CentralBattleCtrl;
+    }
+
+    public void SetDefenseTower(DefenceTarget tower)
+    {
+        Tower = tower;
+    }
+
+    public void SetCurrentEnemyBeenAttacked(CombatHandler enemyCombatHandler)
+    {
+        EnemyHealthBarUI.SetHealthSystem(enemyCombatHandler.GetHealthSystemComponent().GetHealthSystem());
     }
 
     public GameObject GetCloneTower()
@@ -237,4 +335,43 @@ public class GameFlowController : MonoBehaviour
         return ARCtrl;
     }
 
+    public CharacterMovementController getPlayerMovementCtrl()
+    {
+        return playerMovementCtrl;
+    }
+
+    public void SetPlayerMovementCtrl(CharacterMovementController cmc)
+    {
+        playerMovementCtrl = cmc;
+    }
+    #endregion
+
+    #region End Battle Sequence (Reward or Die to return start)
+
+    public void RewardNextStage()
+    {
+        playerGlobalStatus.money++;
+        playerGlobalStatus.speed++;
+        playerGlobalStatus.currentHP = (int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP();
+        // playerGlobalStatus.currentLevel++; // cannot change this
+        playerGlobalStatus.normalAttackDamage++;
+        playerGlobalStatus.specialAttackDamage++;
+        
+        WinPopUpWindow.SetActive(true);
+    }
+
+    public void LossRestartFromBeginning()
+    {
+        // LossPopUpWindow.SetActive(true);
+        ReturningToMapScene();
+    }
+
+
+    public void ReturningToMapScene()
+    {
+        // WinPopUpWindow.SetActive(false);
+        // LossPopUpWindow.SetActive(false);
+        SceneManager.LoadScene(1);
+    }
+    #endregion
 }

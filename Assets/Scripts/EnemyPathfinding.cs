@@ -32,15 +32,15 @@ public class EnemyPathfinding : MonoBehaviour
 
 
     //State
-    private float sightRange = 3.0f;
-    private float attackRange = 1.0f;
-    private bool playerInSightRange;
-    private bool playerInAttackRange;
-    private bool towerInAttackRange;
+    [SerializeField] private float sightRange = 1.0f;
+    [SerializeField] private float attackRange = 0.2f;
+    [SerializeField] private bool playerInSightRange;
+    [SerializeField] private bool playerInAttackRange;
+    [SerializeField] private bool towerInAttackRange;
 
     // [Header("Agent Settings")]
     // [SerializeField]
-    private float walkingSpeed = 3.0f;
+    [SerializeField] private float walkingSpeed = 3.0f;
     
     private float jumpDistance = 1;
     
@@ -112,18 +112,19 @@ public class EnemyPathfinding : MonoBehaviour
         
         //using check capsules
         Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, 0.3f, whatIsEnemy);
-        for (int i = 0; i < hitColliders.Length; ++i)
-        {
-            if (hitColliders[i].gameObject != this.gameObject)
-            {
-                Debug.Log(this.name + " " + hitColliders[i].gameObject.name);
-                DealWithOverlap(hitColliders[i]);
-            }
-        }
+        // hide For Performance
+        // for (int i = 0; i < hitColliders.Length; ++i)
+        // {
+        //     if (hitColliders[i].gameObject != this.gameObject)
+        //     {
+        //         Debug.Log(this.name + " " + hitColliders[i].gameObject.name);
+        //         DealWithOverlap(hitColliders[i]);
+        //     }
+        // }
 
         if (!playerInSightRange && !playerInAttackRange)
         {
-            if (!attackTower)
+            if (!attackTower && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer)
                 GoToTower();
             else
                 AttackTower();
@@ -206,12 +207,12 @@ public class EnemyPathfinding : MonoBehaviour
     {
         //attack (need to change)
         transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
-        Debug.Log(this.name + " Attacking Tower");
+        // Debug.Log(this.name + " Attacking Tower");
     }
 
     public void ChasePlayer()
     {   
-        transform.LookAt(GameFlowCtrl.getARCtrl().getClonePlayer().transform);
+        transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
         SetDestination(GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition());
         attackTower = false;
     }
@@ -220,7 +221,7 @@ public class EnemyPathfinding : MonoBehaviour
     {
         //Make sure enemy doesn't move
         StopMoving();
-        transform.LookAt(GameFlowCtrl.getARCtrl().getClonePlayer().transform);
+        transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
  
         //attack (need to change)
         Debug.Log(this.name + " Attacking Player");

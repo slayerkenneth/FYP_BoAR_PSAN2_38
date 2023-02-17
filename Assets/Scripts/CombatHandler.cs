@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeMonkey.HealthSystemCM;
 using UnityEngine;
+using Assets.Scripts;
 
 public class CombatHandler : MonoBehaviour
 {
@@ -13,12 +15,13 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] private List<Collider> DamageTakingColliders;
     [SerializeField] private CombatHandler AttackTarget;
     [SerializeField] private CombatHandler DamageSource;
+    [SerializeField] private HealthSystemComponent healthSystemComponent;
 
     
     [Header("Reference")] 
-    private ARController ARCtrl;
-    private GameFlowController GameFlowCtrl;
-    private CentralBattleController CentralBattleCtrl;
+    [SerializeField] private ARController ARCtrl;
+    [SerializeField] private GameFlowController GameFlowCtrl;
+    [SerializeField] private CentralBattleController CentralBattleCtrl;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +48,7 @@ public class CombatHandler : MonoBehaviour
             hp = 0;
         }
         else hp = tempHP;
+        healthSystemComponent.GetHealthSystem().Damage(damageAmount);
     }
 
     public float GetCurrentHP()
@@ -55,6 +59,27 @@ public class CombatHandler : MonoBehaviour
     // Only called in initialization
     public void InitHP(float initHP)
     {
-        hp = initHP;
+        //hp = initHP;
+        hp = PlayerStatus.CurrentPlayer.currentHP;
+    }
+
+    public void SetCentralCombatHandler(CentralBattleController cbc)
+    {
+        CentralBattleCtrl = cbc;
+    }
+
+    public List<Collider> GetAttackingColliders()
+    {
+        return AttackingColliders;
+    }
+    
+    public List<Collider> GetDamageReceivingColliders()
+    {
+        return DamageTakingColliders;
+    }
+
+    public HealthSystemComponent GetHealthSystemComponent()
+    {
+        return healthSystemComponent;
     }
 }

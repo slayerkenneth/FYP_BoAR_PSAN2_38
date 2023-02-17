@@ -22,6 +22,7 @@ public class DefenceTarget : MonoBehaviour
     private float CurrentTime;
     private bool hasTowerSpawned = false;
     public int startMinute;
+    public CombatHandler towerCombatHandler;
     private GameObject SpawnedTower;
     
 
@@ -32,6 +33,7 @@ public class DefenceTarget : MonoBehaviour
     private void Start()
     {
         CurrentTime = DefenceTime;
+        GameFlowCtrl.SetDefenseTower(this);
     }
 
     void Update()
@@ -54,12 +56,20 @@ public class DefenceTarget : MonoBehaviour
 
     private void SpawnTower()
     {
-        if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningTower && !hasTowerSpawned)
+        if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && !hasTowerSpawned)
         {
             SpawnedTower = Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
             GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.DefencePointMode;
             hasTowerSpawned = true;
+            GameFlowCtrl.cloneTower = SpawnedTower;
         }
+        // Adjust Tower Y-axis:
+        // if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer)
+        // {
+        //     var CalibrateY = GameFlowCtrl.GetPlayerMovementCtrl().transform.position.y;
+        //     if (CalibrateY <= 0)
+        //         activeTower.transform.localPosition = new Vector3(activeTower.transform.localPosition.x, CalibrateY, activeTower.transform.localPosition.z);
+        // }
     }
 
     public GameObject GetSpawnedTower()
@@ -80,5 +90,10 @@ public class DefenceTarget : MonoBehaviour
     public void StopCountDown()
     {
         stopWatchActive = false;
+    }
+
+    public float GetRemainingTime()
+    {
+        return CurrentTime;
     }
 }

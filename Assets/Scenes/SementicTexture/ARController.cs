@@ -18,6 +18,7 @@ using Niantic.ARDK.AR.HitTest;
 using Niantic.ARDK.External;
 using Assets.Scripts;
 using System.IO;
+using CodeMonkey.HealthSystemCM;
 
 public class ARController : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class ARController : MonoBehaviour
 
     [SerializeField] [Tooltip("GameObject to instantiate as the agent")]
     private GameObject _agentPrefab; // the prefab we will be spawning as our agent
-
+    [SerializeField] private GameObject playerSpawnParent;
     private IGameboard _gameboard; // ARDK's Gameboard object to handle smart placement and navigation
     private GameObject _agentGameObject; // the game object of the spawned agent 
     private WorkshopGameboardAgent _agent; // the agent that can navigate the gameboard
@@ -61,7 +62,8 @@ public class ARController : MonoBehaviour
     [SerializeField] public Text DebugText;
     [SerializeField] public Text AreaText;
 
-    [Header("object reconition")]
+    [Header("object reconition")] 
+    public ObjectRecognitionController ObjectRecognitionCtrl;
     public GameObject PlacementObjectPf;
     public GameObject boxContainer;
     public GameObject boxPrefab;
@@ -123,7 +125,7 @@ public class ARController : MonoBehaviour
         //get the current buffer
         ISemanticBuffer semanticBuffer = args.Sender.AwarenessBuffer;
         //get the index for sky
-        int channel = semanticBuffer.GetChannelIndex("ground");
+        int channel = semanticBuffer.GetChannelIndex("ground"); //ground
 
         semanticBuffer.CreateOrUpdateTextureARGB32(
             ref _semanticTexture, channel, FilterMode.Trilinear
@@ -172,7 +174,7 @@ public class ARController : MonoBehaviour
         // The origin of the scan should be in front of the player
         var origin = playerPosition + Vector3.ProjectOnPlane(playerForward, Vector3.up).normalized;
 
-        if (gameboardArea < 100)
+        if (gameboardArea < GameFlowController.AreaLimit)
         {
             _gameboard.Scan(origin, 5);
         }
@@ -210,7 +212,6 @@ public class ARController : MonoBehaviour
         
         RaycastHit hit;
         var tempPos = new Vector3();
-        Debug.Log(touch.position);
         if (Physics.Raycast(ray, out hit))
         {
             DebugText.text = "Debug: Hit" + touchCount.ToString();
@@ -314,22 +315,40 @@ public class ARController : MonoBehaviour
     {
         if (_agentGameObject != null || GameFlowController.PlayerSpawnActive == false) return;
         // Instantiate the agent with the predefined prefab
-        _agentGameObject = Instantiate(_agentPrefab);
+        Vector3 spawnPoint = GameFlowController.GetEnemySpawnLocationVectorList()[(int) GameFlowController.GetEnemySpawnLocationVectorList().Count/2];
         
-        // Set the position of the agent as the raycast hit result
-        _agentGameObject.transform.position = hitPoint;
+        spawnPoint = new Vector3(spawnPoint.x * _gameboard.Settings.TileSize, 0, spawnPoint.z * _gameboard.Settings.TileSize);
         
         // Have the prefab face towards camera
         var rotation = Vector3.ProjectOnPlane(_arCamera.transform.forward, Vector3.up).normalized;
-        _agentGameObject.transform.rotation = Quaternion.LookRotation(-rotation);
+        var QRot = Quaternion.LookRotation(-rotation);
         
+        _agentGameObject = Instantiate(_agentPrefab, spawnPoint, QRot, playerSpawnParent.transform);
+        playerSpawnParent.transform.localScale = new Vector3(1f, 1f, 1f);
+        // Set the position of the agent as the raycast hit result
+        // _agentGameObject.transform.position = hitPoint;
+
         // Set agent's state for navigation
         // _agent = _agentGameObject.GetComponent<WorkshopGameboardAgent>(); // TODO: A rework on gameboard agent is needed
         // _agent.State = WorkshopGameboardAgent.AgentNavigationState.Idle;
         var CharMoveCtrl = _agentGameObject.GetComponent<CharacterMovementController>();
         CharMoveCtrl.ARController = this;
         CharMoveCtrl.GameFlowController = GameFlowController;
-        DebugText.text = "Debug: Spawned stuff";
+
+        var charCombat = _agentGameObject.GetComponent<CombatHandler>();
+        charCombat.SetCentralCombatHandler(GameFlowController.GetCentralBattleController());
+        DebugText.text = "Debug: Spawned Player";
+
+        var healthBarUI = FindObjectsOfType<HealthBarUI>();
+        foreach (var ui in healthBarUI)
+        {
+            if (ui.tag == "Player")
+            {
+                ui.SetHealthSystem(charCombat.GetHealthSystemComponent().GetHealthSystem());
+            }
+        }
+        
+        GameFlowController.SetPlayerMovementCtrl(CharMoveCtrl);
     }
 
     public IGameboard GetActiveGameboard()
@@ -376,6 +395,11 @@ public class ARController : MonoBehaviour
         //Then clear & draw the texture to fill the entire RTT.
         GL.Clear(true, true, new Color(0, 0, 0, 0));
         Graphics.DrawTexture(new Rect(0, 0, 1, 1), src);
+    }
+
+    public IGameboard GetGameboard()
+    {
+        return _gameboard;
     }
 
     public GameObject getClonePlayer()

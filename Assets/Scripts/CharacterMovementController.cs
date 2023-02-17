@@ -37,6 +37,7 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] private CombatHandler playerOwnCombatHandler;
     [SerializeField] private HealthSystemComponent playerOwnHealthSystem;
     [SerializeField] private float maxHP;
+    [SerializeField] private PlayerWeaponSkillController PlayerWeaponSkillCtrl;
     
     [Header("Debug")]
     public Text debugLog;
@@ -62,6 +63,7 @@ public class CharacterMovementController : MonoBehaviour
         debugLog = ARController.AreaText;
         maxHP = playerOwnHealthSystem.GetHealthSystem().GetHealthMax();
         playerOwnCombatHandler.InitHP(maxHP);
+        PlayerWeaponSkillCtrl = FindObjectOfType<PlayerWeaponSkillController>();
     }
 
     void Update()
@@ -99,11 +101,51 @@ public class CharacterMovementController : MonoBehaviour
 
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+        
+        if (mapper.Player.NormalAttack.triggered)
+        {
+            NormalAttack();
+        }
+        else if (mapper.Player.Defense.triggered)
+        {
+            Defense();
+        } else if (mapper.Player.CastSkill.triggered)
+        {
+            CastSkill();
+        }
+
     }
 
-    public Vector3 getPlayerPosition()
+    public Vector3 GetPlayerPosition()
     {
         return nearestBoardPosition;
     }
 
+    public CombatHandler GetPlayerCombatHandler()
+    {
+        return playerOwnCombatHandler;
+    }
+
+    public void NormalAttack()
+    {
+        animator.Play("NormalAttack1");
+        PlayerWeaponSkillCtrl.NormalAttack();
+    }
+
+    public void Defense()
+    {
+        animator.Play("ReceiveDamage");
+        PlayerWeaponSkillCtrl.Defense();
+    }
+
+    public void CastSkill()
+    {
+        PlayerWeaponSkillCtrl.CastSkill();
+        transform.position = new Vector3(0, 1, 0);
+    }
+
+    public Vector3 getPlayerPosition()
+    {
+        return transform.localPosition;
+    }
 }
