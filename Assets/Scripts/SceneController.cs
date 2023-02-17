@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    public void LoadBattleScene()
+    public void LoadMapScene()
     {
         SceneManager.LoadScene(1);
     }

@@ -8,7 +8,8 @@ public class UIController : MonoBehaviour
 {
     [Header("Global Reference")] [SerializeField]
     public PlayerStatus PlayerStatus;
-    
+
+    public ProgressBar HPBar;
     public Button QuitButton;
     public Button RestoreButton;
     public Button UpHealthButton;
@@ -44,20 +45,20 @@ public class UIController : MonoBehaviour
 
     public VisualElement MainMenu;
 
-    private int recentHealth;
-    private int totalHealth;
-    private int recentMoney;
-    private int recentWeaponLV;
-    private int recentClass1LV;
-    private int recentClass2LV;
+    [SerializeField] private int recentHealth;
+    [SerializeField] private int totalHealth;
+    [SerializeField] private int recentMoney;
+    [SerializeField] private int recentWeaponLV;
+    [SerializeField] private int recentClass1LV;
+    [SerializeField] private int recentClass2LV;
+    [SerializeField] private SceneController SceneController;
     // Start is called before the first frame update
     void Start()
     {
-        InitShopUI();
         var root = GetComponent<UIDocument>().rootVisualElement;
 
         MainMenu = root.Q<VisualElement>("Main_Menu");
-
+        HPBar = root.Q<ProgressBar>("HPBar");
         QuitButton = root.Q<Button>("Quit_Button");
         RestoreButton = root.Q<Button>("Restore_Button");
         UpHealthButton = root.Q<Button>("Upgrade_Health_Button");
@@ -112,12 +113,16 @@ public class UIController : MonoBehaviour
         Cancel3Button.clicked += Cancel3ButtonPressed;
         Cancel4Button.clicked += Cancel4ButtonPressed;
         Cancel5Button.clicked += Cancel5ButtonPressed;
+        
+        InitShopUI();
+
     }
 
     void QuitButtonPressed() 
     {
         MainMenu.style.opacity = 0.5f;
         Item5Text.style.display = DisplayStyle.Flex;
+        SceneController.LoadMapScene();
     }
 
     void RestoreButtonPressed() 
@@ -236,11 +241,18 @@ public class UIController : MonoBehaviour
     {
         PlayerStatus = PlayerStatus.CurrentPlayer;
         if (PlayerStatus== null) return;
-        recentHealth = PlayerStatus.HP;
-        totalHealth = PlayerStatus.HP;
+        Debug.Log(PlayerStatus);
+        recentHealth = PlayerStatus.currentHP;
+        totalHealth = PlayerStatus.maxHP;
         recentMoney = PlayerStatus.money;
         recentWeaponLV = PlayerStatus.normalAttackDamage;
         recentClass1LV = PlayerStatus.normalAttackDamage;
         recentClass2LV = PlayerStatus.specialAttackDamage;
+
+        MoneyText.text = recentMoney.ToString();
+        HPBar.highValue = totalHealth;
+        HPBar.lowValue = recentHealth;
+        HPBar.value = recentHealth;
+        HPBar.title = "HP:" + HPBar.value + "/" + totalHealth;
     }
 }

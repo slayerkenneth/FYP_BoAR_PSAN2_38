@@ -348,7 +348,7 @@ public class GameFlowController : MonoBehaviour
     {
         playerGlobalStatus.money++;
         playerGlobalStatus.speed++;
-        playerGlobalStatus.HP++;
+        playerGlobalStatus.currentHP = (int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP();
         // playerGlobalStatus.currentLevel++; // cannot change this
         playerGlobalStatus.normalAttackDamage++;
         playerGlobalStatus.specialAttackDamage++;
@@ -358,14 +358,15 @@ public class GameFlowController : MonoBehaviour
 
     public void LossRestartFromBeginning()
     {
-        LossPopUpWindow.SetActive(true);
+        // LossPopUpWindow.SetActive(true);
+        ReturningToMapScene();
     }
 
 
     public void ReturningToMapScene()
     {
-        WinPopUpWindow.SetActive(false);
-        LossPopUpWindow.SetActive(false);
+        // WinPopUpWindow.SetActive(false);
+        // LossPopUpWindow.SetActive(false);
         SceneManager.LoadScene(1);
     }
     #endregion

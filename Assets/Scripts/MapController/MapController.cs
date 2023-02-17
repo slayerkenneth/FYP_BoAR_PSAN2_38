@@ -24,11 +24,12 @@ public struct level
     public int id;
     public LevelType levelType;
     public Vector2 pos;
+    public int sequence;    //the distance to the start level. -1 represent end level
 }
 
 public struct Map {
     public Dictionary<int, level> levels;
-    public Dictionary<Vector2, int> pos2Id; 
+    public Dictionary<Vector2, int> pos2Id;
     public Dictionary<int, List<int>> edges; //key is the level id and value is the list connected levels id that can be proceed
 }
 
@@ -36,15 +37,25 @@ public class MapController : MonoBehaviour
 {
 
     public RectTransform graphContainer;
-    public GameObject DefencePrefab;
+    public GameObject IconPrefab;
+    public GameObject EndPrefab;
+    public Sprite DefenceImage;
+    public Sprite ShopImage;
     public GameObject LinkPrefab;
     public GameObject CirclePrefab;
     public static Map currentMap;
+    public bool endSceen = false;
+
 
     public void Start()
     {
         if (currentMap.levels == null) GenerateMap();
         drawMap();
+        if (currentMap.levels[PlayerStatus.CurrentPlayer.currentLevel].sequence == -1)
+        {
+            EndPrefab.SetActive(true);
+            endSceen = true;
+        }
     }
 
     public void GenerateMap() {
@@ -64,14 +75,15 @@ public class MapController : MonoBehaviour
         {
             graph.AddNewEdge(edge.P.ToVector2(), edge.Q.ToVector2());
         });
-
-        for (int i = Random.Range(5, 7); i > 0; --i)
+        registerLevel(startPoint, 0);
+        registerLevel(endPoint, -1);
+        for (int i = Random.Range(5, 12); i > 0; --i)
         {
             var path = DijkstraSearch.Search(graph, new Vertex(startPoint), new Vertex(endPoint));
             if (path == null) break;
             for(int j = 0; j <path.Length - 1; j++) {
-                int currentID = registerLevel(path[j].Name);
-                int next = registerLevel(path[j + 1].Name);
+                int currentID = registerLevel(path[j].Name, j);
+                int next = registerLevel(path[j + 1].Name, j + 1);
                 List<int> value;
                 if (currentMap.edges.TryGetValue(currentID,out value)) {
                     value.Add(next);
@@ -90,7 +102,35 @@ public class MapController : MonoBehaviour
     }
 
     private void CreateIcon(level level) {
-        GameObject newIcon = Instantiate(DefencePrefab);
+        GameObject newIcon = Instantiate(IconPrefab);
+        switch (level.levelType) {
+            case LevelType.Boss:
+                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                break;
+            case LevelType.CapturePointBattleMode:
+                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                break;
+            case LevelType.DefencePointBattleMode:
+                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                break;
+            case LevelType.DungeonMode:
+                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                break;
+            case LevelType.Event:
+                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                break;
+            case LevelType.PushCarBattleMode:
+                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                break;
+            case LevelType.Shop:
+                newIcon.GetComponent<Image>().sprite = ShopImage;
+                break;
+            default:
+                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                break;
+        }
+        
+
         newIcon.name = "Level "+ level.id;
         newIcon.transform.parent = graphContainer;
         RectTransform rectTransform = newIcon.GetComponent<RectTransform>();
@@ -119,22 +159,24 @@ public class MapController : MonoBehaviour
 
     public void onIconClick(int id) {
         List<int> edge;
-        if (currentMap.edges.TryGetValue(PlayerStatus.CurrentPlayer.currentLevel, out edge)) {
-            if (edge.Contains(id))
-            {
-                PlayerStatus.CurrentPlayer.currentLevel = id;
-                SceneManager.LoadScene(currentMap.levels[id].levelType.ToString());
-                // Testing (Shop UI Scene)
-                // SceneManager.LoadScene(3);
+        if (!endSceen) {
+            if (currentMap.edges.TryGetValue(PlayerStatus.CurrentPlayer.currentLevel, out edge)) {
+                if (edge.Contains(id))
+                {
+                    PlayerStatus.CurrentPlayer.currentLevel = id;
+                    SceneManager.LoadScene(currentMap.levels[id].levelType.ToString());
+                }
             }
         }
     }
 
-    private LevelType randomizeType() {
+    private LevelType randomizeType(int sequence) {
+        if (sequence == 1 || sequence == 0 || sequence == -1) return LevelType.DefencePointBattleMode;
+        if (Random.Range(1, 3) == 1) return LevelType.Shop;
         return LevelType.DefencePointBattleMode;
     }
 
-    private int registerLevel(Vector2 pos) {
+    private int registerLevel(Vector2 pos, int sequence) {
         int id = 0;
         if (currentMap.pos2Id.TryGetValue(pos, out id))
         {
@@ -145,8 +187,9 @@ public class MapController : MonoBehaviour
             id = currentMap.levels.Count;
             var level = new level();
             level.id = id;
-            level.levelType = randomizeType();
+            level.levelType = randomizeType(sequence);
             level.pos = pos;
+            level.sequence = sequence;
             currentMap.levels.Add(id, level);
             currentMap.pos2Id.Add(pos, id);
             return id;
