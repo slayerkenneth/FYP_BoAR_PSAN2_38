@@ -193,7 +193,7 @@ public class EnemyPathfinding : MonoBehaviour
         towerSpawned = GameFlowCtrl.GetTowerSpawnLocationVector(out towerPosition);
         if (towerSpawned)
         {
-            transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
+            // transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
             SetDestination(towerPosition);         
             if(Vector3.Distance(transform.position, towerPosition) <= attackRange)
             {
@@ -206,13 +206,13 @@ public class EnemyPathfinding : MonoBehaviour
     public void AttackTower()
     {
         //attack (need to change)
-        transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
+        // transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
         // Debug.Log(this.name + " Attacking Tower");
     }
 
     public void ChasePlayer()
     {   
-        transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
+        // transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
         SetDestination(GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition());
         attackTower = false;
     }
@@ -221,7 +221,7 @@ public class EnemyPathfinding : MonoBehaviour
     {
         //Make sure enemy doesn't move
         StopMoving();
-        transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
+        // transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
  
         //attack (need to change)
         Debug.Log(this.name + " Attacking Player");

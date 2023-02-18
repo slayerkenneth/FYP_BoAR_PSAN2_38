@@ -30,13 +30,14 @@ public class EnemySpawner : MonoBehaviour
     {
         _activeGameboard = ARCtrl.GetActiveGameboard();
         EnemySpawnLocationList = GameFlowCtrl.GetEnemySpawnLocationVectorList();
+        currentEnemyCount = 0;
     }
     
     void Update()
     {
-        if (!EnemySpawnEnable || EnemySpawnPrefabList.Count == 0 || EnemySpawnLocationList.Count == 0 || currentEnemyCount >= MaxEnemyCount) return;
         for (int i=0; i < EnemySpawnLocationList.Count; i++)
         {
+            if (!EnemySpawnEnable || EnemySpawnPrefabList.Count == 0 || EnemySpawnLocationList.Count == 0 || currentEnemyCount >= MaxEnemyCount) return;
             StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i]));
             currentEnemyCount++;
         }

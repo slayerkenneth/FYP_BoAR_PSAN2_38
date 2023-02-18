@@ -108,7 +108,7 @@ public class ARController : MonoBehaviour
         _gameboard = args.Gameboard;
         _gameboard.GameboardDestroyed += OnGameboardDestroyed;
         GameFlowController._activeGameboard = _gameboard;
-        DebugText.text = "Debug: GB created";
+        // DebugText.text = "Debug: GB created";
     }
 
     private void OnGameboardDestroyed(IArdkEventArgs args)
@@ -179,7 +179,7 @@ public class ARController : MonoBehaviour
             _gameboard.Scan(origin, 5);
         }
         gameboardArea = _gameboard.Area;
-        AreaText.text = "Gameboard A: " + gameboardArea.ToString();
+        // AreaText.text = "Gameboard A: " + gameboardArea.ToString();
         
         // if there is no touch, return
         if (PlatformAgnosticInput.touchCount <= 0) return;
@@ -198,10 +198,10 @@ public class ARController : MonoBehaviour
         // do not process if the AR session is not active
         if (_arSession == null || _arCamera == null)
         {
-            DebugText.text = "Debug: No AR Session";
+            // DebugText.text = "Debug: No AR Session";
             if (_arCamera == null)
             {
-                DebugText.text = "Debug: No AR Camera";
+                // DebugText.text = "Debug: No AR Camera";
             }
             return;
         }
@@ -214,7 +214,7 @@ public class ARController : MonoBehaviour
         var tempPos = new Vector3();
         if (Physics.Raycast(ray, out hit))
         {
-            DebugText.text = "Debug: Hit" + touchCount.ToString();
+            // DebugText.text = "Debug: Hit" + touchCount.ToString();
             touchCount++;
             _gameboard.FindNearestFreePosition(hit.point, out tempPos);
             // if agent does not exist, spawn it!
@@ -230,8 +230,8 @@ public class ARController : MonoBehaviour
             {
                 // Test
                 var node = new GridNode();
-                if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node))
-                    DebugText.text = DebugText.text + " Raycast hit nearest board pos " + tempPos.ToString() + " GN node Coord" + node.Coordinates;
+                // if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node))
+                    // DebugText.text = DebugText.text + " Raycast hit nearest board pos " + tempPos.ToString() + " GN node Coord" + node.Coordinates;
             }
         }
         
@@ -317,7 +317,7 @@ public class ARController : MonoBehaviour
         // Instantiate the agent with the predefined prefab
         Vector3 spawnPoint = GameFlowController.GetEnemySpawnLocationVectorList()[(int) GameFlowController.GetEnemySpawnLocationVectorList().Count/2];
         
-        spawnPoint = new Vector3(spawnPoint.x * _gameboard.Settings.TileSize, 0, spawnPoint.z * _gameboard.Settings.TileSize);
+        spawnPoint = new Vector3(spawnPoint.x * _gameboard.Settings.TileSize, 1f, spawnPoint.z * _gameboard.Settings.TileSize);
         
         // Have the prefab face towards camera
         var rotation = Vector3.ProjectOnPlane(_arCamera.transform.forward, Vector3.up).normalized;
@@ -337,7 +337,7 @@ public class ARController : MonoBehaviour
 
         var charCombat = _agentGameObject.GetComponent<CombatHandler>();
         charCombat.SetCentralCombatHandler(GameFlowController.GetCentralBattleController());
-        DebugText.text = "Debug: Spawned Player";
+        // DebugText.text = "Debug: Spawned Player";
 
         var healthBarUI = FindObjectsOfType<HealthBarUI>();
         foreach (var ui in healthBarUI)

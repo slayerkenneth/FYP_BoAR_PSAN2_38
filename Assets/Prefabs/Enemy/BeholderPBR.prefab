@@ -600,6 +600,7 @@ GameObject:
   - component: {fileID: 7744360170719625079}
   - component: {fileID: 1289335370182288983}
   - component: {fileID: 6087071987150614418}
+  - component: {fileID: -1159675105632936976}
   m_Layer: 9
   m_Name: BeholderPBR
   m_TagString: Enemy
@@ -675,8 +676,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 50
   skillCoolDown: 0
-  AttackingColliders: []
-  DamageTakingColliders: []
+  AttackingColliders:
+  - {fileID: -1159675105632936976}
+  DamageTakingColliders:
+  - {fileID: -1159675105632936976}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 6087071987150614418}
@@ -692,7 +695,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 7487410016656624447}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 1.1
   m_Height: 2.5
   m_Direction: 1
@@ -711,6 +714,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmountMax: 100
   startingHealthAmount: 100
+--- !u!65 &-1159675105632936976
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7487410016656624447}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.72, y: 7.06, z: 1.57}
+  m_Center: {x: 0, y: 1.52, z: 0}
 --- !u!1 &7487410016656624449
 GameObject:
   m_ObjectHideFlags: 0

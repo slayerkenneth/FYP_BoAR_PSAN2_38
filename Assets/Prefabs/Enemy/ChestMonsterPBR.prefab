@@ -679,6 +679,7 @@ GameObject:
   - component: {fileID: 2582723231185886663}
   - component: {fileID: 8866083746365405675}
   - component: {fileID: 230690333636417260}
+  - component: {fileID: -1586254527527419753}
   m_Layer: 9
   m_Name: ChestMonsterPBR
   m_TagString: Enemy
@@ -731,11 +732,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6860756994242604922}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.73, y: 1.71, z: 1.48}
-  m_Center: {x: 0, y: 0.67, z: 0}
+  m_Size: {x: 1.73, y: 7.06, z: 1.48}
+  m_Center: {x: 0, y: 0.27, z: 0}
 --- !u!114 &2582723231185886663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,8 +768,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 100
   skillCoolDown: 0
-  AttackingColliders: []
-  DamageTakingColliders: []
+  AttackingColliders:
+  - {fileID: -1586254527527419753}
+  DamageTakingColliders:
+  - {fileID: -1586254527527419753}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 230690333636417260}
@@ -789,6 +792,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmountMax: 100
   startingHealthAmount: 100
+--- !u!65 &-1586254527527419753
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6860756994242604922}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.71, y: 1.33, z: 1.48}
+  m_Center: {x: 0, y: 0.65, z: 0}
 --- !u!1 &6860756994242604924
 GameObject:
   m_ObjectHideFlags: 0
