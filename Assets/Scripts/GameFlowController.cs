@@ -234,7 +234,7 @@ public class GameFlowController : MonoBehaviour
                 var v = Utils.PositionToTile(towerLocation, _activeGameboard.Settings.TileSize);
                 if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
                 {
-                    towerLocation = new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.15f, v.y * _activeGameboard.Settings.TileSize); 
+                    towerLocation = new Vector3(v.x * _activeGameboard.Settings.TileSize, -2f, v.y * _activeGameboard.Settings.TileSize); 
                 }
             towerLocation = CalculateTowerLocation();
             // if (DefTarget.GetSpawnedTower() != null) cloneTower = DefTarget.GetSpawnedTower();
