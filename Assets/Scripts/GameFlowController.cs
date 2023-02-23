@@ -13,7 +13,7 @@ public class GameFlowController : MonoBehaviour
 {
     public enum PVEBattleSceneState
     {
-        invalid,
+        Invalid,
         Scanning,
         ScanCompleteForColliderBuilding,
         ColliderBuilt,
@@ -28,13 +28,17 @@ public class GameFlowController : MonoBehaviour
         DefencePointMode,
         DungeonMode,
         BossFight,
-        Win,
-        Loss,
-        WaitingReturnMap
+        WinBattle,
+        LossBattle,
+        MapActive,
+        ShopActive,
+        EventActive,
+        BattleConclusion,
+        ChapterEnd
     }
 
     [Header("Game Flow variable")] 
-    [SerializeField] public PVEBattleSceneState battleSceneState = PVEBattleSceneState.invalid;
+    [SerializeField] public PVEBattleSceneState battleSceneState = PVEBattleSceneState.Invalid;
     public bool PlayerSpawnActive = false;
     public PVEBattleSceneState BattleMode;
     
@@ -81,8 +85,11 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] public PlayerStatus playerGlobalStatus;
     [SerializeField] public static int EnemyKillCount = 0;
 
+    [Header("Shop")] 
+    [SerializeField] public GameObject ShopUIParent;
     
-
+    [Header("Map")]
+    [SerializeField] public GameObject MapParent;
 
     public GameObject cloneTower;
     
@@ -125,7 +132,7 @@ public class GameFlowController : MonoBehaviour
     }
 
     #region Maptiles, Map boundaries And Collider Setting
-    void SetBoundaryColliders()
+    void SetBoundaryColliders() // disable all border control like what government did (sorry actually becoz it's buggy
     {
         var WallSet = Instantiate(InvisibleWallPrefab, new Vector3(0, -0.1f, 0), new Quaternion());
         WallSet.GetComponent<BoxCollider>().enabled = false;
@@ -145,7 +152,7 @@ public class GameFlowController : MonoBehaviour
         battleSceneState = PVEBattleSceneState.ColliderBuilt;
     }
 
-    public void GetAllTileCoordinatesAndMarkWalls() // Problematic if Area < 4, from the beginning is buggy and wrong to use the AreaLimit
+    public void GetAllTileCoordinatesAndMarkWalls()
     {
         if (SpatialTree == null || MapCoordinatesConfirmed) return;
 
@@ -258,14 +265,14 @@ public class GameFlowController : MonoBehaviour
 
     private void CheckGameEndCondition()
     {
-        if (playerMovementCtrl == null || battleSceneState == PVEBattleSceneState.WaitingReturnMap) return;
+        if (playerMovementCtrl == null || battleSceneState == PVEBattleSceneState.BattleConclusion) return;
         if (playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP() <= 0)
         {
-            battleSceneState = PVEBattleSceneState.Loss;
+            battleSceneState = PVEBattleSceneState.LossBattle;
             DebugText.text = " Player Died and loss! Back to Start Point";
             playerGlobalStatus.currentLevel = 0;
             LossRestartFromBeginning();
-            battleSceneState = PVEBattleSceneState.WaitingReturnMap;
+            battleSceneState = PVEBattleSceneState.BattleConclusion;
             return;
         }
         
@@ -277,10 +284,10 @@ public class GameFlowController : MonoBehaviour
         {
             if (Tower.GetRemainingTime() <= 0)
             {
-                battleSceneState = PVEBattleSceneState.Win;
+                battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
                 RewardNextStage();
-                battleSceneState = PVEBattleSceneState.WaitingReturnMap;
+                battleSceneState = PVEBattleSceneState.BattleConclusion;
 
                 return;
             }
