@@ -2476,7 +2476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _arCamera: {fileID: 619056670}
-  _agentPrefab: {fileID: 1556040939566342, guid: 8fffc8111ceddc044a92c1d13747c5bb,
+  _agentPrefab: {fileID: 1556040939566342, guid: 012f75391d50dcd49a42dfb8ef8bf5db,
     type: 3}
   playerSpawnParent: {fileID: 1049136496}
   HitTestType: 16

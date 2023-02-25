@@ -17,7 +17,7 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] private CombatHandler DamageSource;
     [SerializeField] private HealthSystemComponent healthSystemComponent;
 
-    
+
     [Header("Reference")] 
     [SerializeField] private ARController ARCtrl;
     [SerializeField] private GameFlowController GameFlowCtrl;
@@ -37,18 +37,30 @@ public class CombatHandler : MonoBehaviour
 
     public void DoDamage(CombatHandler targetHitTarget, float damageAmount)
     {
-        CentralBattleCtrl.DamageTransfer(targetHitTarget, damageAmount);
+        CentralBattleCtrl.DamageTransfer(targetHitTarget, damageAmount, this);
     }
 
-    public void ReceiveDamage(float damageAmount)
+    public void ReceiveDamage(float damageAmount, CombatHandler attacker)
     {
-        var tempHP = hp - damageAmount;
+        Debug.Log("ReceiveDamage");
+        float modifiedDamageAmount;
+        PlayerWeaponSkillController playerWeaponSkillController;
+        if (TryGetComponent<PlayerWeaponSkillController>(out playerWeaponSkillController))
+        {
+            modifiedDamageAmount = playerWeaponSkillController.OnrecieveDamage(damageAmount, attacker);
+            Debug.Log("Receive no Damage: " + modifiedDamageAmount);
+        }
+        else {
+            modifiedDamageAmount = damageAmount;
+        }
+        
+        var tempHP = hp - modifiedDamageAmount;
         if (hp <= 0)
         {
             hp = 0;
         }
         else hp = tempHP;
-        healthSystemComponent.GetHealthSystem().Damage(damageAmount);
+        healthSystemComponent.GetHealthSystem().Damage(modifiedDamageAmount);
     }
 
     public float GetCurrentHP()
@@ -71,6 +83,11 @@ public class CombatHandler : MonoBehaviour
     public List<Collider> GetAttackingColliders()
     {
         return AttackingColliders;
+    }
+
+    public void AddAttackingColliders(Collider collider)
+    {
+        AttackingColliders.Add(collider);
     }
     
     public List<Collider> GetDamageReceivingColliders()

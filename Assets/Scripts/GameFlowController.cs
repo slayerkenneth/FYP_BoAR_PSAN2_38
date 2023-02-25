@@ -354,8 +354,6 @@ public class GameFlowController : MonoBehaviour
         playerGlobalStatus.speed++;
         playerGlobalStatus.currentHP = (int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP();
         // playerGlobalStatus.currentLevel++; // cannot change this
-        playerGlobalStatus.normalAttackDamage++;
-        playerGlobalStatus.specialAttackDamage++;
         
         WinPopUpWindow.SetActive(true);
     }
