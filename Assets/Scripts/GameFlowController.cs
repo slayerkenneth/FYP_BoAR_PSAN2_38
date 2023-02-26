@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class GameFlowController : MonoBehaviour
 {
@@ -90,48 +91,113 @@ public class GameFlowController : MonoBehaviour
     
     [Header("Map")]
     [SerializeField] public GameObject MapParent;
+    
+    [Header("DefenseTower")]
+    [SerializeField] public GameObject DefenseTowerParent;
+    
+    [Header("CaptureTower")]
+    [SerializeField] public GameObject CaptureTowerParent;
+    
+    [Header("Dungeon")]
+    [SerializeField] public GameObject DungeonParent;
+    
+    [Header("PushCar")]
+    [SerializeField] public GameObject PushCarParent;
+    
+    [Header("BossFight")]
+    [SerializeField] public GameObject BossFightParent;
+
+    [Header("Events and Actions")]
+    [SerializeField] UnityEvent DummyEvent;
+    [SerializeField] Action DummyAction;
+
 
     public GameObject cloneTower;
     
     // Start is called before the first frame update
     void Start()
     {
+        // Init or Get static Overall Player stats
         playerGlobalStatus = PlayerStatus.CurrentPlayer;
+        
+        // Scene State init
         if (_activeGameboard != null)
         {
             battleSceneState = PVEBattleSceneState.Scanning;
         }
+        
+        // Map Coordinate, (wall) list init
         CoordinatesAdjacencyList = new Dictionary<Vector2Int, List<Vector2Int>>();
         AllGridNodeCoordinates = new List<Vector2Int>();
         WallCoordinates = new List<Vector2Int>();
     }
     
+    // Old Version
     // Update is called once per frame
+    // void Update() // Old Version
+    // {
+    //     // Check if the game is end
+    //     CheckGameEndCondition();
+    //     
+    //     // AreaText.text = "A:" + _activeGameboard.Area + " A / tile: " + _activeGameboard.Area / _activeGameboard.Settings.TileSize + battleSceneState;
+    //     // var srcPosition = Utils.PositionToTile(tempPosition, _activeGameboard.Settings.TileSize);
+    //     
+    //     // if no active gameboard leave loop
+    //     if (_activeGameboard == null) return;
+    //
+    //     // Area scanned is enough for the map
+    //     if (_activeGameboard.Area / _activeGameboard.Settings.TileSize >= testScanArea)
+    //     {
+    //         // Start getting the gameboard map tiles
+    //         SpatialTree = _activeGameboard.GetSpatialTree();
+    //         if (PlayerSpawnActive == false)
+    //         {
+    //             // make following function called once only
+    //             
+    //             // change scene state
+    //             battleSceneState = PVEBattleSceneState.ScanCompleteForColliderBuilding;
+    //             
+    //             // Build up and set up all walls and coordinates
+    //             GetAllTileCoordinatesAndMarkWalls();
+    //             SetBoundaryColliders();
+    //             
+    //             // Set enemy spawner On
+    //             EnemySpawner.SetSpawner(true);
+    //             SetRandomEnemySpawnLocationVectors(enemyRandomSpawnLocationsCount);
+    //             
+    //             // Set Tower Spawner On
+    //             battleSceneState = PVEBattleSceneState.SpawningTower;
+    //         }
+    //         
+    //         // Set Player spawn active
+    //         PlayerSpawnActive = true;
+    //     }
+    // }
+
     void Update()
     {
-        CheckGameEndCondition();
-        AreaText.text = "A:" + _activeGameboard.Area + " A / tile: " + _activeGameboard.Area / _activeGameboard.Settings.TileSize + battleSceneState;
-        // var srcPosition = Utils.PositionToTile(tempPosition, _activeGameboard.Settings.TileSize);
-        if (_activeGameboard == null) return;
-
-        if (_activeGameboard.Area / _activeGameboard.Settings.TileSize >= testScanArea)
-        {
-            SpatialTree = _activeGameboard.GetSpatialTree();
-            if (PlayerSpawnActive == false)
-            {
-                // make following function called once only
-                battleSceneState = PVEBattleSceneState.ScanCompleteForColliderBuilding;
-                GetAllTileCoordinatesAndMarkWalls();
-                SetBoundaryColliders();
-                EnemySpawner.SetSpawner(true);
-                SetRandomEnemySpawnLocationVectors(enemyRandomSpawnLocationsCount);
-                battleSceneState = PVEBattleSceneState.SpawningTower;
-            }
-            PlayerSpawnActive = true;
-        }
+        // Game Flow: 
+        // Chapter selection
+        // Event (Story) 
+        // Scene scanning
+        // Map generation and selection 
+        // Battle 1
+        // Conclusion
+        //     Map selection 
+        // Battle + conclusion/ Shop / Event 
+        // Map selection...
+        // Repeated. 
+        //     Boss fight
+        // Save character build
+        //     Chapter selection
     }
-
+    
+    
     #region Maptiles, Map boundaries And Collider Setting
+    /*
+     * Instantiate All wall boundary colliders
+     * Then Set battleSceneState = PVEBattleSceneState.ColliderBuilt
+     */
     void SetBoundaryColliders() // disable all border control like what government did (sorry actually becoz it's buggy
     {
         var WallSet = Instantiate(InvisibleWallPrefab, new Vector3(0, -0.1f, 0), new Quaternion());
@@ -149,9 +215,18 @@ public class GameFlowController : MonoBehaviour
             // disable all border control like what government did (sorry actually becoz it's buggy
             wall.SetActive(false);
         }
+        
+        // scene state done collider
         battleSceneState = PVEBattleSceneState.ColliderBuilt;
     }
 
+    /*
+     * MapCoordinatesConfirmed then not go into the loop: only call once
+     * From spatial tree of the  gameboard
+     * scan through from - Area Limit to Area Limit
+     * Find all tile coordinate and mark wall coordinates
+     * Wall confirmed = true
+     */
     public void GetAllTileCoordinatesAndMarkWalls()
     {
         if (SpatialTree == null || MapCoordinatesConfirmed) return;
@@ -205,12 +280,25 @@ public class GameFlowController : MonoBehaviour
     #endregion
 
     #region Enemy Spawning
+    
+    /*
+     * Set battleSceneState = PVEBattleSceneState.SpawningEnemy
+     * return EnemySpawnPositionList
+     */
     public List<Vector3> GetEnemySpawnLocationVectorList()
     {
         battleSceneState = PVEBattleSceneState.SpawningEnemy;
         return EnemySpawnPositionList;
     }
 
+    /*
+     * Select and add random non wall coordinates as enemy spawn point
+     * Param max position count
+     * Set Position List
+     * with y-axis coordinate of 2f
+     * 
+     * Set battleSceneState = BattleMode;
+     */
     private void SetRandomEnemySpawnLocationVectors(int MaxRandomSpawnPositionCount)
     {
         int count = 0;
@@ -229,8 +317,20 @@ public class GameFlowController : MonoBehaviour
         battleSceneState = BattleMode;
     }
     #endregion
+    
+    #region Map Route Node Generation and Selection
+
+    
+
+    #endregion
 
     #region CapturePoint / Defence Point
+    
+    /*
+     * Find Random position if it is in correct mode
+     * check if it's in the valid map tile
+     * 
+     */
     public bool GetTowerSpawnLocationVector(out Vector3 towerLocation)
     {
         towerLocation = new Vector3();
@@ -261,10 +361,29 @@ public class GameFlowController : MonoBehaviour
     }
     #endregion
 
+    #region Dungeon Mode
+
+    
+
+    #endregion
+    
+    #region Push Car Mode
+
+    
+
+    #endregion
+    
+    #region BossFight Mode
+
+    
+
+    #endregion
+
     #region Flow Condition Check
 
     private void CheckGameEndCondition()
     {
+        // no player exist or inside battle conclusion stage then no need to check
         if (playerMovementCtrl == null || battleSceneState == PVEBattleSceneState.BattleConclusion) return;
         if (playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP() <= 0)
         {
@@ -353,7 +472,7 @@ public class GameFlowController : MonoBehaviour
     }
     #endregion
 
-    #region End Battle Sequence (Reward or Die to return start)
+    #region End Battle Sequence Conclusion(Reward or Die to return start)
 
     public void RewardNextStage()
     {
@@ -379,5 +498,16 @@ public class GameFlowController : MonoBehaviour
         // LossPopUpWindow.SetActive(false);
         SceneManager.LoadScene(1);
     }
+
+    public void ReturnToTitlePage()
+    {
+        SceneManager.LoadScene(0);
+    }
+    #endregion
+
+    #region ShopUI
+
+    
+
     #endregion
 }

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public enum LevelType
 {
-    DefencePointBattleMode,
+    DefensePointBattleMode,
     CapturePointBattleMode,
     DungeonMode,
     PushCarBattleMode,
@@ -110,7 +110,7 @@ public class MapController : MonoBehaviour
             case LevelType.CapturePointBattleMode:
                 newIcon.GetComponent<Image>().sprite = DefenceImage;
                 break;
-            case LevelType.DefencePointBattleMode:
+            case LevelType.DefensePointBattleMode:
                 newIcon.GetComponent<Image>().sprite = DefenceImage;
                 break;
             case LevelType.DungeonMode:
@@ -171,9 +171,9 @@ public class MapController : MonoBehaviour
     }
 
     private LevelType randomizeType(int sequence) {
-        if (sequence == 1 || sequence == 0 || sequence == -1) return LevelType.DefencePointBattleMode;
+        if (sequence == 1 || sequence == 0 || sequence == -1) return LevelType.DefensePointBattleMode;
         if (Random.Range(1, 3) == 1) return LevelType.Shop;
-        return LevelType.DefencePointBattleMode;
+        return LevelType.DefensePointBattleMode;
     }
 
     private int registerLevel(Vector2 pos, int sequence) {
