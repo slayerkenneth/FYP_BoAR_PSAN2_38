@@ -35,7 +35,7 @@ public struct Map {
 
 public class MapController : MonoBehaviour
 {
-
+    public GameFlowController GameFlowCtrl;
     public RectTransform graphContainer;
     public GameObject IconPrefab;
     public GameObject EndPrefab;
@@ -164,7 +164,7 @@ public class MapController : MonoBehaviour
                 if (edge.Contains(id))
                 {
                     PlayerStatus.CurrentPlayer.currentLevel = id;
-                    SceneManager.LoadScene(currentMap.levels[id].levelType.ToString());
+                    GameFlowCtrl.EnterMapNode((LevelType) PlayerStatus.CurrentPlayer.currentLevel);
                 }
             }
         }

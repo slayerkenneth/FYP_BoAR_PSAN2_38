@@ -56,7 +56,7 @@ public class DefenceTarget : MonoBehaviour
 
     private void SpawnTower()
     {
-        if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && !hasTowerSpawned)
+        if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && !hasTowerSpawned && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningTower)
         {
             SpawnedTower = Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
             GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.DefencePointMode;

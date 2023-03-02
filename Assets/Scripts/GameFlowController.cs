@@ -16,13 +16,12 @@ public class GameFlowController : MonoBehaviour
     {
         Invalid,
         Scanning,
-        ScanCompleteForColliderBuilding,
+        ScanCompleted,
         ColliderBuilt,
         SpawningEnemy,
         SpawningTower,
         SpawningGameObject,
         SpawningPlayer,
-        GameModeSelection,
         UISetup,
         PushCarBattleMode,
         CapturePointMode,
@@ -77,6 +76,7 @@ public class GameFlowController : MonoBehaviour
     public DefenceTarget Tower;
 
     [Header("UI / Canvas elements")] 
+    public GameObject BattleUICanvasParent;
     public HealthBarUI PlayerHealthBarUI;
     public HealthBarUI EnemyHealthBarUI;
     public GameObject WinPopUpWindow;
@@ -115,17 +115,17 @@ public class GameFlowController : MonoBehaviour
     public GameObject cloneTower;
     
     // Start is called before the first frame update
+    // Set battleSceneState = Scanning
     void Start()
     {
         // Init or Get static Overall Player stats
         playerGlobalStatus = PlayerStatus.CurrentPlayer;
         
         // Scene State init
-        if (_activeGameboard != null)
-        {
-            battleSceneState = PVEBattleSceneState.Scanning;
-        }
-        
+        // Set battleSceneState = Invalid
+        // To be triggered by map Selection: On Click the icon
+         battleSceneState = PVEBattleSceneState.Invalid;
+
         // Map Coordinate, (wall) list init
         CoordinatesAdjacencyList = new Dictionary<Vector2Int, List<Vector2Int>>();
         AllGridNodeCoordinates = new List<Vector2Int>();
@@ -179,17 +179,40 @@ public class GameFlowController : MonoBehaviour
         // Game Flow: 
         // Chapter selection
         // Event (Story) 
-        // Scene scanning
+        // Scene scanning: handled by AR Controller
+        
         // Map generation and selection 
-        // Battle 1
-        // Conclusion
-        //     Map selection 
-        // Battle + conclusion/ Shop / Event 
-        // Map selection...
-        // Repeated. 
-        //     Boss fight
+        // !~! Warning: Now Skipped Collider Generation, later before testing need to re-implement the collider logics
+        if (battleSceneState == PVEBattleSceneState.ScanCompleted)
+        {
+            GetAllTileCoordinatesAndMarkWalls();
+        }
+        
+        // Only if all map tile and coordinates are confirm, the game flow continues
+        if (!MapCoordinatesConfirmed) return;
+        
+        // Battle (entering Battle status): 4 main mode + Boss fight
+        if (battleSceneState is 
+            (PVEBattleSceneState.CapturePointMode or PVEBattleSceneState.DefencePointMode
+            or PVEBattleSceneState.DungeonMode or PVEBattleSceneState.PushCarBattleMode or PVEBattleSceneState.BossFight))
+        {
+            // init
+            
+            // update
+            
+            // Conclusion State
+        }
+
+        // Map selection  (returns to map)
+        if (battleSceneState is PVEBattleSceneState.MapActive)
+        {
+            
+        }
+        // Shop / Event (story) mode
+        
         // Save character build
-        //     Chapter selection
+        
+        // Chapter selection
     }
     
     
@@ -222,7 +245,7 @@ public class GameFlowController : MonoBehaviour
 
     /*
      * MapCoordinatesConfirmed then not go into the loop: only call once
-     * From spatial tree of the  gameboard
+     * From spatial tree of the gameboard
      * scan through from - Area Limit to Area Limit
      * Find all tile coordinate and mark wall coordinates
      * Wall confirmed = true
@@ -287,7 +310,6 @@ public class GameFlowController : MonoBehaviour
      */
     public List<Vector3> GetEnemySpawnLocationVectorList()
     {
-        battleSceneState = PVEBattleSceneState.SpawningEnemy;
         return EnemySpawnPositionList;
     }
 
@@ -320,11 +342,68 @@ public class GameFlowController : MonoBehaviour
     
     #region Map Route Node Generation and Selection
 
-    
+    public void EnterMapNode(LevelType levelType)
+    {
+        if (battleSceneState == PVEBattleSceneState.Invalid)
+        {
+            // Wait until Game board session is init and started
+            StartCoroutine(IsGameboardReady()); 
+            // Then Start Scanning
+            battleSceneState = PVEBattleSceneState.Scanning;
+            StartCoroutine(WaitForScanComplete());
+        }
+        switch (levelType)
+        {
+            /*
+             * Battle Sessions
+             */
+            case LevelType.CapturePointBattleMode:
+                battleSceneState = PVEBattleSceneState.CapturePointMode;
+                break;
+            
+            case LevelType.DefensePointBattleMode:
+                battleSceneState = PVEBattleSceneState.DefencePointMode;
+                break;
+            
+            case LevelType.PushCarBattleMode:
+                battleSceneState = PVEBattleSceneState.PushCarBattleMode;
+                break;
+            
+            case LevelType.DungeonMode:
+                battleSceneState = PVEBattleSceneState.DungeonMode;
+                break;
+            
+            /*
+             * Shop, event, Boss session
+             */
+            case LevelType.Shop:
+                battleSceneState = PVEBattleSceneState.ShopActive;
+                break;
+            
+            case LevelType.Event:
+                battleSceneState = PVEBattleSceneState.EventActive;
+                break;
+            
+            case LevelType.Boss:
+                battleSceneState = PVEBattleSceneState.BossFight;
+                break;
+        }
+    }
 
+
+    IEnumerator IsGameboardReady()
+    {
+        yield return new WaitUntil(() => _activeGameboard != null);
+    }
+
+    IEnumerator WaitForScanComplete()
+    {
+        yield return new WaitUntil(() => battleSceneState == PVEBattleSceneState.ScanCompleted);
+
+    }
     #endregion
 
-    #region CapturePoint / Defence Point
+    #region Capture Point / Defense Point
     
     /*
      * Find Random position if it is in correct mode

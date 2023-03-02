@@ -69,6 +69,8 @@ public class ARController : MonoBehaviour
     public GameObject boxPrefab;
     public Yolov5Detector yolov5Detector;
 
+    [Header("UI Related")] public InstructionUI scanningInstructionUI;
+
     private void OnEnable()
     {
         //add a callback for catching the updated semantic buffer
@@ -174,9 +176,22 @@ public class ARController : MonoBehaviour
         // The origin of the scan should be in front of the player
         var origin = playerPosition + Vector3.ProjectOnPlane(playerForward, Vector3.up).normalized;
 
-        if (gameboardArea < GameFlowController.AreaLimit)
+        if (_gameboard.Area / _gameboard.Settings.TileSize < GameFlowController.AreaLimit && GameFlowController.battleSceneState ==
+            GameFlowController.PVEBattleSceneState.Scanning)
         {
             _gameboard.Scan(origin, 5);
+            scanningInstructionUI.SetInstructionText("Scanning In Progress", true);
+        }
+        else if (_gameboard.Area / _gameboard.Settings.TileSize >= GameFlowController.AreaLimit)
+        {
+            GameFlowController.battleSceneState =
+                GameFlowController.PVEBattleSceneState.ScanCompleted;
+            scanningInstructionUI.EnableText = false;
+            Debug.Log("Scan Completed");
+        }
+        else
+        {
+            scanningInstructionUI.EnableText = false;
         }
         gameboardArea = _gameboard.Area;
         // AreaText.text = "Gameboard A: " + gameboardArea.ToString();
@@ -196,7 +211,7 @@ public class ARController : MonoBehaviour
     private void OnTouchScreen(Touch touch)
     {
         // do not process if the AR session is not active
-        if (_arSession == null || _arCamera == null)
+        if (_arSession == null || _arCamera == null || GameFlowController.battleSceneState == GameFlowController.PVEBattleSceneState.Invalid)
         {
             // DebugText.text = "Debug: No AR Session";
             if (_arCamera == null)

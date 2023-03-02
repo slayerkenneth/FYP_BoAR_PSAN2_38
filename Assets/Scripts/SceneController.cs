@@ -10,4 +10,9 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
+    public void LoadChapterScene()
+    {
+        
+    }
+
 }
