@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2183710516522777639}
   - component: {fileID: 593859230819194797}
+  - component: {fileID: 6166926502615526781}
   m_Layer: 0
   m_Name: Obelisk_zodiac_low
   m_TagString: Tower(D)
@@ -139,6 +140,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!135 &6166926502615526781
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514838442195789469}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 23
+  m_Center: {x: 0, y: 5, z: 0}
 --- !u!1 &2072005146838210861
 GameObject:
   m_ObjectHideFlags: 0

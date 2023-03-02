@@ -344,6 +344,11 @@ public class GameFlowController : MonoBehaviour
     {
         playerMovementCtrl = cmc;
     }
+
+    public CombatHandler GetPlayerCombatHandler()
+    {       
+        return playerOwnCombatHandler;
+    }
     #endregion
 
     #region End Battle Sequence (Reward or Die to return start)
