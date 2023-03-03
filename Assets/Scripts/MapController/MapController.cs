@@ -164,7 +164,8 @@ public class MapController : MonoBehaviour
                 if (edge.Contains(id))
                 {
                     PlayerStatus.CurrentPlayer.currentLevel = id;
-                    GameFlowCtrl.EnterMapNode((LevelType) PlayerStatus.CurrentPlayer.currentLevel);
+                    GameFlowCtrl.EnterMapNode(currentMap.levels[id].levelType);
+                    Debug.Log("enter level" + currentMap.levels[id].levelType);
                 }
             }
         }

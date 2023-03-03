@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4439403, g: 0.4931519, b: 0.5722083, a: 1}
+  m_IndirectSpecularColor: {r: 0.44402242, g: 0.49316543, b: 0.5722324, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3991,6 +3991,84 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1083436866}
   m_CullTransparentMesh: 0
+--- !u!1 &1094842682
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1094842683}
+  - component: {fileID: 1094842685}
+  - component: {fileID: 1094842684}
+  m_Layer: 0
+  m_Name: TowerSpawner(Defense Target)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1094842683
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094842682}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1545443210}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1094842684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094842682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ce00f2d7f4aff41a0ff3ce5b839e92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 500
+  skillCoolDown: 0
+  AttackingColliders: []
+  DamageTakingColliders: []
+  AttackTarget: {fileID: 0}
+  DamageSource: {fileID: 0}
+  healthSystemComponent: {fileID: 0}
+  ARCtrl: {fileID: 0}
+  GameFlowCtrl: {fileID: 0}
+  CentralBattleCtrl: {fileID: 0}
+--- !u!114 &1094842685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094842682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bc8e938a0209af48be662b3aef757ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameFlowCtrl: {fileID: 1451593558}
+  arCtrl: {fileID: 619056682}
+  DefenceRange: 0
+  TowerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,
+    type: 3}
+  TowerPosition: {x: 0, y: 0, z: 0}
+  DefenceTime: 90
+  startMinute: 0
+  towerCombatHandler: {fileID: 1094842684}
+  DefenceModeUICanvas: {fileID: 4098587496591411372}
+  CurrentTimeText: {fileID: 4098587496175638028}
 --- !u!1 &1096763722
 GameObject:
   m_ObjectHideFlags: 0
@@ -4908,6 +4986,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1429391863}
   - component: {fileID: 1429391864}
+  - component: {fileID: 1429391865}
   m_Layer: 0
   m_Name: TowerSpawner(Defense Target)
   m_TagString: Untagged
@@ -4950,9 +5029,31 @@ MonoBehaviour:
   TowerPosition: {x: 0, y: 0, z: 0}
   DefenceTime: 90
   startMinute: 0
-  towerCombatHandler: {fileID: 0}
+  towerCombatHandler: {fileID: 1429391865}
   DefenceModeUICanvas: {fileID: 4098587496591411372}
   CurrentTimeText: {fileID: 4098587496175638028}
+--- !u!114 &1429391865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429391862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ce00f2d7f4aff41a0ff3ce5b839e92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 500
+  skillCoolDown: 0
+  AttackingColliders: []
+  DamageTakingColliders: []
+  AttackTarget: {fileID: 0}
+  DamageSource: {fileID: 0}
+  healthSystemComponent: {fileID: 0}
+  ARCtrl: {fileID: 0}
+  GameFlowCtrl: {fileID: 0}
+  CentralBattleCtrl: {fileID: 0}
 --- !u!1 &1451593556
 GameObject:
   m_ObjectHideFlags: 0
@@ -5032,9 +5133,10 @@ MonoBehaviour:
   EnemyHealthBarUI: {fileID: 3450456933082368580}
   WinPopUpWindow: {fileID: 1242954834}
   LossPopUpWindow: {fileID: 2121741730}
+  BackgroundCanvasParent: {fileID: 606874905}
   playerGlobalStatus: {fileID: 0}
   ShopUIParent: {fileID: 924853197}
-  MapParent: {fileID: 28619735}
+  MapParent: {fileID: 1785446425}
   DefenseTowerParent: {fileID: 1249809416}
   CaptureTowerParent: {fileID: 1545443209}
   DungeonParent: {fileID: 674969097}
@@ -5483,7 +5585,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1094842683}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6149,7 +6252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
+  m_BlockingObjects: 3
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -6414,12 +6517,12 @@ PrefabInstance:
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
@@ -6439,7 +6542,7 @@ PrefabInstance:
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: -398.13367
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
@@ -20954,7 +21057,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &4098587496591411370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21002,7 +21105,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4098587496591411369}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}

@@ -81,6 +81,7 @@ public class GameFlowController : MonoBehaviour
     public HealthBarUI EnemyHealthBarUI;
     public GameObject WinPopUpWindow;
     public GameObject LossPopUpWindow;
+    public GameObject BackgroundCanvasParent;
 
     [Header("Global Player status")]
     [SerializeField] public PlayerStatus playerGlobalStatus;
@@ -191,25 +192,51 @@ public class GameFlowController : MonoBehaviour
         // Only if all map tile and coordinates are confirm, the game flow continues
         if (!MapCoordinatesConfirmed) return;
         
+        battleSceneState = BattleMode;
+
         // Battle (entering Battle status): 4 main mode + Boss fight
+
         if (battleSceneState is 
             (PVEBattleSceneState.CapturePointMode or PVEBattleSceneState.DefencePointMode
             or PVEBattleSceneState.DungeonMode or PVEBattleSceneState.PushCarBattleMode or PVEBattleSceneState.BossFight))
         {
-            // init
-            
-            // update
-            
+            // update loop
+            /* CP
+             * - Spawn Tower (not Enabled)
+             *   -->Set Tower to Capture Mode, Enemy Spawn Point nearby the tower, the 4 pillars
+             *  - Activate Capture Percentage Gauge
+             *   - Spawn Enemy (not Enabled)
+             *   - Spawn (Object Recognition Related) buff or Items (not Enabled)
+             *   - Ask start? Start Waiting
+             *   - Start by spawn Player, and enable all spawned elements
+             *  - Enable UIs: Capture Gauge, player HP bar...
+             * - Loop
+             *   -->Detect game end condition
+             */
             // Conclusion State
         }
 
         // Map selection  (returns to map)
-        if (battleSceneState is PVEBattleSceneState.MapActive)
+        else if (battleSceneState is PVEBattleSceneState.MapActive)
         {
-            
+            BattleUICanvasParent.SetActive(false);
+            MapParent.SetActive(true);
+            BackgroundCanvasParent.SetActive(true);
         }
-        // Shop / Event (story) mode
         
+        // Shop / Event (story) mode
+        else if (battleSceneState is PVEBattleSceneState.ShopActive)
+        {
+            BattleUICanvasParent.SetActive(false);
+            ShopUIParent.SetActive(true);
+            BackgroundCanvasParent.SetActive(true);
+        }
+        
+        else if (battleSceneState is PVEBattleSceneState.EventActive)
+        {
+            BattleUICanvasParent.SetActive(false);
+            BackgroundCanvasParent.SetActive(true);
+        }
         // Save character build
         
         // Chapter selection
@@ -252,6 +279,7 @@ public class GameFlowController : MonoBehaviour
      */
     public void GetAllTileCoordinatesAndMarkWalls()
     {
+        SpatialTree = _activeGameboard.GetSpatialTree();
         if (SpatialTree == null || MapCoordinatesConfirmed) return;
 
         for (var i = -AreaLimit; i < AreaLimit; i++)
@@ -350,43 +378,57 @@ public class GameFlowController : MonoBehaviour
             StartCoroutine(IsGameboardReady()); 
             // Then Start Scanning
             battleSceneState = PVEBattleSceneState.Scanning;
-            StartCoroutine(WaitForScanComplete());
         }
+        // Set battle mode (not the current state)
         switch (levelType)
         {
             /*
              * Battle Sessions
              */
             case LevelType.CapturePointBattleMode:
-                battleSceneState = PVEBattleSceneState.CapturePointMode;
+                BattleMode = PVEBattleSceneState.CapturePointMode;
+                Debug.Log("Battle CP");
                 break;
             
             case LevelType.DefensePointBattleMode:
-                battleSceneState = PVEBattleSceneState.DefencePointMode;
+                BattleMode = PVEBattleSceneState.DefencePointMode;
+                Debug.Log("Battle DP");
                 break;
             
             case LevelType.PushCarBattleMode:
-                battleSceneState = PVEBattleSceneState.PushCarBattleMode;
+                BattleMode = PVEBattleSceneState.PushCarBattleMode;
+                Debug.Log("Battle CA");
                 break;
             
             case LevelType.DungeonMode:
-                battleSceneState = PVEBattleSceneState.DungeonMode;
+                BattleMode = PVEBattleSceneState.DungeonMode;
+                Debug.Log("Battle D");
                 break;
             
             /*
              * Shop, event, Boss session
              */
             case LevelType.Shop:
-                battleSceneState = PVEBattleSceneState.ShopActive;
+                BattleMode = PVEBattleSceneState.ShopActive;
                 break;
             
             case LevelType.Event:
-                battleSceneState = PVEBattleSceneState.EventActive;
+                BattleMode = PVEBattleSceneState.EventActive;
                 break;
             
             case LevelType.Boss:
-                battleSceneState = PVEBattleSceneState.BossFight;
+                BattleMode = PVEBattleSceneState.BossFight;
                 break;
+        }
+        // Set up UI for battle / scan mode
+        if (battleSceneState is 
+            (PVEBattleSceneState.Scanning or PVEBattleSceneState.BossFight or PVEBattleSceneState.CapturePointMode 
+            or PVEBattleSceneState.DefencePointMode or PVEBattleSceneState.DungeonMode or PVEBattleSceneState.PushCarBattleMode or PVEBattleSceneState.BossFight)
+           )
+        {
+            BattleUICanvasParent.GetComponent<Canvas>().enabled = true;
+            MapParent.GetComponent<Canvas>().enabled = false;
+            BackgroundCanvasParent.GetComponent<Canvas>().enabled = false;
         }
     }
 
@@ -396,11 +438,14 @@ public class GameFlowController : MonoBehaviour
         yield return new WaitUntil(() => _activeGameboard != null);
     }
 
-    IEnumerator WaitForScanComplete()
-    {
-        yield return new WaitUntil(() => battleSceneState == PVEBattleSceneState.ScanCompleted);
-
-    }
+    // IEnumerator WaitForScanComplete()
+    // {
+    //     yield return new WaitUntil(() =>
+    //     {
+    //         return battleSceneState == PVEBattleSceneState.ScanCompleted;
+    //     });
+    //
+    // }
     #endregion
 
     #region Capture Point / Defense Point

@@ -165,7 +165,7 @@ public class ARController : MonoBehaviour
         // If the gameboard isn't running, do not process touches
         if (_gameboard == null)
         {
-            DebugText.text = "Debug: GM == null";
+            Debug.Log("GM null");
             return;
         }
         var cameraTransform = _arCamera.transform;
@@ -180,6 +180,7 @@ public class ARController : MonoBehaviour
             GameFlowController.PVEBattleSceneState.Scanning)
         {
             _gameboard.Scan(origin, 5);
+            scanningInstructionUI.EnableText = true;
             scanningInstructionUI.SetInstructionText("Scanning In Progress", true);
         }
         else if (_gameboard.Area / _gameboard.Settings.TileSize >= GameFlowController.AreaLimit)
@@ -237,6 +238,7 @@ public class ARController : MonoBehaviour
             if (_agentGameObject == null)
             {
                 var node = new GridNode();
+                if (GameFlowController.SpatialTree == null) return;
                 if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node))
                     SpawnAgent(new Vector3(node.Coordinates.x, 0.5f, node.Coordinates.y));
                 GameFlowController.battleSceneState = GameFlowController.PVEBattleSceneState.SpawningPlayer;
