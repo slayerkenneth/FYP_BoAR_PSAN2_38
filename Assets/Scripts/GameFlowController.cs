@@ -82,10 +82,14 @@ public class GameFlowController : MonoBehaviour
     public GameObject WinPopUpWindow;
     public GameObject LossPopUpWindow;
     public GameObject BackgroundCanvasParent;
+    public GameObject startFightUI;
 
     [Header("Global Player status")]
     [SerializeField] public PlayerStatus playerGlobalStatus;
+    [SerializeField] public PlayerSpawner PlayerSpawner;
     [SerializeField] public static int EnemyKillCount = 0;
+    [SerializeField] private Vector3 PlayerSpawnLocation;
+    [SerializeField] public GameObject PlayerSpawnParent;
 
     [Header("Shop")] 
     [SerializeField] public GameObject ShopUIParent;
@@ -94,19 +98,24 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] public GameObject MapParent;
     
     [Header("DefenseTower")]
-    [SerializeField] public GameObject DefenseTowerParent;
+    [SerializeField] public GameObject DefenseTowerParentPrefab;
+    [SerializeField] public GameObject ActiveDefenseTowerParent;
     
     [Header("CaptureTower")]
-    [SerializeField] public GameObject CaptureTowerParent;
+    [SerializeField] public GameObject CaptureTowerParentPrefab;
+    [SerializeField] public GameObject ActiveCaptureTowerParent;
     
     [Header("Dungeon")]
-    [SerializeField] public GameObject DungeonParent;
+    [SerializeField] public GameObject DungeonParentPrefab;
+    [SerializeField] public GameObject ActiveDungeonParent;
     
     [Header("PushCar")]
-    [SerializeField] public GameObject PushCarParent;
+    [SerializeField] public GameObject PushCarParentPrefab;
+    [SerializeField] public GameObject ActivePushCarParent;
     
     [Header("BossFight")]
-    [SerializeField] public GameObject BossFightParent;
+    [SerializeField] public GameObject BossFightParentPrefab;
+    [SerializeField] public GameObject ActiveBossFightParent;
 
     [Header("Events and Actions")]
     [SerializeField] UnityEvent DummyEvent;
@@ -131,6 +140,8 @@ public class GameFlowController : MonoBehaviour
         CoordinatesAdjacencyList = new Dictionary<Vector2Int, List<Vector2Int>>();
         AllGridNodeCoordinates = new List<Vector2Int>();
         WallCoordinates = new List<Vector2Int>();
+        
+        startFightUI.SetActive(false);
     }
     
     // Old Version
@@ -187,12 +198,13 @@ public class GameFlowController : MonoBehaviour
         if (battleSceneState == PVEBattleSceneState.ScanCompleted)
         {
             GetAllTileCoordinatesAndMarkWalls();
+            startFightUI.SetActive(true);
         }
         
         // Only if all map tile and coordinates are confirm, the game flow continues
         if (!MapCoordinatesConfirmed) return;
         
-        battleSceneState = BattleMode;
+        // battleSceneState = BattleMode;
 
         // Battle (entering Battle status): 4 main mode + Boss fight
 
@@ -383,25 +395,29 @@ public class GameFlowController : MonoBehaviour
         switch (levelType)
         {
             /*
-             * Battle Sessions
+             * Battle Sessions: Also call the initialisation of each mode!! (Only call once)
              */
             case LevelType.CapturePointBattleMode:
                 BattleMode = PVEBattleSceneState.CapturePointMode;
+                InitCaptureTowerMode();
                 Debug.Log("Battle CP");
                 break;
             
             case LevelType.DefensePointBattleMode:
                 BattleMode = PVEBattleSceneState.DefencePointMode;
+                InitDefenseTowerMode();
                 Debug.Log("Battle DP");
                 break;
             
             case LevelType.PushCarBattleMode:
                 BattleMode = PVEBattleSceneState.PushCarBattleMode;
+                InitPushCarMode();
                 Debug.Log("Battle CA");
                 break;
             
             case LevelType.DungeonMode:
                 BattleMode = PVEBattleSceneState.DungeonMode;
+                InitDungeonMode();
                 Debug.Log("Battle D");
                 break;
             
@@ -418,6 +434,7 @@ public class GameFlowController : MonoBehaviour
             
             case LevelType.Boss:
                 BattleMode = PVEBattleSceneState.BossFight;
+                InitBossFight();
                 break;
         }
         // Set up UI for battle / scan mode
@@ -448,7 +465,7 @@ public class GameFlowController : MonoBehaviour
     // }
     #endregion
 
-    #region Capture Point / Defense Point
+    #region Spawn Object
     
     /*
      * Find Random position if it is in correct mode
@@ -483,23 +500,94 @@ public class GameFlowController : MonoBehaviour
         _activeGameboard.FindNearestFreePosition(new Vector3(x, -1, z), out TPos);
         return TPos;
     }
+
+    public void SpawnPlayer()
+    {
+        if (PlayerSpawner.activeCharacter != null) return;
+        battleSceneState = PVEBattleSceneState.SpawningPlayer;
+        StartCoroutine(CalculatePlayerSpawnPoint());
+        PlayerSpawner.SpawnPlayer(playerGlobalStatus, PlayerSpawnParent.transform, PlayerSpawnLocation);
+        startFightUI.SetActive(false);
+        battleSceneState = BattleMode;
+    }
+
+    private IEnumerator CalculatePlayerSpawnPoint()
+    {
+        var spawnpoint = new Vector3();
+        //
+        // var ray = ARCtrl._arCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0f));
+        // RaycastHit hit;
+        //
+        // if (Physics.Raycast(ray, out hit))
+        // {
+        //     _activeGameboard.FindNearestFreePosition(hit.point, out spawnpoint);
+        //     // var node = new GridNode();
+        //     // if (SpatialTree.GetElement(
+        //     //         Utils.PositionToTile(spawnpoint, _activeGameboard.Settings.TileSize), out node))
+        //     // {
+        //     //     Vector3 spawnPoint = GetEnemySpawnLocationVectorList()[(int) GetEnemySpawnLocationVectorList().Count/2];
+        //     //     
+        //     //     spawnPoint = new Vector3(spawnPoint.x * _activeGameboard.Settings.TileSize, 1f, spawnPoint.z * _activeGameboard.Settings.TileSize);
+        //     //     
+        //     //     // Have the prefab face towards camera
+        //     //     var rotation = Vector3.ProjectOnPlane(ARCtrl.transform.forward, Vector3.up).normalized;
+        //     //     var QRot = Quaternion.LookRotation(-rotation);
+        //     // }
+        // }
+
+        spawnpoint = new Vector3(0, 0, 1f);
+        PlayerSpawnLocation = spawnpoint;
+        yield return new WaitUntil( () => PlayerSpawnLocation == spawnpoint);
+    }
+    #endregion
+    
+    #region Capture Tower Mode
+
+    void InitCaptureTowerMode()
+    {
+        ActiveCaptureTowerParent = Instantiate(CaptureTowerParentPrefab);
+        ActiveCaptureTowerParent.transform.position = Vector3.zero;
+    }
+    
     #endregion
 
+    #region Defense Tower Mode
+
+    void InitDefenseTowerMode()
+    {
+        ActiveDefenseTowerParent = Instantiate(DefenseTowerParentPrefab);
+        ActiveDefenseTowerParent.transform.position = Vector3.zero;
+    }
+    
+    #endregion
+    
     #region Dungeon Mode
 
-    
+    void InitDungeonMode()
+    {
+        ActiveDungeonParent = Instantiate(DungeonParentPrefab);
+        ActiveDungeonParent.transform.position = Vector3.zero;
+    }
 
     #endregion
     
     #region Push Car Mode
 
-    
+    void InitPushCarMode()
+    {
+        ActivePushCarParent = Instantiate(PushCarParentPrefab);
+        ActivePushCarParent.transform.position = Vector3.zero;
+    }
 
     #endregion
     
     #region BossFight Mode
 
-    
+    void InitBossFight()
+    {
+        ActiveBossFightParent = Instantiate(BossFightParentPrefab);
+        ActiveBossFightParent.transform.position = Vector3.zero;
+    }
 
     #endregion
 
@@ -555,7 +643,9 @@ public class GameFlowController : MonoBehaviour
     #region Getter / Setter
     public CharacterMovementController GetPlayerMovementCtrl ()
     {
-        var movementCtrl = ARCtrl.GetActivePlayerMovementCtrl();
+        if (PlayerSpawner.activeCharacter is null) return null;
+        
+        var movementCtrl = PlayerSpawner.activeCharacter.GetComponent<CharacterMovementController>();
         playerMovementCtrl = movementCtrl;
         return movementCtrl;
     }
@@ -587,12 +677,23 @@ public class GameFlowController : MonoBehaviour
 
     public CharacterMovementController getPlayerMovementCtrl()
     {
+        if (PlayerSpawner.activeCharacter is null) return null;
         return playerMovementCtrl;
     }
 
     public void SetPlayerMovementCtrl(CharacterMovementController cmc)
     {
         playerMovementCtrl = cmc;
+    }
+
+    public void SetPlayerLocation(Vector3 location)
+    {
+        PlayerSpawnLocation = location;
+    }
+    
+    public Vector3 GetPlayerLocation()
+    {
+        return PlayerSpawnLocation;
     }
     #endregion
 

@@ -28,14 +28,14 @@ public class ARController : MonoBehaviour
     * or for accessing ARDK features across methods.
     */
     [SerializeField] [Tooltip("The scene's ARCamera")]
-    private Camera _arCamera; // the ARDK's AR Camera instead of the default Unity camera
+    public Camera _arCamera; // the ARDK's AR Camera instead of the default Unity camera
 
     [SerializeField] [Tooltip("GameObject to instantiate as the agent")]
-    private GameObject _agentPrefab; // the prefab we will be spawning as our agent
-    [SerializeField] private GameObject playerSpawnParent;
+    // private GameObject _agentPrefab; // the prefab we will be spawning as our agent
+    // [SerializeField] private GameObject playerSpawnParent;
     private IGameboard _gameboard; // ARDK's Gameboard object to handle smart placement and navigation
-    private GameObject _agentGameObject; // the game object of the spawned agent 
-    private WorkshopGameboardAgent _agent; // the agent that can navigate the gameboard
+    // private GameObject _agentGameObject; // the game object of the spawned agent 
+    // private WorkshopGameboardAgent _agent; // the agent that can navigate the gameboard
     private IARSession _arSession; // the AR session started by ARDK
     private int touchCount = 0;
     private float gameboardArea = 0;
@@ -82,8 +82,8 @@ public class ARController : MonoBehaviour
     private void OnDisable()
     {
         ARSessionFactory.SessionInitialized -= OnSessionInitialized;
-        Destroy(_agentGameObject);
-        _agentGameObject = null;
+        // Destroy(_agentGameObject);
+        // _agentGameObject = null;
         if (DebugText) DebugText.text = "Debug: AR Session Disabled";
     }
     
@@ -183,7 +183,9 @@ public class ARController : MonoBehaviour
             scanningInstructionUI.EnableText = true;
             scanningInstructionUI.SetInstructionText("Scanning In Progress", true);
         }
-        else if (_gameboard.Area / _gameboard.Settings.TileSize >= GameFlowController.AreaLimit)
+        else if (_gameboard.Area / _gameboard.Settings.TileSize >= GameFlowController.AreaLimit && 
+                 GameFlowController.battleSceneState ==
+                 GameFlowController.PVEBattleSceneState.Scanning)
         {
             GameFlowController.battleSceneState =
                 GameFlowController.PVEBattleSceneState.ScanCompleted;
@@ -235,21 +237,21 @@ public class ARController : MonoBehaviour
             _gameboard.FindNearestFreePosition(hit.point, out tempPos);
             // if agent does not exist, spawn it!
             
-            if (_agentGameObject == null)
-            {
-                var node = new GridNode();
-                if (GameFlowController.SpatialTree == null) return;
-                if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node))
-                    SpawnAgent(new Vector3(node.Coordinates.x, 0.5f, node.Coordinates.y));
-                GameFlowController.battleSceneState = GameFlowController.PVEBattleSceneState.SpawningPlayer;
-            }
-            else
-            {
-                // Test
-                var node = new GridNode();
-                // if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node))
-                    // DebugText.text = DebugText.text + " Raycast hit nearest board pos " + tempPos.ToString() + " GN node Coord" + node.Coordinates;
-            }
+            // if (_agentGameObject == null)
+            // {
+            //     var node = new GridNode();
+            //     if (GameFlowController.SpatialTree == null) return;
+            //     if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node))
+            //         SpawnAgent(new Vector3(node.Coordinates.x, 0.5f, node.Coordinates.y));
+            //     GameFlowController.battleSceneState = GameFlowController.PVEBattleSceneState.SpawningPlayer;
+            // }
+            // else
+            // {
+            //     // Test
+            //     var node = new GridNode();
+            //     // if (GameFlowController.SpatialTree.GetElement(Utils.PositionToTile(tempPos, _gameboard.Settings.TileSize), out node))
+            //         // DebugText.text = DebugText.text + " Raycast hit nearest board pos " + tempPos.ToString() + " GN node Coord" + node.Coordinates;
+            // }
         }
         
         // RenderTexture rt = new RenderTexture(_arCamera.pixelWidth, _arCamera.pixelHeight, 24);
@@ -328,55 +330,55 @@ public class ARController : MonoBehaviour
         // }));
     }
 
-    private void SpawnAgent(Vector3 hitPoint)
-    {
-        if (_agentGameObject != null || GameFlowController.PlayerSpawnActive == false) return;
-        // Instantiate the agent with the predefined prefab
-        Vector3 spawnPoint = GameFlowController.GetEnemySpawnLocationVectorList()[(int) GameFlowController.GetEnemySpawnLocationVectorList().Count/2];
-        
-        spawnPoint = new Vector3(spawnPoint.x * _gameboard.Settings.TileSize, 1f, spawnPoint.z * _gameboard.Settings.TileSize);
-        
-        // Have the prefab face towards camera
-        var rotation = Vector3.ProjectOnPlane(_arCamera.transform.forward, Vector3.up).normalized;
-        var QRot = Quaternion.LookRotation(-rotation);
-        
-        _agentGameObject = Instantiate(_agentPrefab, spawnPoint, QRot, playerSpawnParent.transform);
-        playerSpawnParent.transform.localScale = new Vector3(1f, 1f, 1f);
-        // Set the position of the agent as the raycast hit result
-        // _agentGameObject.transform.position = hitPoint;
-
-        // Set agent's state for navigation
-        // _agent = _agentGameObject.GetComponent<WorkshopGameboardAgent>(); // TODO: A rework on gameboard agent is needed
-        // _agent.State = WorkshopGameboardAgent.AgentNavigationState.Idle;
-        var CharMoveCtrl = _agentGameObject.GetComponent<CharacterMovementController>();
-        CharMoveCtrl.ARController = this;
-        CharMoveCtrl.GameFlowController = GameFlowController;
-
-        var charCombat = _agentGameObject.GetComponent<CombatHandler>();
-        charCombat.SetCentralCombatHandler(GameFlowController.GetCentralBattleController());
-        // DebugText.text = "Debug: Spawned Player";
-
-        var healthBarUI = FindObjectsOfType<HealthBarUI>();
-        foreach (var ui in healthBarUI)
-        {
-            if (ui.tag == "Player")
-            {
-                ui.SetHealthSystem(charCombat.GetHealthSystemComponent().GetHealthSystem());
-            }
-        }
-        
-        GameFlowController.SetPlayerMovementCtrl(CharMoveCtrl);
-    }
+    // private void SpawnAgent(Vector3 hitPoint)
+    // {
+    //     if (_agentGameObject != null || GameFlowController.PlayerSpawnActive == false) return;
+    //     // Instantiate the agent with the predefined prefab
+    //     Vector3 spawnPoint = GameFlowController.GetEnemySpawnLocationVectorList()[(int) GameFlowController.GetEnemySpawnLocationVectorList().Count/2];
+    //     
+    //     spawnPoint = new Vector3(spawnPoint.x * _gameboard.Settings.TileSize, 1f, spawnPoint.z * _gameboard.Settings.TileSize);
+    //     
+    //     // Have the prefab face towards camera
+    //     var rotation = Vector3.ProjectOnPlane(_arCamera.transform.forward, Vector3.up).normalized;
+    //     var QRot = Quaternion.LookRotation(-rotation);
+    //     
+    //     _agentGameObject = Instantiate(_agentPrefab, spawnPoint, QRot, playerSpawnParent.transform);
+    //     playerSpawnParent.transform.localScale = new Vector3(1f, 1f, 1f);
+    //     // Set the position of the agent as the raycast hit result
+    //     // _agentGameObject.transform.position = hitPoint;
+    //
+    //     // Set agent's state for navigation
+    //     // _agent = _agentGameObject.GetComponent<WorkshopGameboardAgent>(); // TODO: A rework on gameboard agent is needed
+    //     // _agent.State = WorkshopGameboardAgent.AgentNavigationState.Idle;
+    //     var CharMoveCtrl = _agentGameObject.GetComponent<CharacterMovementController>();
+    //     CharMoveCtrl.ARController = this;
+    //     CharMoveCtrl.GameFlowController = GameFlowController;
+    //
+    //     var charCombat = _agentGameObject.GetComponent<CombatHandler>();
+    //     charCombat.SetCentralCombatHandler(GameFlowController.GetCentralBattleController());
+    //     // DebugText.text = "Debug: Spawned Player";
+    //
+    //     var healthBarUI = FindObjectsOfType<HealthBarUI>();
+    //     foreach (var ui in healthBarUI)
+    //     {
+    //         if (ui.tag == "Player")
+    //         {
+    //             ui.SetHealthSystem(charCombat.GetHealthSystemComponent().GetHealthSystem());
+    //         }
+    //     }
+    //     
+    //     GameFlowController.SetPlayerMovementCtrl(CharMoveCtrl);
+    // }
 
     public IGameboard GetActiveGameboard()
     {
         return _gameboard;
     }
 
-    public CharacterMovementController GetActivePlayerMovementCtrl()
-    {
-        return _agentGameObject.GetComponent<CharacterMovementController>();
-    }
+    // public CharacterMovementController GetActivePlayerMovementCtrl()
+    // {
+    //     return GameFlowController.PlayerSpawner.activeCharacter.GetComponent<CharacterMovementController>();
+    // }
 
     public void SpawnLandscape(Vector2 position) {
         var ray = _arCamera.ScreenPointToRay(position); ;
@@ -421,6 +423,6 @@ public class ARController : MonoBehaviour
 
     public GameObject getClonePlayer()
     {
-        return _agentGameObject;
+        return GameFlowController.PlayerSpawner.activeCharacter;
     }
 }
