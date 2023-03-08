@@ -189,6 +189,7 @@ public class ARController : MonoBehaviour
         {
             GameFlowController.battleSceneState =
                 GameFlowController.PVEBattleSceneState.ScanCompleted;
+            GameFlowController.GetAllTileCoordinatesAndMarkWalls();
             scanningInstructionUI.EnableText = false;
             Debug.Log("Scan Completed");
         }

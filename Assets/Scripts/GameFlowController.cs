@@ -140,6 +140,8 @@ public class GameFlowController : MonoBehaviour
         CoordinatesAdjacencyList = new Dictionary<Vector2Int, List<Vector2Int>>();
         AllGridNodeCoordinates = new List<Vector2Int>();
         WallCoordinates = new List<Vector2Int>();
+
+        EnemySpawnPositionList = new List<Vector3>();
         
         startFightUI.SetActive(false);
     }
@@ -195,9 +197,12 @@ public class GameFlowController : MonoBehaviour
         
         // Map generation and selection 
         // !~! Warning: Now Skipped Collider Generation, later before testing need to re-implement the collider logics
+        
+        // // now Only call once in AR controller after scan completed, so this if condition check no longer needed
         if (battleSceneState == PVEBattleSceneState.ScanCompleted)
         {
-            GetAllTileCoordinatesAndMarkWalls();
+            // now Only call once in AR controller after scan completed
+            // GetAllTileCoordinatesAndMarkWalls();
             startFightUI.SetActive(true);
         }
         
@@ -361,7 +366,7 @@ public class GameFlowController : MonoBehaviour
      * 
      * Set battleSceneState = BattleMode;
      */
-    private void SetRandomEnemySpawnLocationVectors(int MaxRandomSpawnPositionCount)
+    public void SetRandomEnemySpawnLocationVectors(int MaxRandomSpawnPositionCount)
     {
         int count = 0;
 
@@ -371,12 +376,15 @@ public class GameFlowController : MonoBehaviour
             var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
             if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
             {
-                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, 2f, v.y * _activeGameboard.Settings.TileSize));
+                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.1f, v.y * _activeGameboard.Settings.TileSize));
                 count++;
             }
         }
+    }
 
-        battleSceneState = BattleMode;
+    public void ResetEnemySpawnLocationList()
+    {
+        EnemySpawnPositionList.Clear();
     }
     #endregion
     
@@ -535,7 +543,7 @@ public class GameFlowController : MonoBehaviour
         //     // }
         // }
 
-        spawnpoint = new Vector3(0, 0, 1f);
+        spawnpoint = new Vector3(0, 0.5f, 0);
         PlayerSpawnLocation = spawnpoint;
         yield return new WaitUntil( () => PlayerSpawnLocation == spawnpoint);
     }

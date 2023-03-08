@@ -29,7 +29,6 @@ public class EnemySpawner : MonoBehaviour
     void Start()
     {
         _activeGameboard = ARCtrl.GetActiveGameboard();
-        EnemySpawnLocationList = GameFlowCtrl.GetEnemySpawnLocationVectorList();
         currentEnemyCount = 0;
     }
     
@@ -68,10 +67,23 @@ public class EnemySpawner : MonoBehaviour
     public void SetSpawner(bool sw)
     {
         EnemySpawnEnable = sw;
+        if (!sw)
+        {
+            GameFlowCtrl.ResetEnemySpawnLocationList();
+            ResetEnemySpawnLocationList();
+            return;
+        }
+        GameFlowCtrl.SetRandomEnemySpawnLocationVectors(MaxEnemyCount);
+        EnemySpawnLocationList = GameFlowCtrl.GetEnemySpawnLocationVectorList();
     }
 
     public Vector3 getTowerPosition()
     {
         return towerPosition;
+    }
+
+    private void ResetEnemySpawnLocationList()
+    {
+        EnemySpawnLocationList.Clear();
     }
 }
