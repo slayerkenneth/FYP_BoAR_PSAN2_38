@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4439403, g: 0.4931519, b: 0.5722083, a: 1}
+  m_IndirectSpecularColor: {r: 0.44402242, g: 0.49316543, b: 0.5722324, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3439,7 +3439,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &674969098
 Transform:
   m_ObjectHideFlags: 0
@@ -4223,10 +4223,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1094842683}
-  - component: {fileID: 1094842685}
   - component: {fileID: 1094842684}
   m_Layer: 0
-  m_Name: TowerSpawner(Defense Target)
+  m_Name: TowerSpawner(Capture Target)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4266,32 +4265,9 @@ MonoBehaviour:
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 0}
-  ARCtrl: {fileID: 0}
-  GameFlowCtrl: {fileID: 0}
-  CentralBattleCtrl: {fileID: 0}
---- !u!114 &1094842685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1094842682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bc8e938a0209af48be662b3aef757ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  ARCtrl: {fileID: 619056682}
   GameFlowCtrl: {fileID: 1451593558}
-  arCtrl: {fileID: 619056682}
-  DefenceRange: 0
-  TowerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,
-    type: 3}
-  TowerPosition: {x: 0, y: 0, z: 0}
-  DefenceTime: 90
-  startMinute: 0
-  towerCombatHandler: {fileID: 1094842684}
-  DefenceModeUICanvas: {fileID: 4098587496591411372}
-  CurrentTimeText: {fileID: 4098587496175638028}
+  CentralBattleCtrl: {fileID: 1451593561}
 --- !u!1 &1096763722
 GameObject:
   m_ObjectHideFlags: 0
@@ -4744,7 +4720,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1249809417
 Transform:
   m_ObjectHideFlags: 0
@@ -5122,7 +5098,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1372125106
 Transform:
   m_ObjectHideFlags: 0
@@ -5274,9 +5250,9 @@ MonoBehaviour:
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 0}
-  ARCtrl: {fileID: 0}
-  GameFlowCtrl: {fileID: 0}
-  CentralBattleCtrl: {fileID: 0}
+  ARCtrl: {fileID: 619056682}
+  GameFlowCtrl: {fileID: 1451593558}
+  CentralBattleCtrl: {fileID: 1451593561}
 --- !u!1 &1451593556
 GameObject:
   m_ObjectHideFlags: 0
@@ -5832,7 +5808,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1545443210
 Transform:
   m_ObjectHideFlags: 0
@@ -6654,7 +6630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1801687160
 Transform:
   m_ObjectHideFlags: 0

@@ -39,7 +39,6 @@ public class DefenceTarget : MonoBehaviour
     void Update()
     {
         //Debug.Log(TowerPosition);
-        SpawnTower();
         if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer) StartCountDown();
         if (stopWatchActive == true)
         {
@@ -54,7 +53,7 @@ public class DefenceTarget : MonoBehaviour
         CurrentTimeText.text = "Defense Time Remaining: " + timeSpan.ToString(@"mm\:ss");
     }
 
-    private void SpawnTower()
+    public void SpawnTower()
     {
         if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && !hasTowerSpawned && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningTower)
         {

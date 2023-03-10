@@ -553,6 +553,7 @@ public class GameFlowController : MonoBehaviour
 
     void InitCaptureTowerMode()
     {
+        CalculateTowerLocation();
         ActiveCaptureTowerParent = Instantiate(CaptureTowerParentPrefab);
         ActiveCaptureTowerParent.transform.position = Vector3.zero;
     }
@@ -563,8 +564,18 @@ public class GameFlowController : MonoBehaviour
 
     void InitDefenseTowerMode()
     {
+        CalculateTowerLocation();
         ActiveDefenseTowerParent = Instantiate(DefenseTowerParentPrefab);
         ActiveDefenseTowerParent.transform.position = Vector3.zero;
+        startFightUI.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            ActiveDefenseTowerParent.SetActive(true);
+            battleSceneState = PVEBattleSceneState.SpawningTower;
+            var dt = ActiveDefenseTowerParent.GetComponentInChildren<DefenceTarget>();
+            dt.SpawnTower();
+            dt.StartCountDown();
+            battleSceneState = PVEBattleSceneState.DefencePointMode;
+        });
     }
     
     #endregion
