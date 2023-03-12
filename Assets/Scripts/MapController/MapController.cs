@@ -39,8 +39,13 @@ public class MapController : MonoBehaviour
     public RectTransform graphContainer;
     public GameObject IconPrefab;
     public GameObject EndPrefab;
-    public Sprite DefenceImage;
+    public Sprite DefenseImage;
+    public Sprite CaptureImage;
+    public Sprite DungeonImage;
+    public Sprite PushCarImage;
+    public Sprite BossImage;
     public Sprite ShopImage;
+    public Sprite EventImage;
     public GameObject LinkPrefab;
     public GameObject CirclePrefab;
     public static Map currentMap;
@@ -105,28 +110,28 @@ public class MapController : MonoBehaviour
         GameObject newIcon = Instantiate(IconPrefab);
         switch (level.levelType) {
             case LevelType.Boss:
-                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                newIcon.GetComponent<Image>().sprite = BossImage;
                 break;
             case LevelType.CapturePointBattleMode:
-                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                newIcon.GetComponent<Image>().sprite = CaptureImage;
                 break;
             case LevelType.DefensePointBattleMode:
-                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                newIcon.GetComponent<Image>().sprite = DefenseImage;
                 break;
             case LevelType.DungeonMode:
-                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                newIcon.GetComponent<Image>().sprite = DungeonImage;
                 break;
             case LevelType.Event:
-                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                newIcon.GetComponent<Image>().sprite = EventImage;
                 break;
             case LevelType.PushCarBattleMode:
-                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                newIcon.GetComponent<Image>().sprite = PushCarImage;
                 break;
             case LevelType.Shop:
                 newIcon.GetComponent<Image>().sprite = ShopImage;
                 break;
             default:
-                newIcon.GetComponent<Image>().sprite = DefenceImage;
+                newIcon.GetComponent<Image>().sprite = DefenseImage;
                 break;
         }
         
@@ -172,8 +177,34 @@ public class MapController : MonoBehaviour
     }
 
     private LevelType randomizeType(int sequence) {
-        if (sequence == 1 || sequence == 0 || sequence == -1) return LevelType.DefensePointBattleMode;
-        if (Random.Range(1, 3) == 1) return LevelType.Shop;
+        if (sequence == 1 || sequence == 0 || sequence == -1)
+        {
+            switch (Random.Range(1, 4))
+            {
+                case 1:
+                    return LevelType.PushCarBattleMode;
+                case 2:
+                    return LevelType.DungeonMode;
+                case 3:
+                    return LevelType.DefensePointBattleMode;
+                case 4:
+                    return LevelType.CapturePointBattleMode;
+            }
+        }
+        switch (Random.Range(1, 5))
+        {
+            case 1:
+                return LevelType.Shop;
+            case 2:
+                return LevelType.PushCarBattleMode;
+            case 3:
+                return LevelType.DungeonMode;
+            case 4:
+                return LevelType.DefensePointBattleMode;
+            case 5:
+                return LevelType.CapturePointBattleMode;
+        }
+
         return LevelType.DefensePointBattleMode;
     }
 

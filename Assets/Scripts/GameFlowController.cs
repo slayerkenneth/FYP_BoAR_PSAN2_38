@@ -73,7 +73,9 @@ public class GameFlowController : MonoBehaviour
     public int enemyRandomSpawnLocationsCount;
 
     [Header("Defense Point reference")] 
-    public DefenceTarget Tower;
+    public DefenceTarget DTower;
+
+    [Header("Capture Point reference")] public CaptureTarget CTower;
 
     [Header("UI / Canvas elements")] 
     public GameObject BattleUICanvasParent;
@@ -179,7 +181,7 @@ public class GameFlowController : MonoBehaviour
     //             EnemySpawner.SetSpawner(true);
     //             SetRandomEnemySpawnLocationVectors(enemyRandomSpawnLocationsCount);
     //             
-    //             // Set Tower Spawner On
+    //             // Set DTower Spawner On
     //             battleSceneState = PVEBattleSceneState.SpawningTower;
     //         }
     //         
@@ -219,8 +221,8 @@ public class GameFlowController : MonoBehaviour
         {
             // update loop
             /* CP
-             * - Spawn Tower (not Enabled)
-             *   -->Set Tower to Capture Mode, Enemy Spawn Point nearby the tower, the 4 pillars
+             * - Spawn DTower (not Enabled)
+             *   -->Set DTower to Capture Mode, Enemy Spawn Point nearby the tower, the 4 pillars
              *  - Activate Capture Percentage Gauge
              *   - Spawn Enemy (not Enabled)
              *   - Spawn (Object Recognition Related) buff or Items (not Enabled)
@@ -549,18 +551,26 @@ public class GameFlowController : MonoBehaviour
     }
     #endregion
     
-    #region Capture Tower Mode
+    #region Capture DTower Mode
 
     void InitCaptureTowerMode()
     {
         CalculateTowerLocation();
         ActiveCaptureTowerParent = Instantiate(CaptureTowerParentPrefab);
         ActiveCaptureTowerParent.transform.position = Vector3.zero;
+        startFightUI.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            ActiveCaptureTowerParent.SetActive(true);
+            battleSceneState = PVEBattleSceneState.SpawningTower;
+            var dt = ActiveDefenseTowerParent.GetComponentInChildren<CaptureTarget>();
+            dt.SpawnTower();
+            battleSceneState = PVEBattleSceneState.CapturePointMode;
+        });
     }
     
     #endregion
 
-    #region Defense Tower Mode
+    #region Defense DTower Mode
 
     void InitDefenseTowerMode()
     {
@@ -632,7 +642,7 @@ public class GameFlowController : MonoBehaviour
         }
         else if (BattleMode == PVEBattleSceneState.DefencePointMode)
         {
-            if (Tower.GetRemainingTime() <= 0)
+            if (DTower.GetRemainingTime() <= 0)
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
@@ -676,7 +686,12 @@ public class GameFlowController : MonoBehaviour
 
     public void SetDefenseTower(DefenceTarget tower)
     {
-        Tower = tower;
+        DTower = tower;
+    }
+
+    public void SetCaptureTower(CaptureTarget tower)
+    {
+        CTower = tower;
     }
 
     public void SetCurrentEnemyBeenAttacked(CombatHandler enemyCombatHandler)

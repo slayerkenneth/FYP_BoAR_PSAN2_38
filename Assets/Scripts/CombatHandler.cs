@@ -7,7 +7,7 @@ using Assets.Scripts;
 public class CombatHandler : MonoBehaviour
 {
     // Low Level Commands for combat related functionalities
-    // Every Enemy, Player, maybe Tower, and anything interact with Central Battle Controller have this component
+    // Every Enemy, Player, maybe DTower, and anything interact with Central Battle Controller have this component
     [Header("Battle Parameters")] 
     [SerializeField] private float hp;
     [SerializeField] private float skillCoolDown;

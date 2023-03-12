@@ -1749,8 +1749,13 @@ MonoBehaviour:
   IconPrefab: {fileID: 611048098088729295, guid: 9af04530be647f94196339551ce93aec,
     type: 3}
   EndPrefab: {fileID: 1750711033}
-  DefenceImage: {fileID: 21300000, guid: 5fbb18f543ad7cc45bf7aaeb3e81dee8, type: 3}
+  DefenseImage: {fileID: 21300000, guid: bbe5abccc4add8d49a5aa2c8c1634287, type: 3}
+  CaptureImage: {fileID: 21300000, guid: fb5b4963cd2961743b4f2cc118dd3d3f, type: 3}
+  DungeonImage: {fileID: 21300000, guid: 57ee4529ffa09904da321c32b1cfaba9, type: 3}
+  PushCarImage: {fileID: 21300000, guid: aa17768a7e3f3d14082da93cf0548d2c, type: 3}
+  BossImage: {fileID: 0}
   ShopImage: {fileID: 21300000, guid: 258b3e730f00faa4bbff8146594ecccd, type: 3}
+  EventImage: {fileID: 0}
   LinkPrefab: {fileID: 4670098070062989320, guid: c4ba319c21d2cb242990c1b2b84d2f35,
     type: 3}
   CirclePrefab: {fileID: 3698393956567473449, guid: 3d9c29db274ab334dabb69145994e3ad,
@@ -4224,6 +4229,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1094842683}
   - component: {fileID: 1094842684}
+  - component: {fileID: 1094842685}
   m_Layer: 0
   m_Name: TowerSpawner(Capture Target)
   m_TagString: Untagged
@@ -4268,6 +4274,27 @@ MonoBehaviour:
   ARCtrl: {fileID: 619056682}
   GameFlowCtrl: {fileID: 1451593558}
   CentralBattleCtrl: {fileID: 1451593561}
+--- !u!114 &1094842685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094842682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90e1a4df2abcc1b408685becd8cca3e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameFlowCtrl: {fileID: 1451593558}
+  ARCtrl: {fileID: 619056682}
+  DefenceRange: 0
+  TowerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,
+    type: 3}
+  TowerPosition: {x: 0, y: 0, z: 0}
+  DefenceTime: 0
+  towerCombatHandler: {fileID: 1094842684}
+  DefenceModeUICanvas: {fileID: 0}
 --- !u!1 &1096763722
 GameObject:
   m_ObjectHideFlags: 0
@@ -5327,7 +5354,8 @@ MonoBehaviour:
   EnemySpawner: {fileID: 1451593559}
   EnemySpawnPositionList: []
   enemyRandomSpawnLocationsCount: 5
-  Tower: {fileID: 1429391864}
+  DTower: {fileID: 0}
+  CTower: {fileID: 0}
   BattleUICanvasParent: {fileID: 4098587496591411369}
   PlayerHealthBarUI: {fileID: 3450456933618736479}
   EnemyHealthBarUI: {fileID: 3450456933082368580}

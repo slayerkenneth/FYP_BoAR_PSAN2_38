@@ -68,8 +68,8 @@ public class EnemyPathfinding : MonoBehaviour
         attackTower = false;
         // get the player position (need to change)
         //player = GameObject.FindGameObjectWithTag("Player").transform;
-        //tower = GameObject.FindGameObjectWithTag("Tower(D)").transform;
-        //Debug.Log(GameObject.FindGameObjectWithTag("Tower(D)"));
+        //tower = GameObject.FindGameObjectWithTag("DTower(D)").transform;
+        //Debug.Log(GameObject.FindGameObjectWithTag("DTower(D)"));
     }
 
     private void OnGameboardCreated(GameboardCreatedArgs args)
@@ -141,7 +141,7 @@ public class EnemyPathfinding : MonoBehaviour
         {
             float towerToCollider = Vector3.Distance(hitCollider.gameObject.transform.position, towerPosition);
             float towerToThis = Vector3.Distance(this.transform.position, towerPosition);
-            //Debug.Log("Show Tower Distance: " + towerToCollider + " " + towerToThis);
+            //Debug.Log("Show DTower Distance: " + towerToCollider + " " + towerToThis);
             if (towerToThis > towerToCollider)
             {
                 newPosition = CalculatingEnemyNewPath(hitCollider.gameObject);
@@ -207,7 +207,7 @@ public class EnemyPathfinding : MonoBehaviour
     {
         //attack (need to change)
         // transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
-        // Debug.Log(this.name + " Attacking Tower");
+        // Debug.Log(this.name + " Attacking DTower");
     }
 
     public void ChasePlayer()

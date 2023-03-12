@@ -5,12 +5,12 @@ using Niantic.ARDK.Extensions.Gameboard;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DefenceTarget : MonoBehaviour
+public class CaptureTarget : MonoBehaviour
 {
     [Header("Gameboard and other controller reference")]
     public IGameboard _activeGameboard;
     public GameFlowController GameFlowCtrl;
-    public ARController arCtrl;
+    public ARController ARCtrl;
 
     [Header("DTower Parameters")] 
     private float hp = 100f;
@@ -18,39 +18,22 @@ public class DefenceTarget : MonoBehaviour
     public GameObject TowerPrefab;
     public Vector3 TowerPosition;
     [SerializeField] private float DefenceTime;
-    private bool stopWatchActive;
-    private float CurrentTime;
     private bool hasTowerSpawned = false;
-    public int startMinute;
     public CombatHandler towerCombatHandler;
     private GameObject SpawnedTower;
     
 
     [Header("UI")] 
     public Canvas DefenceModeUICanvas;
-    public Text CurrentTimeText;
 
     private void Start()
     {
-        CurrentTime = DefenceTime;
-        GameFlowCtrl.SetDefenseTower(this);
+        GameFlowCtrl.SetCaptureTower(this);
     }
 
     void Update()
     {
-        //Debug.Log(TowerPosition);
-        if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer) StartCountDown();
-        if (stopWatchActive == true)
-        {
-            CurrentTime = CurrentTime - Time.deltaTime;
-            if (CurrentTime <= 0)
-            {
-                stopWatchActive = false;
-                
-            }
-        }
-        TimeSpan timeSpan = TimeSpan.FromSeconds(CurrentTime);
-        CurrentTimeText.text = "Defense Time Remaining: " + timeSpan.ToString(@"mm\:ss");
+
     }
 
     public void SpawnTower()
@@ -80,19 +63,5 @@ public class DefenceTarget : MonoBehaviour
     {
         return TowerPosition;
     }
-
-    public void StartCountDown()
-    {
-        stopWatchActive = true;
-    }
-
-    public void StopCountDown()
-    {
-        stopWatchActive = false;
-    }
-
-    public float GetRemainingTime()
-    {
-        return CurrentTime;
-    }
+    
 }
