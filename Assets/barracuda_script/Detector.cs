@@ -6,8 +6,15 @@ using System.Collections.Generic;
 
 public interface Detector
 {
+    public virtual int RequiredWidth {
+        get {
+            return 0; 
+        }
+    }
+
+
     void Start();
-    IEnumerator Detect(Color32[] picture, int requestedWidth, System.Action<IList<BoundingBox>> callback);
+    IEnumerator Detect(Color32[] picture, int requestedWidth, Rect Rect, System.Action<IList<BoundingBox>> callback); //Rect show the area of the pic to be used. (0,0) is the top left corner.
 
 }
 

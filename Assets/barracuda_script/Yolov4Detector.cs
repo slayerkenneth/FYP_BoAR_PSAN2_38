@@ -7,12 +7,21 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Unity.Barracuda;
 using UnityEngine;
+using System.IO;
 
 namespace Assets.Scripts
 {
-    public class Yolov5Detector : MonoBehaviour, Detector
+    public class Yolov4Detector : MonoBehaviour, Detector
     {
         public string INPUT_NAME;
+
+        public virtual int RequiredWidth
+        {
+            get
+            {
+                return IMAGE_SIZE;
+            }
+        }
 
         public int IMAGE_SIZE = 416;
         public int CLASS_COUNT = 3;
@@ -21,6 +30,7 @@ namespace Assets.Scripts
         public int OUTPUT3_SIZE = 10647;
         public float MINIMUM_CONFIDENCE = 0.25f;
         public int OBJECTS_LIMIT = 20;
+
 
         public NNModel modelFile;
         public TextAsset labelsFile;
@@ -38,16 +48,16 @@ namespace Assets.Scripts
             this.labels = Regex.Split(this.labelsFile.text, "\n|\r|\r\n")
                 .Where(s => !String.IsNullOrEmpty(s)).ToArray();  
             var model = ModelLoader.Load(this.modelFile);
-            this.worker = GraphicsWorker.GetWorker(model);
+            this.worker = GraphicsWorker.GetV4Worker(model);
             int[] array1 = new int[] { 1, 3, 3, 2 };
             float[] array2 = new float[] { 12, 16, 19, 36, 40, 28, 36, 75, 76, 55, 72, 146, 142, 110, 192, 243, 459, 401 };
             anchor = new Tensor(array1, array2);
         }
 
-        public IEnumerator Detect(Color32[] picture, int width, System.Action<IList<BoundingBox>> callback)
+        public IEnumerator Detect(Color32[] picture, int width, Rect rect, System.Action<IList<BoundingBox>> callback)
         {
 
-            using (var tensor = TransformInput(picture, IMAGE_SIZE, IMAGE_SIZE, width))
+            using (var tensor = TransformInput(picture, IMAGE_SIZE, IMAGE_SIZE, width, rect))
             {
                 var inputs = new Dictionary<string, Tensor>();
                 var layer = new Dictionary<int, Tensor>();
@@ -65,24 +75,55 @@ namespace Assets.Scripts
             }
         }
 
-        private static Tensor TransformInput(Color32[] pic, int width, int height, int requestedWidth)
+        private static Tensor TransformInput(Color32[] pic, int width, int height, int requestedWidth, Rect rect)
         {
             float[] floatValues = new float[width * height * 3];
 
-            int beginning = (((pic.Length / requestedWidth) - height) * requestedWidth) / 2;
-            int leftOffset = (requestedWidth - width) / 2;
+            float RationX = rect.width / width;
+            float RationY = rect.height / height;
+
+            float beginning = rect.yMin * requestedWidth;
+            float leftOffset = rect.xMin / 2;
+            //int beginning = (((pic.Length / requestedWidth) - height) * requestedWidth) / 2;
+            //int leftOffset = (requestedWidth - width) / 2;
+
+            float picX, picY;
+            picY = beginning;
+
+            Texture2D test = new Texture2D(width, height);
+
             for (int i = 0; i < height; i++)
             {
+                picX = leftOffset;
                 for (int j = 0; j < width; j++)
                 {
-                    var color = pic[beginning + leftOffset + j];
+                    int x = Mathf.RoundToInt(picX);
+                    int y = Mathf.RoundToInt(picY);
+
+                    var color = pic[x + y * requestedWidth];
+
+                    test.SetPixel(j, i, color);
 
                     floatValues[(i * width + j) * 3 + 0] = (color.r - IMAGE_MEAN) / IMAGE_STD;
                     floatValues[(i * width + j) * 3 + 1] = (color.g - IMAGE_MEAN) / IMAGE_STD;
                     floatValues[(i * width + j) * 3 + 2] = (color.b - IMAGE_MEAN) / IMAGE_STD;
+                    picX += RationX;
                 }
-                beginning += requestedWidth;
+                picY += RationY;
             }
+
+
+            var dirPath = Application.dataPath + "/../SaveImages/";
+
+            byte[] bytes2 = test.EncodeToPNG();
+            if (!System.IO.Directory.Exists(dirPath))
+            {
+                print(dirPath);
+                Directory.CreateDirectory(dirPath);
+            }
+            File.WriteAllBytes(dirPath + "Image4.png", bytes2);
+
+
 
             return new Tensor(1, height, width, 3, floatValues);
         }
