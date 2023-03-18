@@ -2476,7 +2476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _arCamera: {fileID: 619056670}
-  _agentPrefab: {fileID: 1556040939566342, guid: 012f75391d50dcd49a42dfb8ef8bf5db,
+  _agentPrefab: {fileID: 8189980434977739222, guid: eb64b54ddc44347478d7c6d3d45f821c,
     type: 3}
   playerSpawnParent: {fileID: 1049136496}
   HitTestType: 16
@@ -4211,7 +4211,7 @@ MonoBehaviour:
   boxPrefab: {fileID: 5347304568407062166, guid: efb33e49a6005c544b4a82223b9e2a13,
     type: 3}
   testImage: {fileID: 0}
-  IsInference: 1
+  IsInference: 0
   IsTestImage: 0
   IsYoloV8: 1
   IsArCamera: 1
@@ -7329,19 +7329,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1068038021823712010}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1448402531}
-        m_TargetAssemblyTypeName: ObjectSpawningController, Assembly-CSharp
-        m_MethodName: spawnSceneItems
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &1068038021823712117
 CanvasRenderer:
   m_ObjectHideFlags: 0

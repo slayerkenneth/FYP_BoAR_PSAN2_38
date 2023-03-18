@@ -55,7 +55,7 @@ public class PlayerStatus : ScriptableObject
                 _currentPlayer.currentLevel = 0;
                 _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
                 _currentPlayer.passiveClass = null;
-                _currentPlayer.weaponStat = (BackpackStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Backpack/BackpackStat.asset", typeof(BackpackStat));
+                _currentPlayer.weaponStat = (BottleStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Bottle/BottleStat.asset", typeof(BottleStat));
                 _currentPlayer.hideFlags = HideFlags.HideAndDontSave;
             }
             return _currentPlayer;

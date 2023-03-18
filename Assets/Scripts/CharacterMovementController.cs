@@ -77,7 +77,10 @@ public class CharacterMovementController : MonoBehaviour
         }
 
         Vector2 movementInput = mapper.Player.Move.ReadValue<Vector2>();
-        Vector3 move = (cameraTransform.forward * movementInput.y + cameraTransform.right * movementInput.x);
+        if (Mathf.Abs(movementInput.y) < 0.06) movementInput.y = 0.0F;
+        if (Mathf.Abs( movementInput.x) < 0.06) movementInput.x = 0.0F;
+
+         Vector3 move = (cameraTransform.forward * movementInput.y + cameraTransform.right * movementInput.x);
         move.y = 0;
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("rolling")) 
@@ -92,7 +95,8 @@ public class CharacterMovementController : MonoBehaviour
 
         if (movementInput.magnitude != 0)
         {
-            animator.Play("Run");
+            Debug.Log("Move: " + movementInput);
+            if(animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) animator.Play("Run");
             _activeGameboard.FindNearestFreePosition(transform.position, out nearestBoardPosition);
             debugLog.text = debugLog.text + " Player nearest board pos " + nearestBoardPosition.ToString();
         }
