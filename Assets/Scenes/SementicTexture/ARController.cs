@@ -324,6 +324,7 @@ public class ARController : MonoBehaviour
         var QRot = Quaternion.LookRotation(-rotation);
         
         _agentGameObject = Instantiate(_agentPrefab, spawnPoint, QRot, playerSpawnParent.transform);
+        if (PlayerStatus.CurrentPlayer.passiveClass != null) PlayerStatus.CurrentPlayer.passiveClass.StartPassive(_agentGameObject);
         playerSpawnParent.transform.localScale = new Vector3(1f, 1f, 1f);
         // Set the position of the agent as the raycast hit result
         // _agentGameObject.transform.position = hitPoint;

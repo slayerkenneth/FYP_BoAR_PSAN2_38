@@ -54,7 +54,7 @@ public class PlayerStatus : ScriptableObject
                 _currentPlayer.weaponLv = 0;
                 _currentPlayer.currentLevel = 0;
                 _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
-                _currentPlayer.passiveClass = null;
+                _currentPlayer.passiveClass = (GoldRicePassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/PassiveClass/GoldRiceBowl/GoldRicePassive.asset", typeof(GoldRicePassive));
                 _currentPlayer.weaponStat = (BottleStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Bottle/BottleStat.asset", typeof(BottleStat));
                 _currentPlayer.hideFlags = HideFlags.HideAndDontSave;
             }

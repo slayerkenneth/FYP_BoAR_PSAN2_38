@@ -30,13 +30,18 @@ namespace CodeMonkey.HealthSystemCM {
 
         private float healthMax;
         private float health;
+        private float shield;
+
+        public GameObject character;
 
         /// <summary>
         /// Construct a HealthSystem, receives the health max and sets current health to that value
         /// </summary>
-        public HealthSystem(float healthMax) {
+        public HealthSystem(float healthMax, GameObject character) {
             this.healthMax = healthMax;
+            this.character = character;
             health = healthMax;
+            shield = 0;
         }
 
         /// <summary>
@@ -61,19 +66,42 @@ namespace CodeMonkey.HealthSystemCM {
         }
 
         /// <summary>
+        /// Get the current Shield as a Normalized value (0-1)
+        /// </summary>
+        public float GetShieldNormalized()
+        {
+            return shield / healthMax;
+        }
+
+        /// <summary>
         /// Deal damage to this HealthSystem
         /// </summary>
         public void Damage(float amount) {
-            health -= amount;
-            if (health < 0) {
-                health = 0;
-            }
-            OnHealthChanged?.Invoke(this, EventArgs.Empty);
-            OnDamaged?.Invoke(this, EventArgs.Empty);
 
-            if (health <= 0) {
-                Die();
+            shield -= amount;
+            if (shield < 0)
+            {
+                health += shield;
+                shield = 0;
+
+                if (health < 0)
+                {
+                    health = 0;
+                }
+
+                OnHealthChanged?.Invoke(this, EventArgs.Empty);
+                OnDamaged?.Invoke(this, EventArgs.Empty);
+
+                if (health <= 0)
+                {
+                    Die();
+                }
             }
+            else {
+                OnHealthChanged?.Invoke(this, EventArgs.Empty);
+                OnDamaged?.Invoke(this, EventArgs.Empty);
+            }
+            
         }
 
         /// <summary>
@@ -100,6 +128,15 @@ namespace CodeMonkey.HealthSystemCM {
             }
             OnHealthChanged?.Invoke(this, EventArgs.Empty);
             OnHealed?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Shield this HealthSystem
+        /// </summary>
+        public void Shield(float amount)
+        {
+            shield += amount;
+            OnHealthChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace CodeMonkey.HealthSystemCM {
 
         private void Awake() {
             // Create Health System
-            healthSystem = new HealthSystem(healthAmountMax);
+            healthSystem = new HealthSystem(healthAmountMax, gameObject);
 
             if (startingHealthAmount != 0) {
                 healthSystem.SetHealth(startingHealthAmount);
