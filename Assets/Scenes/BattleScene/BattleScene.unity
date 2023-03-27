@@ -4272,8 +4272,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1094842683}
-  - component: {fileID: 1094842684}
   - component: {fileID: 1094842685}
+  - component: {fileID: 1094842684}
   m_Layer: 0
   m_Name: TowerSpawner(Capture Target)
   m_TagString: Untagged
@@ -4338,7 +4338,7 @@ MonoBehaviour:
   TowerPosition: {x: 0, y: 0, z: 0}
   DefenceTime: 0
   towerCombatHandler: {fileID: 1094842684}
-  DefenceModeUICanvas: {fileID: 0}
+  CaptureModeUICanvas: {fileID: 0}
 --- !u!1 &1096763722
 GameObject:
   m_ObjectHideFlags: 0
@@ -5516,7 +5516,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeCharacter: {fileID: 0}
   GameFlowController: {fileID: 1451593558}
-  PlayerStatus: {fileID: 0}
+  PlayerStatusRef: {fileID: 0}
   KendoPrefab: {fileID: 1556040939566342, guid: 8fffc8111ceddc044a92c1d13747c5bb,
     type: 3}
   HallSecurityPrefab: {fileID: 7830203463684231489, guid: ed32d4f332a647e4ea52918af5219fb5,
@@ -9364,7 +9364,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &3450456933373103428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9472,7 +9472,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &3450456933576585156
 MonoBehaviour:
   m_ObjectHideFlags: 0

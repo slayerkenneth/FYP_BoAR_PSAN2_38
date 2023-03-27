@@ -12,7 +12,7 @@ public class CaptureTarget : MonoBehaviour
     public GameFlowController GameFlowCtrl;
     public ARController ARCtrl;
 
-    [Header("DTower Parameters")] 
+    [Header("C Tower Parameters")] 
     private float hp = 100f;
     public float DefenceRange;
     public GameObject TowerPrefab;
@@ -24,7 +24,7 @@ public class CaptureTarget : MonoBehaviour
     
 
     [Header("UI")] 
-    public Canvas DefenceModeUICanvas;
+    public Canvas CaptureModeUICanvas;
 
     private void Start()
     {

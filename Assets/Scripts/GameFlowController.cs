@@ -213,11 +213,10 @@ public class GameFlowController : MonoBehaviour
         
         // battleSceneState = BattleMode;
 
-        // Battle (entering Battle status): 4 main mode + Boss fight
-
-        if (battleSceneState is 
-            (PVEBattleSceneState.CapturePointMode or PVEBattleSceneState.DefencePointMode
-            or PVEBattleSceneState.DungeonMode or PVEBattleSceneState.PushCarBattleMode or PVEBattleSceneState.BossFight))
+        /*
+         * Battle Sessions(entering Battle status): 4 main mode + Boss fight
+         */
+        if (battleSceneState is PVEBattleSceneState.CapturePointMode)
         {
             // update loop
             /* CP
@@ -233,6 +232,78 @@ public class GameFlowController : MonoBehaviour
              *   -->Detect game end condition
              */
             // Conclusion State
+        }
+        
+        else if (battleSceneState is PVEBattleSceneState.DefencePointMode)
+        {
+            // update loop
+            /* DP
+             * Defense Point
+                - Get all spawn locations
+                - Spawn Tower (not Enabled)
+                -->Set Tower to defense Mode
+                - Activate Objective gauge (Tower HP percentage & Time remaining)
+                - Spawn Enemy (not Enabled)
+                - Spawn (Object Recognition Related) buff or Items (not Enabled)
+                - Ask start? Start Waiting
+                - Start by spawn Player, and enable all spawned elements
+                - Enable UIs: Tower Gauge, player HP bar...
+             * - Loop
+             *   -->Detect game end condition
+             */
+            // Conclusion State
+        }
+        else if (battleSceneState is PVEBattleSceneState.DungeonMode)
+        {
+            // update loop
+            /* D
+             * - Get all spawn locations
+             * - Set Start and exit point, pre-set routes
+                - Spawn Enemy
+                - Spawn (Object Recognition Related) buff or Items (not Enabled)
+                - Ask start? Start Waiting
+                - Start by spawn Player, and enable all spawned elements
+                - Enable UIs: player HP bar...
+             * - Loop
+             *   -->Detect game end condition
+             */
+            // Conclusion State
+        }
+        
+        else if (battleSceneState is PVEBattleSceneState.PushCarBattleMode)
+        {
+            // update loop
+            /* PC
+             * - Get all spawn locations
+                - spawn Car and car push route
+                - Spawn Enemy
+                - Spawn (Object Recognition Related) buff or Items (not Enabled)
+                - Ask start? Start Waiting
+                - Start by spawn Player, and enable all spawned elements
+                - Enable UIs: push progress bar (Objective gauge), player HP bar...
+             * - Loop
+             *   -->Detect game end condition
+             */
+            // Conclusion State
+        }
+        
+        else if (battleSceneState is PVEBattleSceneState.BossFight)
+        {
+            // update loop
+            /* BF
+             * - Spawn Boss
+                - Spawn  (Object Recognition Related) buff or Items (not Enabled)
+                - Ask start? Start Waiting
+                - Start by spawn Player, and enable all spawned elements
+                - Enable UIs: boss UP (Objective gauge) player HP bar...
+             * - Loop
+             *   -->Detect game end condition
+             */
+            // Conclusion State
+            
+            // Save character build
+        
+            // Chapter selection
         }
 
         // Map selection  (returns to map)
@@ -256,9 +327,6 @@ public class GameFlowController : MonoBehaviour
             BattleUICanvasParent.SetActive(false);
             BackgroundCanvasParent.SetActive(true);
         }
-        // Save character build
-        
-        // Chapter selection
     }
     
     
