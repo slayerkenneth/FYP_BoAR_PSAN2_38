@@ -71,5 +71,9 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+#Object recognition model file and the meta file
+*.onnx
+*.onnx.meta
+
 # Saved Image from testing Object Recognition
 SaveImages/
