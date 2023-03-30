@@ -67,7 +67,7 @@ public class ARController : MonoBehaviour
     public GameObject PlacementObjectPf;
     public GameObject boxContainer;
     public GameObject boxPrefab;
-    public Yolov5Detector yolov5Detector;
+    public Yolov4Detector yolov5Detector;
 
     [Header("UI Related")] public InstructionUI scanningInstructionUI;
 

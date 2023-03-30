@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "HoldAttack",
+                    "type": "Button",
+                    "id": "c830e734-c172-4793-90af-808ed4aa7228",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -144,7 +153,7 @@
                     "name": "",
                     "id": "ea26d7a2-425b-4463-885a-8bb052c8a322",
                     "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "processors": "",
                     "groups": "",
                     "action": "NormalAttack",
@@ -170,6 +179,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Defense",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e2215cad-2e07-4122-8084-523ec0956ecf",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "Hold(duration=0.3)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HoldAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

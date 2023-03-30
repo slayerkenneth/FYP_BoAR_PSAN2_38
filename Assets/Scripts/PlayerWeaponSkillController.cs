@@ -3,24 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerWeaponSkillController : MonoBehaviour
+public abstract class PlayerWeaponSkillController : MonoBehaviour
 {
 
     [Header("Reference")] 
-    [SerializeField] private Animator Animator;
-    [SerializeField] private CombatHandler combatHandler;
-    [SerializeField] private GameFlowController GameFlowCtrl;
+    [SerializeField] protected Animator Animator;
+    [SerializeField] protected CombatHandler combatHandler;
+    [SerializeField] protected GameFlowController GameFlowCtrl;
 
     [Header("Weapons")] 
-    [SerializeField] private GameObject Weapon;
+    [SerializeField] protected GameObject Weapon;
 
-    [Header("Damage Parameters")]
-    [SerializeField] private float NormalAttackDamage;
-    [SerializeField] private float SkillDamage;
-    [SerializeField] private int normalAttackCount = 0;
-    [SerializeField] private bool ValidHit = false;
-    [SerializeField] private CombatHandler currentAttackingTarget;
-    
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,43 +38,30 @@ public class PlayerWeaponSkillController : MonoBehaviour
         
     }
 
-    public void NormalAttack()
-    {
-        if (!ValidHit) return;
-        if (normalAttackCount == 2)
-        {
-            normalAttackCount = 0;
-        }
-        else
-        {
-            normalAttackCount++;
-        }
-        
-        combatHandler.DoDamage(currentAttackingTarget, NormalAttackDamage);
-    }
+    public abstract void NormalAttack();
 
-    public void Defense()
-    {
-        
-    }
+    public abstract void Rolling();
 
-    public void CastSkill()
-    {
-        
-    }
+    public abstract void CastSkill();
+
+    public abstract void StartHoldAttack();
+
+    public abstract void EndHoldAttack();
+
+    public abstract float OnrecieveDamage(float damageAmount, CombatHandler attacker);
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
-        {
-            ValidHit = true;
-            currentAttackingTarget = other.transform.GetComponent<CombatHandler>();
-        }
+        //if (other.CompareTag("Enemy"))
+        //{
+        //    ValidHit = true;
+        //    currentAttackingTarget = other.transform.GetComponent<CombatHandler>();
+        //}
     }
 
     private void OnTriggerExit(Collider other)
     {
-        ValidHit = false;
+        //ValidHit = false;
         // shd be after animation end and depends on collider of the weapon
     }
 }

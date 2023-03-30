@@ -71,6 +71,15 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HoldAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""c830e734-c172-4793-90af-808ed4aa7228"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -166,7 +175,7 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""ea26d7a2-425b-4463-885a-8bb052c8a322"",
                     ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""NormalAttack"",
@@ -194,6 +203,17 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
                     ""action"": ""Defense"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e2215cad-2e07-4122-8084-523ec0956ecf"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": ""Hold(duration=0.3)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HoldAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -207,6 +227,7 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
         m_Player_NormalAttack = m_Player.FindAction("NormalAttack", throwIfNotFound: true);
         m_Player_CastSkill = m_Player.FindAction("CastSkill", throwIfNotFound: true);
         m_Player_Defense = m_Player.FindAction("Defense", throwIfNotFound: true);
+        m_Player_HoldAttack = m_Player.FindAction("HoldAttack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -271,6 +292,7 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_NormalAttack;
     private readonly InputAction m_Player_CastSkill;
     private readonly InputAction m_Player_Defense;
+    private readonly InputAction m_Player_HoldAttack;
     public struct PlayerActions
     {
         private @CharacterControlMap m_Wrapper;
@@ -280,6 +302,7 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
         public InputAction @NormalAttack => m_Wrapper.m_Player_NormalAttack;
         public InputAction @CastSkill => m_Wrapper.m_Player_CastSkill;
         public InputAction @Defense => m_Wrapper.m_Player_Defense;
+        public InputAction @HoldAttack => m_Wrapper.m_Player_HoldAttack;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -304,6 +327,9 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
                 @Defense.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDefense;
                 @Defense.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDefense;
                 @Defense.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDefense;
+                @HoldAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHoldAttack;
+                @HoldAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHoldAttack;
+                @HoldAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHoldAttack;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -323,6 +349,9 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
                 @Defense.started += instance.OnDefense;
                 @Defense.performed += instance.OnDefense;
                 @Defense.canceled += instance.OnDefense;
+                @HoldAttack.started += instance.OnHoldAttack;
+                @HoldAttack.performed += instance.OnHoldAttack;
+                @HoldAttack.canceled += instance.OnHoldAttack;
             }
         }
     }
@@ -334,5 +363,6 @@ public partial class @CharacterControlMap : IInputActionCollection2, IDisposable
         void OnNormalAttack(InputAction.CallbackContext context);
         void OnCastSkill(InputAction.CallbackContext context);
         void OnDefense(InputAction.CallbackContext context);
+        void OnHoldAttack(InputAction.CallbackContext context);
     }
 }
