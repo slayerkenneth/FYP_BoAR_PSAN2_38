@@ -59,6 +59,8 @@ public class EnemyPathfinding : MonoBehaviour
 
     private float sightRange;
     private float attackRange;
+    private float colliderRange;
+    private float attackTime;
     
     private float jumpDistance = 1;
     
@@ -79,13 +81,18 @@ public class EnemyPathfinding : MonoBehaviour
 
     private IGameboard _gameboard;
 
+    private EnemyBehavior behaviourScript;
+
     void Start()
     {
         _agentConfig = new AgentConfiguration(jumpPenalty, jumpDistance, pathFindingBehaviour);
         GameboardFactory.GameboardInitialized += OnGameboardCreated;
         animator = gameObject.GetComponent<Animator>();
-        sightRange = gameObject.GetComponent<EnemyBehavior>().sightRange;
-        attackRange = gameObject.GetComponent<EnemyBehavior>().attackRange;
+        behaviourScript = gameObject.GetComponent<EnemyBehavior>();
+        sightRange = behaviourScript.sightRange;
+        attackRange = behaviourScript.attackRange;
+        colliderRange = behaviourScript.colliderRange;
+        attackTime = 0;
         playerInSightRange = false;
         playerInAttackRange = false;
         // get the player position (need to change)
@@ -138,9 +145,8 @@ public class EnemyPathfinding : MonoBehaviour
         }
         
         //using check capsules
-        hitColliders = Physics.OverlapSphere(this.transform.position, 0.1f, whatIsEnemy);
-        //hide For Performance
-        if(hitColliders.Length <= 1)
+        hitColliders = Physics.OverlapSphere(this.transform.position, colliderRange, whatIsEnemy); 
+        if(hitColliders.Length == 1 && hitColliders[0].gameObject == this.gameObject)
         {
             dealWithOverlap = false;
         }
@@ -148,7 +154,7 @@ public class EnemyPathfinding : MonoBehaviour
         {
             dealWithOverlap = true;
             for (int i = 0; i < hitColliders.Length; ++i)
-            {
+            { 
                 if (hitColliders[i].gameObject != this.gameObject)
                 {
                     //Debug.Log(this.name + " " + hitColliders[i].gameObject.name);
@@ -165,11 +171,15 @@ public class EnemyPathfinding : MonoBehaviour
                     GoToTower();
             }
                 
-            if (!calmDown && playerInSightRange && !playerInAttackRange) ChasePlayer();
-            if (!calmDown && playerInAttackRange && playerInSightRange) AttackPlayer();
-        }
-
-        
+            if (!calmDown && playerInSightRange && !playerInAttackRange) 
+            {
+                ChasePlayer();
+            }
+            if (!calmDown && playerInAttackRange && playerInSightRange) 
+            {
+                AttackPlayer();
+            }
+        }       
     }
 
     public void DealWithOverlap(Collider hitCollider)
@@ -181,29 +191,17 @@ public class EnemyPathfinding : MonoBehaviour
             playerToCollider = Vector3.Distance(hitCollider.gameObject.transform.position, playerPosition);
             playerToThis = Vector3.Distance(this.transform.position, playerPosition);
             //Debug.Log("Show Player Distance: " + playerToCollider + " " + playerToThis);
-            if (playerToThis > playerToCollider)
+            if (playerToThis >= playerToCollider)
             {
                 GoToTower();
-                calmDownTime = 10.0f;
+                calmDownTime = 5.0f;
                 calmDown = true;
             }
         }
     }
 
-
-    public Vector3 CalculatingEnemyNewPath(GameObject col)
-    {
-        Vector3 newPosition;
-        theta = transform.rotation.y;
-        var rnd = new Random();
-        float index  = (float)(rnd.Next(1, 11) / 20.0);
-        newPosition = new Vector3(transform.position.x - Mathf.Sin(theta) * index, transform.position.y, transform.position.z - Mathf.Cos(theta) * index);
-        return newPosition;
-    }
-
     public void GoToTower()
     {   
-        //GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.DefencePointMode 
         // it will output error, says that cannot call 2 event in the same time
         towerSpawned = GameFlowCtrl.GetTowerSpawnLocationVector(out towerPosition);
         if (towerSpawned)
@@ -222,13 +220,21 @@ public class EnemyPathfinding : MonoBehaviour
     public void AttackTower()
     {
         //attack (need to change)
-        transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
-        animator.SetTrigger("Attack");
+        Transform tempTower = GameFlowCtrl.GetCloneTower().transform;
+        tempTower.position = new Vector3 (tempTower.position.x, transform.position.y, tempTower.position.z);
+        transform.LookAt(tempTower);
+        if (!isAttacking())
+        {
+            attackTime = gameObject.GetComponent<EnemyBehavior>().attackTime;
+            animator.SetTrigger("Attack");     
+        }
     }
 
     public void ChasePlayer()
     {   
-        transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
+        Transform tempPlayer = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
+        tempPlayer.position = new Vector3 (tempPlayer.position.x, transform.position.y, tempPlayer.position.z);
+        transform.LookAt(tempPlayer);
         SetDestination(GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition());
     }
 
@@ -236,9 +242,28 @@ public class EnemyPathfinding : MonoBehaviour
     {
         //Make sure enemy doesn't move
         StopMoving();
-        transform.LookAt(GameFlowCtrl.GetPlayerMovementCtrl().transform);
-        // animator.enabled = true;
-        animator.SetTrigger("Attack");
+        Transform tempPlayer = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
+        tempPlayer.position = new Vector3 (tempPlayer.position.x, transform.position.y, tempPlayer.position.z);
+        transform.LookAt(tempPlayer);
+        if (!isAttacking())
+        {
+            attackTime = gameObject.GetComponent<EnemyBehavior>().attackTime;
+            animator.SetTrigger("Attack");
+        }
+    }
+
+    public bool isAttacking()
+    {
+        attackTime -= Time.deltaTime;
+        if (attackTime > 0)
+            return true;
+        else
+            return false;
+    }
+
+    public void RangeAttack()
+    {
+        
     }
 
 
@@ -247,14 +272,6 @@ public class EnemyPathfinding : MonoBehaviour
         if (_actorMoveCoroutine != null)
             StopCoroutine(_actorMoveCoroutine);
     }
-
-    // void onTriggerStay(Collider other)
-    // {
-    //     if (other.gameObject.tag == "Enemy")
-    //     {
-    //         Debug.Log("Collide");
-    //     }
-    // }
 
     private void OnDestroy()
     {

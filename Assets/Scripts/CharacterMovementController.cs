@@ -148,4 +148,9 @@ public class CharacterMovementController : MonoBehaviour
     {
         return transform.localPosition;
     }
+
+    public Transform getCharacterTransform()
+    {
+        return transform;
+    }
 }

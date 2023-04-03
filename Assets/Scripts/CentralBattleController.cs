@@ -21,6 +21,7 @@ public class CentralBattleController : MonoBehaviour
             {
                 currentEnemyAttackedByPlayer = targetHitTarget;
                 GameFlowCtrl.SetCurrentEnemyBeenAttacked(currentEnemyAttackedByPlayer);
+                
             }
         }
     }

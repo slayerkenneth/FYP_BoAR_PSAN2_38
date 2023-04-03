@@ -4190,7 +4190,7 @@ MonoBehaviour:
     type: 3}
   yolov5Detector: {fileID: 409333505}
   DebugText: {fileID: 4098587495805698984}
-  IsCapturingEnv: 0
+  IsCapturingEnv: 1
   RecognitionBoxes: []
 --- !u!114 &1451593561
 MonoBehaviour:

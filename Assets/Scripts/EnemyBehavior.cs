@@ -7,26 +7,41 @@ using UnityEngine;
 public class EnemyBehavior : MonoBehaviour
 {
     [Header("Combat related")]
-    public GameFlowController GameFlowCtrl; 
+    public GameFlowController GameFlowCtrl;
+    // public AttackCharacter AtkCharacter; 
     public CombatHandler CombatHandler;
-    public List<Collider> AttackingColliders;
-    public List<Collider> DamageTakingColliders;
+    // public List<Collider> AttackingColliders;
+    // public List<Collider> DamageTakingColliders;
 
     [Header("Data Related")]
     public float attackRange;
     public float sightRange;
+    public float colliderRange;
     public float DamageAmount;
+    public float attackTime;
+    public Transform attackPoint;
+    public enum AttackType {Melee, Range};
+    public AttackType type;
+    //private bool performRangeAttack = true;
+
+    [Header("Range Related")]
+    public GameObject RangePrefab;
+    public Transform RangeSpawnPoint;
+
+    [Header("Layer Mask")]
+    public LayerMask whatIsPlayer;
+    public LayerMask whatIsTower;
 
     private Vector3 playerPosition;
     private bool isDamagePlayer = false;
     private bool isDamageTower = false;
-    private Collider tempCollider;
+    private GameObject tempCollider;
 
         // This version is just making the enemy do damage to players if their colliders collide
     void Start()
     {
-        AttackingColliders = CombatHandler.GetAttackingColliders();
-        DamageTakingColliders = CombatHandler.GetDamageReceivingColliders();
+        // AttackingColliders = CombatHandler.GetAttackingColliders();
+        // DamageTakingColliders = CombatHandler.GetDamageReceivingColliders();
     }
 
     // Update is called once per frame
@@ -35,66 +50,59 @@ public class EnemyBehavior : MonoBehaviour
         if (CombatHandler.GetCurrentHP() <= 0)
         {
             EnemySpawner.currentEnemyCount--;
-            GameFlowController.EnemyKillCount++;
+            //GameFlowController.EnemyKillCount++;
             Destroy(gameObject);
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (!AttackingColliders.Contains(other) && !DamageTakingColliders.Contains(other))
-        { 
-            if (other.transform.CompareTag("Player"))
-            {
-                isDamagePlayer = true;
-                tempCollider = other;
-            }
-            else if (other.transform.CompareTag("Tower(D)"))
-            {
-                isDamageTower = true;
-            }
         }
     }
 
     //Animation Event
     public void AttackEnd()
     {
-        // if(GameFlowCtrl.getPlayerMovementCtrl())
-        // {
-        //     //Debug.Log("Halo");
-        //     playerPosition = GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition();
-        //     //if melee atttack
-        //     if (isDamagePlayer)
-        //     {
-        //         Debug.Log(gameObject.name + "attacking player.");
-        //         CombatHandler.DoDamage(tempCollider.transform.GetComponent<CombatHandler>(), DamageAmount);
-        //         isDamagePlayer = false;
-        //     }
-        // }
-        if (isDamagePlayer)
+        //tempCollider = AtkCharacter.getAttackTarget();
+        //Debug.Log(gameObject.transform.name + " temp Collider: " + tempCollider);
+        if (type == AttackType.Melee)
         {
-            Debug.Log(gameObject.name + "attacking player.");
-            CombatHandler.DoDamage(tempCollider.transform.GetComponent<CombatHandler>(), DamageAmount);
-            isDamagePlayer = false;
+            if (isAttackCharacter())
+            {
+                Debug.Log(gameObject.name + "attacking player.");
+                CombatHandler.DoDamage(GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform().GetComponent<CombatHandler>(), DamageAmount);
+            } 
+            else if (isAttackTower())
+            {
+                Debug.Log(gameObject.name + "attacking tower.");
+            }
+        }
+
+        if (type == AttackType.Range)
+        {
+            if (isAttackCharacter())
+            {
+                Instantiate(RangePrefab, RangeSpawnPoint.transform.position, Quaternion.identity);
+                RangePrefab.GetComponent<RangeAttack>().CombatHandler = CombatHandler;
+                RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
+                RangePrefab.GetComponent<RangeAttack>().GameFlowCtrl = GameFlowCtrl;
+                RangePrefab.GetComponent<RangeAttack>().enemy = this.transform;
+            }
+            else if (isAttackTower())
+            {
+                //attack tower
+                Debug.Log(gameObject.name + "attacking tower.");
+            }
+            
         }
         
-        if (isDamageTower)
-        {
-            Debug.Log(gameObject.name + "attacking tower.");
-            isDamageTower = false;
-        }
     
-        //if Long Range Attack
+        
     }
 
-    // private void OnTriggerStay(Collider other)
-    // {
-    //     if (!AttackingColliders.Contains(other) && !DamageTakingColliders.Contains(other))
-    //     {
-    //         if (other.transform.CompareTag("Player"))
-    //         {
-    //             CombatHandler.DoDamage(other.transform.GetComponent<CombatHandler>(), 10f);
-    //         }
-    //     }
-    // }
+    private bool isAttackCharacter()
+    {
+        return Physics.CheckSphere(attackPoint.position, attackRange, whatIsPlayer);
+    }
+
+    private bool isAttackTower()
+    {
+        return Physics.CheckSphere(attackPoint.position, attackRange, whatIsTower);
+    }
+
 }

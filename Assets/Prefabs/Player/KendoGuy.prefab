@@ -1563,7 +1563,7 @@ GameObject:
   - component: {fileID: -2058255866417811186}
   - component: {fileID: -3881848197012541022}
   - component: {fileID: 3736411471065533042}
-  - component: {fileID: 117792335716911333}
+  - component: {fileID: 288270149995101429}
   m_Layer: 8
   m_Name: KendoGuy
   m_TagString: Player
@@ -1728,7 +1728,7 @@ MonoBehaviour:
   normalAttackCount: 0
   ValidHit: 0
   currentAttackingTarget: {fileID: 0}
---- !u!54 &117792335716911333
+--- !u!54 &288270149995101429
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

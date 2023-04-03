@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8997627446758184518}
   - component: {fileID: 8275303532959191813}
   - component: {fileID: 5528598668886907069}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: obelisk_plate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 2183710516522777639}
   - component: {fileID: 593859230819194797}
   - component: {fileID: 6166926502615526781}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Obelisk_zodiac_low
   m_TagString: Tower(D)
   m_Icon: {fileID: 0}
@@ -151,8 +151,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 23
-  m_Center: {x: 0, y: 5, z: 0}
+  m_Radius: 24
+  m_Center: {x: 0.11016926, y: 8.305081, z: 0}
 --- !u!1 &2072005146838210861
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 2958340227487425243}
   - component: {fileID: 881997242303287840}
   - component: {fileID: 8327626095128621763}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: obelisk_plate_side
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 2399352660026973734}
   - component: {fileID: 18246142228171260}
   - component: {fileID: 6819180917013648682}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: obelisk_main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +330,7 @@ GameObject:
   - component: {fileID: 7217041297222056461}
   - component: {fileID: 4309268096639938502}
   - component: {fileID: 7848478916152045112}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: obelisk_side
   m_TagString: Untagged
   m_Icon: {fileID: 0}

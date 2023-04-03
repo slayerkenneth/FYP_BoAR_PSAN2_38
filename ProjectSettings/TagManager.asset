@@ -9,6 +9,7 @@ TagManager:
   - Tower(C)
   - WinUI
   - LoseUI
+  - AttackPoint
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - ARDK_MockWorld
   - Player
   - Enemy
-  - 
+  - Tower
   - 
   - 
   - 
