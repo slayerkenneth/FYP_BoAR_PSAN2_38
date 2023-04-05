@@ -47,11 +47,6 @@ public class RangeAttack : MonoBehaviour
                 {
                     Destroy(gameObject);
                 }
-                if (stayTime <= 0)
-                {
-                    stopRangeAttack = true;
-                    Destroy(gameObject);
-                }
             // if (stayTime == 7f)
             // {
             //     tempPosition = target.position;
@@ -82,6 +77,11 @@ public class RangeAttack : MonoBehaviour
             }
             else
             {
+                Destroy(gameObject);
+            }
+            if (stayTime <= 0)
+            {
+                stopRangeAttack = true;
                 Destroy(gameObject);
             }
             
