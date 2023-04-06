@@ -93,7 +93,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5150628053658875581}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -110,10 +110,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b106edc6edaf0340be7e46da96d6783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 2
+  DamageAmount: 2
   velocity: 1
-  target: {fileID: 0}
   enemy: {fileID: 0}
-  rb: {fileID: 0}
+  target: {fileID: 0}
   CombatHandler: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
+  ValidHit: 0
+  currentAttackingTarget: {fileID: 0}

@@ -37,6 +37,10 @@ public class EnemyBehavior : MonoBehaviour
     private bool isDamageTower = false;
     private GameObject tempCollider;
 
+    [Header("Damage Parameters")]
+    [SerializeField] private bool ValidHit = false;
+    [SerializeField] private CombatHandler currentAttackingTarget;
+
         // This version is just making the enemy do damage to players if their colliders collide
     void Start()
     {
@@ -62,28 +66,29 @@ public class EnemyBehavior : MonoBehaviour
         //Debug.Log(gameObject.transform.name + " temp Collider: " + tempCollider);
         if (type == AttackType.Melee)
         {
-            if (isAttackCharacter())
+            if (!ValidHit) return;           
+            if (currentAttackingTarget.CompareTag("Player"))
             {
                 Debug.Log(gameObject.name + "attacking player.");
-                CombatHandler.DoDamage(GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform().GetComponent<CombatHandler>(), DamageAmount);
+                CombatHandler.DoDamage(currentAttackingTarget, DamageAmount);
             } 
-            else if (isAttackTower())
+            else if (currentAttackingTarget.CompareTag("Tower(D)"))
             {
                 Debug.Log(gameObject.name + "attacking tower.");
             }
         }
 
         if (type == AttackType.Range)
-        {
-            if (isAttackCharacter())
+        {        
+            if (Vector3.Distance(transform.position, GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition()) < attackRange)
             {
                 Instantiate(RangePrefab, RangeSpawnPoint.transform.position, Quaternion.identity);
                 RangePrefab.GetComponent<RangeAttack>().CombatHandler = CombatHandler;
-                RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
                 RangePrefab.GetComponent<RangeAttack>().GameFlowCtrl = GameFlowCtrl;
                 RangePrefab.GetComponent<RangeAttack>().enemy = this.transform;
+                RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
             }
-            else if (isAttackTower())
+            else
             {
                 //attack tower
                 Debug.Log(gameObject.name + "attacking tower.");
@@ -95,14 +100,29 @@ public class EnemyBehavior : MonoBehaviour
         
     }
 
-    private bool isAttackCharacter()
+    private void OnTriggerEnter(Collider other)
     {
-        return Physics.CheckSphere(attackPoint.position, attackRange, whatIsPlayer);
+        if (other.CompareTag("Player"))
+        {
+            ValidHit = true;
+            currentAttackingTarget = other.transform.GetComponent<CombatHandler>();
+        }
     }
 
-    private bool isAttackTower()
+    private void OnTriggerExit(Collider other)
     {
-        return Physics.CheckSphere(attackPoint.position, attackRange, whatIsTower);
+        ValidHit = false;
+        // shd be after animation end and depends on collider of the weapon
     }
+
+    // private bool isAttackCharacter()
+    // {
+    //     return Physics.CheckSphere(attackPoint.position, attackRange, whatIsPlayer);
+    // }
+
+    // private bool isAttackTower()
+    // {
+    //     return Physics.CheckSphere(attackPoint.position, attackRange, whatIsTower);
+    // }
 
 }

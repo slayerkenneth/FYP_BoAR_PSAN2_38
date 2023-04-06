@@ -94,7 +94,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 8404456232165352809}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
@@ -111,9 +111,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b106edc6edaf0340be7e46da96d6783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  DamageAmount: 1
   velocity: 0.5
-  target: {fileID: 0}
   enemy: {fileID: 0}
+  target: {fileID: 0}
   CombatHandler: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
+  ValidHit: 0
+  currentAttackingTarget: {fileID: 0}

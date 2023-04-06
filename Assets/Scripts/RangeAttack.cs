@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class RangeAttack : MonoBehaviour
 {
-    public float damage;
+    public float DamageAmount;
     public float velocity;
-    public Transform target;
     public Transform enemy;
+    public Transform target;
     private bool stopRangeAttack = false;
     private float stayTime = 7f;
     private Vector3 tempPosition;
-    private bool enter = true;
-    //public Rigidbody rb;
-    // private bool playerInAttackRange;
 
     public CombatHandler CombatHandler;
     public GameFlowController GameFlowCtrl;
+
+    [Header("Damage Parameters")]
+    [SerializeField] private bool ValidHit = false;
+    [SerializeField] private CombatHandler currentAttackingTarget;
 
 
     // Update is called once per frame
@@ -33,17 +34,15 @@ public class RangeAttack : MonoBehaviour
             stayTime -= Time.deltaTime;
 
             if (!stopRangeAttack)
-            {
-                if(Vector3.Distance(transform.position, target.position) < 0.05f)
+            {      
+                if (Vector3.Distance(transform.position, target.position) < 0.05f)
                 {
-                    if (target.CompareTag("Player"))
-                    {
-                        CombatHandler.DoDamage(GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform().GetComponent<CombatHandler>(), damage);
-                        stopRangeAttack = true;
-                        Destroy(gameObject);
-                    }
+                    Debug.Log("Halo");
+                    CombatHandler.DoDamage(target.GetComponent<CombatHandler>(), DamageAmount);
+                    stopRangeAttack = true;
+                    Destroy(gameObject);
                 }
-                else if (Vector3.Distance(transform.position, tempPosition) < 0.05f && enter)
+                else if (Vector3.Distance(transform.position, tempPosition) < 0.05f)
                 {
                     Destroy(gameObject);
                 }
@@ -79,12 +78,17 @@ public class RangeAttack : MonoBehaviour
             {
                 Destroy(gameObject);
             }
+            // Debug.Log(transform.name + " " + stayTime);
             if (stayTime <= 0)
             {
                 stopRangeAttack = true;
                 Destroy(gameObject);
             }
             
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 }

@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerWeaponSkillController : MonoBehaviour
+public class PlayerWeaponSkillController_Book : MonoBehaviour
 {
 
     [Header("Reference")] 
@@ -16,11 +15,12 @@ public class PlayerWeaponSkillController : MonoBehaviour
 
     [Header("Damage Parameters")]
     [SerializeField] private float NormalAttackDamage;
+    [SerializeField] private float HoldAttackDamage;
+    [SerializeField] private LayerMask whatIsEnemy;
     [SerializeField] private float SkillDamage;
     [SerializeField] private int normalAttackCount = 0;
     [SerializeField] private bool ValidHit = false;
     [SerializeField] private CombatHandler currentAttackingTarget;
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -33,7 +33,44 @@ public class PlayerWeaponSkillController : MonoBehaviour
         
     }
 
-    public void OverrideDefaultWeapon(GameObject newWeapon)
+    public void NormalAttack()
+    {
+        if (!ValidHit) return;
+        if (Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        {
+            Animator.Play("NormalAttack");
+            combatHandler.DoDamage(currentAttackingTarget, NormalAttackDamage);
+        }
+        
+    }
+
+    public void StartHoldAttack()
+    {
+        if (Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        {
+            Animator.Play("HoldAttack");
+        }
+    }
+
+    public void EndHoldAttack()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, 0.2f, whatIsEnemy);
+        if (Physics.CheckSphere(transform.position, 0.5f))
+        {
+            if (hitColliders.Length > 1)
+            {
+                for (int i = 0; i < hitColliders.Length; ++i)
+                { 
+                    if (hitColliders[i].gameObject != this.gameObject)
+                    {
+                        combatHandler.DoDamage(hitColliders[i].gameObject.GetComponent<CombatHandler>(), HoldAttackDamage);
+                    }
+                } 
+            }
+        }
+    }
+
+     public void OverrideDefaultWeapon(GameObject newWeapon)
     {
         Weapon = newWeapon;
     }
@@ -42,28 +79,7 @@ public class PlayerWeaponSkillController : MonoBehaviour
     {
         
     }
-
-    public void NormalAttack()
-    {
-        if (!ValidHit) return;
-        if (normalAttackCount == 2)
-        {
-            normalAttackCount = 0;
-        }
-        else
-        {
-            normalAttackCount++;
-        }
-        
-        combatHandler.DoDamage(currentAttackingTarget, NormalAttackDamage);
-    }
-
-    // public abstract void NormalAttack();
-
-    // public abstract void StartHoldAttack();
-
-    // public abstract void EndHoldAttack();
-
+    
     public void Defense()
     {
         

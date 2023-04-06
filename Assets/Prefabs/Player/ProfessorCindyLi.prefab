@@ -2274,6 +2274,7 @@ GameObject:
   - component: {fileID: 3741930513873572181}
   - component: {fileID: 4107456148009102222}
   - component: {fileID: -6390358997438491074}
+  - component: {fileID: 5573024188668310891}
   - component: {fileID: 3276981404916579627}
   - component: {fileID: 7651870370338978087}
   m_Layer: 8
@@ -2385,6 +2386,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmountMax: 100
   startingHealthAmount: 100
+--- !u!114 &5573024188668310891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647134206250791342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53163f7b24a6ed043ab97134548fa45b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 7413344840680693326}
+  combatHandler: {fileID: 3276981404916579627}
+  GameFlowCtrl: {fileID: 0}
+  Weapon: {fileID: 0}
+  NormalAttackDamage: 10
+  HoldAttackDamage: 20
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 512
+  SkillDamage: 0
+  normalAttackCount: 0
+  ValidHit: 0
+  currentAttackingTarget: {fileID: 0}
 --- !u!114 &3276981404916579627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2399,7 +2425,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 100
   skillCoolDown: 5
-  AttackingColliders: []
+  AttackingColliders:
+  - {fileID: 7697881086083608160}
   DamageTakingColliders:
   - {fileID: 4107456148009102222}
   AttackTarget: {fileID: 0}
@@ -2894,3 +2921,23 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3471809025032378251}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4390796572301060826 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a21de90a2d519de488b79cd6699dbf06,
+    type: 3}
+  m_PrefabInstance: {fileID: 3471809025032378251}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &7697881086083608160
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4390796572301060826}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
