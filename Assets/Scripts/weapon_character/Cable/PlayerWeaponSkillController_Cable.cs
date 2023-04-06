@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerWeaponSkillController_Cable : PlayerWeaponSkillController
 {
     public CableController CableController;
+    public CharacterController CharacterController;
 
     public float singleHitDamage = 10f;
     public float HitRange = 2f;
@@ -20,20 +21,20 @@ public class PlayerWeaponSkillController_Cable : PlayerWeaponSkillController
     // Update is called once per frame
     void Update()
     {
-        
+        if (SkillCDRemain > 0.0F) SkillCDRemain -= Time.deltaTime;
     }
 
     public override void NormalAttack()
     {
         if (!Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) return; //anim state name not correct
         
-        Animator.Play("CableNormal"); //anim state name not correct
-        CableController.AreaElectricAttack();
+        Animator.Play("SingleHit"); //anim state name not correct
+        CableController.AreaElectricAttack(singleHitDamage, HitRange);
     }
 
     public override void Rolling()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public override void CastSkill()
@@ -47,19 +48,21 @@ public class PlayerWeaponSkillController_Cable : PlayerWeaponSkillController
 
     public override void StartHoldAttack()
     {
-        throw new System.NotImplementedException();
+        Animator.Play("Idle_Shoot_Ar");
+        CableController.Aim();
     }
 
     public override void EndHoldAttack()
     {
-        throw new System.NotImplementedException();
+        Animator.SetTrigger("Release");
+        CableController.DashAttack(BurstDamage);
     }
 
     public override float OnrecieveDamage(float damageAmount, CombatHandler attacker)
     {
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("rolling")) return 0;
         
-        Animator.Play("ReceiveDamage");
+        // Animator.Play("ReceiveDamage");
         return damageAmount;
     }
 }

@@ -12,6 +12,15 @@ using UnityEngine.Events;
 
 public class GameFlowController : MonoBehaviour
 {
+    public enum SceneTheme
+    {
+        Cyberpunk,
+        PostApocalypse,
+        Fantasy,
+        Xianxia,
+        Modern
+    }
+    
     public enum PVEBattleSceneState
     {
         Invalid,
@@ -76,6 +85,18 @@ public class GameFlowController : MonoBehaviour
     public DefenceTarget DTower;
 
     [Header("Capture Point reference")] public CaptureTarget CTower;
+
+    [Header("AR theme")] public SceneTheme currentSceneTheme;
+        
+    [Header("Route, Item Gen Reference")] 
+    public List<Vector3> RouteTiles;
+    public GameObject TileParent;
+    public int MaxTilesCount;
+    public GameObject CyberpunkTilePrefab,
+        PostApocalypseTilePrefab,
+        FantasyTilePrefab,
+        XianxiaTilePrefab,
+        ModernTilePrefab;
 
     [Header("UI / Canvas elements")] 
     public GameObject BattleUICanvasParent;
@@ -415,6 +436,105 @@ public class GameFlowController : MonoBehaviour
     {
         return WallCoordinates;
     }
+
+    /*
+     * Generate a route
+     * For Dungeon and Push Car
+     * Then Spawn those map tile with corresponding theme
+     */
+    public void GenerateSpawnRouteTile()
+    {
+        if (BattleMode == PVEBattleSceneState.BossFight ||
+            BattleMode == PVEBattleSceneState.CapturePointMode ||
+            BattleMode == PVEBattleSceneState.DefencePointMode) return;
+        
+        ClearRouteTile();
+
+        // Player Starting Position (0,y,0) should always be the starting position
+        RouteTiles.Add(new Vector3(0, -1.1f, 0));
+        int tileCount = 0;
+        Vector3 pos = new Vector3();
+        Debug.Log("GST 1");
+        while (_activeGameboard.FindRandomPosition(out pos) && tileCount != MaxTilesCount)
+        {
+            Debug.Log("GST 2");
+
+            var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
+            if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
+            {
+                Debug.Log("GST 3");
+
+                RouteTiles.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.1f, v.y * _activeGameboard.Settings.TileSize));
+                tileCount++;
+            }
+        }
+
+        var connectingPositions = new List<Vector3>();
+        connectingPositions.Add(RouteTiles[0]);
+
+        for (int i = 0; i < RouteTiles.Count; i++)
+        {
+            if (i == RouteTiles.Count - 1)
+            {
+                connectingPositions.Add(RouteTiles.FindLast(v => true));
+                break;
+            }
+        
+            Vector3 lastPosition = connectingPositions[connectingPositions.Count - 1];
+            float distance = Vector3.Distance(lastPosition, RouteTiles[i]);
+
+            if (distance >= _activeGameboard.Settings.TileSize * 75)
+            {
+                int numIntervals = (int)(distance /  _activeGameboard.Settings.TileSize * 2);
+                float intervalLength = distance / numIntervals;
+
+                for (int j = 1; j <= numIntervals; j++)
+                {
+                    Vector3 newPosition = Vector3.Lerp(lastPosition, RouteTiles[i], intervalLength * j / distance);
+                    connectingPositions.Add(newPosition);
+                }
+            }
+
+            connectingPositions.Add(RouteTiles[i]);
+        }
+        
+        ClearRouteTile();
+        RouteTiles = connectingPositions;
+        
+        var tile = CyberpunkTilePrefab;
+        switch (currentSceneTheme)
+        {
+            case SceneTheme.Cyberpunk:
+                tile = CyberpunkTilePrefab;
+                break;
+            case SceneTheme.Fantasy:
+                tile = FantasyTilePrefab;
+                break;
+            case SceneTheme.PostApocalypse:
+                tile = PostApocalypseTilePrefab;
+                break;
+            case SceneTheme.Xianxia:
+                tile = XianxiaTilePrefab;
+                break;
+            case SceneTheme.Modern:
+                tile = ModernTilePrefab;
+                break;
+        }
+
+        var rotQ = new Quaternion(0, 0, 0, 0);
+        foreach (var location in RouteTiles)
+        {
+            Instantiate(tile, location, rotQ , TileParent.transform);
+        }
+    }
+
+    public void ClearRouteTile()
+    {
+        if (RouteTiles.Capacity != 0)
+        {
+            RouteTiles.Clear();
+        }
+    }
     #endregion
 
     #region Enemy Spawning
@@ -446,7 +566,7 @@ public class GameFlowController : MonoBehaviour
             var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
             if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
             {
-                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.1f, v.y * _activeGameboard.Settings.TileSize));
+                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1f, v.y * _activeGameboard.Settings.TileSize));
                 count++;
             }
         }
@@ -642,7 +762,6 @@ public class GameFlowController : MonoBehaviour
 
     void InitDefenseTowerMode()
     {
-        CalculateTowerLocation();
         ActiveDefenseTowerParent = Instantiate(DefenseTowerParentPrefab);
         ActiveDefenseTowerParent.transform.position = Vector3.zero;
         startFightUI.GetComponent<Button>().onClick.AddListener(() =>
@@ -796,6 +915,16 @@ public class GameFlowController : MonoBehaviour
     public Vector3 GetPlayerLocation()
     {
         return PlayerSpawnLocation;
+    }
+
+    public void SetBattleSceneTheme(SceneTheme theme)
+    {
+        currentSceneTheme = theme;
+    }
+
+    public SceneTheme GetBattleSceneTheme()
+    {
+        return currentSceneTheme;
     }
     #endregion
 

@@ -20,7 +20,7 @@ public class PlayerSpawner : MonoBehaviour
     public void SpawnPlayer(PlayerStatus globalStatus, Transform parentTransform, Vector3 spawnLocation)
     {
         PlayerStatusRef = PlayerStatus.CurrentPlayer;
-        activeCharacter = Instantiate(KendoPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
+        activeCharacter = Instantiate(RoboticsTeamPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
         var CharMoveCtrl = activeCharacter.GetComponent<CharacterMovementController>();
         CharMoveCtrl.ARController = GameFlowController.getARCtrl();
         CharMoveCtrl.GameFlowController = GameFlowController;

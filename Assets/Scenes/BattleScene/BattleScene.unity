@@ -1390,6 +1390,37 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 276159902}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &331931139
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 331931140}
+  m_Layer: 0
+  m_Name: TileParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &331931140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 331931139}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1451593557}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &354326710
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2650,6 +2681,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1451593558}
+        m_TargetAssemblyTypeName: GameFlowController, Assembly-CSharp
+        m_MethodName: GenerateSpawnRouteTile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &581750064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3202,7 +3245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _arCamera: {fileID: 619056670}
   HitTestType: 16
-  _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
+  _shaderMaterial: {fileID: 2100000, guid: 5039ab6bb4555417d8346c57657cd331, type: 2}
   _semanticManager: {fileID: 619056672}
   GameFlowController: {fileID: 1451593558}
   DebugText: {fileID: 1486486168}
@@ -3459,6 +3502,116 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &719079144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 719079147}
+  - component: {fileID: 719079146}
+  - component: {fileID: 719079145}
+  m_Layer: 0
+  m_Name: ThunderVFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!73398921 &719079145
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719079144}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 4294967295
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!2083052967 &719079146
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719079144}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 15309b49475d842dd84073f43c414748, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array: []
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array: []
+    m_Vector4f:
+      m_Array: []
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array: []
+    m_Bool:
+      m_Array: []
+--- !u!4 &719079147
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719079144}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.3241434, y: -0.49, z: 0.24}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &745755939 stripped
 GameObject:
@@ -3717,6 +3870,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddd50e8c943c1461ea879d09cf0b47f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StartPointPrefab: {fileID: 0}
+  EndpointPrefab: {fileID: 0}
+  BuffSpawnerPrefab: {fileID: 0}
+  SkillSpawnerPrefab: {fileID: 0}
+  GameItemsLocations: []
 --- !u!1 &908754370
 GameObject:
   m_ObjectHideFlags: 0
@@ -4580,7 +4738,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1211082266 stripped
 GameObject:
@@ -5360,6 +5518,7 @@ Transform:
   - {fileID: 1934517722}
   - {fileID: 1049136497}
   - {fileID: 865289984}
+  - {fileID: 331931140}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5399,8 +5558,21 @@ MonoBehaviour:
   EnemySpawner: {fileID: 1451593559}
   EnemySpawnPositionList: []
   enemyRandomSpawnLocationsCount: 5
-  DTower: {fileID: 0}
-  CTower: {fileID: 0}
+  DTower: {fileID: 1429391864}
+  CTower: {fileID: 1094842685}
+  currentSceneTheme: 0
+  RouteTiles: []
+  TileParent: {fileID: 331931139}
+  MaxTilesCount: 25
+  CyberpunkTilePrefab: {fileID: 6930621874065236045, guid: 3640323052e3d954390fbadd91771313,
+    type: 3}
+  PostApocalypseTilePrefab: {fileID: 7986504087968017091, guid: 12a56ee4630040c4eb17ae9707ed4cef,
+    type: 3}
+  FantasyTilePrefab: {fileID: 3377181292992421420, guid: 48c5715f9603c3842a353516a8baefbb,
+    type: 3}
+  XianxiaTilePrefab: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d,
+    type: 3}
+  ModernTilePrefab: {fileID: 0}
   BattleUICanvasParent: {fileID: 4098587496591411369}
   PlayerHealthBarUI: {fileID: 3450456933618736479}
   EnemyHealthBarUI: {fileID: 3450456933082368580}
@@ -5481,10 +5653,14 @@ MonoBehaviour:
   arCamera: {fileID: 619056670}
   PlacementObjectPf: {fileID: 1537502993957880, guid: 30bdbf2b9c0bd8446af70e5b67b0dfc8,
     type: 3}
+  imageAsset: {fileID: 0}
   boxContainer: {fileID: 1211082266}
   boxPrefab: {fileID: 5347304568407062166, guid: efb33e49a6005c544b4a82223b9e2a13,
     type: 3}
-  yolov5Detector: {fileID: 409333505}
+  yolov4Detector: {fileID: 0}
+  yolov8Detector: {fileID: 0}
+  FixAspectRatio: 1
+  width: 640
   DebugText: {fileID: 4098587495805698984}
   IsCapturingEnv: 0
   RecognitionBoxes: []
@@ -8006,6 +8182,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2100579586}
   - component: {fileID: 2100579585}
+  - component: {fileID: 2100579587}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -8090,6 +8267,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &2100579587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100579584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &2108886779
 GameObject:
   m_ObjectHideFlags: 0
@@ -10323,7 +10520,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4098587495205970029
 RectTransform:
   m_ObjectHideFlags: 0
