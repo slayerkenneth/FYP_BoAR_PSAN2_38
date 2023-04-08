@@ -454,48 +454,56 @@ public class GameFlowController : MonoBehaviour
         RouteTiles.Add(new Vector3(0, -1.1f, 0));
         int tileCount = 0;
         Vector3 pos = new Vector3();
-        Debug.Log("GST 1");
         while (_activeGameboard.FindRandomPosition(out pos) && tileCount != MaxTilesCount)
         {
-            Debug.Log("GST 2");
-
             var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
             if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
             {
-                Debug.Log("GST 3");
-
                 RouteTiles.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.1f, v.y * _activeGameboard.Settings.TileSize));
                 tileCount++;
             }
         }
 
         var connectingPositions = new List<Vector3>();
+        var distanceThreshold = _activeGameboard.Settings.TileSize;
+        int offset = 0;
         connectingPositions.Add(RouteTiles[0]);
 
         for (int i = 0; i < RouteTiles.Count; i++)
         {
-            if (i == RouteTiles.Count - 1)
+            connectingPositions.Add(RouteTiles[0]); 
+            RouteTiles.Remove(RouteTiles[0]);
+
+            var ClosestPos = new Vector3();
+            if (RouteTiles.Capacity >= 1)
             {
-                connectingPositions.Add(RouteTiles.FindLast(v => true));
-                break;
+                ClosestPos = RouteTiles[0];
             }
-        
-            Vector3 lastPosition = connectingPositions[connectingPositions.Count - 1];
-            float distance = Vector3.Distance(lastPosition, RouteTiles[i]);
-
-            if (distance >= _activeGameboard.Settings.TileSize * 75)
+            else return;
+            
+            var shortestDistance = Vector3.Distance(ClosestPos, connectingPositions[i+1+offset]);
+            foreach (var tilePos in RouteTiles)
             {
-                int numIntervals = (int)(distance /  _activeGameboard.Settings.TileSize * 2);
-                float intervalLength = distance / numIntervals;
-
-                for (int j = 1; j <= numIntervals; j++)
+                var dist = Vector3.Distance(tilePos, connectingPositions[i+1+offset]);
+                if (dist < shortestDistance)
                 {
-                    Vector3 newPosition = Vector3.Lerp(lastPosition, RouteTiles[i], intervalLength * j / distance);
-                    connectingPositions.Add(newPosition);
+                    ClosestPos = tilePos;
+                    shortestDistance = dist;
                 }
             }
-
-            connectingPositions.Add(RouteTiles[i]);
+            
+            Debug.Log("Shortest: " + ClosestPos + " ;Shortest Distance / threshold: " + shortestDistance / distanceThreshold);
+            /*
+             * Avoid the tile being too close
+             */
+            if (shortestDistance / distanceThreshold >= 9)
+            {
+                connectingPositions.Add(ClosestPos);    
+                // If two tiles are too far, add middle tile(s)
+                connectingPositions.Add(Vector3.Lerp(ClosestPos, connectingPositions[i + 1], 0.5f));
+                offset++;
+            }
+            RouteTiles.Remove(ClosestPos);
         }
         
         ClearRouteTile();
@@ -522,9 +530,18 @@ public class GameFlowController : MonoBehaviour
         }
 
         var rotQ = new Quaternion(0, 0, 0, 0);
+        var count = 0;
         foreach (var location in RouteTiles)
         {
-            Instantiate(tile, location, rotQ , TileParent.transform);
+            if (count == RouteTiles.Count-1)
+            {
+                var endTile = PostApocalypseTilePrefab;
+                Instantiate(endTile, location, rotQ , TileParent.transform);
+                var bpd = endTile.GetComponent<BattlePathDest>();
+                bpd.SetBattleMode(BattleMode);
+            }
+            else Instantiate(tile, location, rotQ , TileParent.transform);
+            count++;
         }
     }
 

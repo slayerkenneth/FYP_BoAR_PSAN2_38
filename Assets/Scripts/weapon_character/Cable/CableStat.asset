@@ -13,7 +13,38 @@ MonoBehaviour:
   m_Name: CableStat
   m_EditorClassIdentifier: 
   lv: 0
-  upgradeHint: []
-  NormalAttackDamageLv: []
-  NormalAttackRangeLv: []
-  HoldDamagePreSecLv: []
+  upgradeHint:
+  - 
+  NormalAttackDamageLv:
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  NormalAttackRangeLv:
+  - 20
+  - 20
+  - 20
+  - 20
+  - 20
+  - 20
+  - 20
+  - 20
+  - 20
+  - 20
+  HoldDamagePreSecLv:
+  - 35
+  - 35
+  - 35
+  - 35
+  - 35
+  - 35
+  - 35
+  - 35
+  - 35
+  - 35

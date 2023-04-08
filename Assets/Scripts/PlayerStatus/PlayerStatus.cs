@@ -42,6 +42,9 @@ public class PlayerStatus : ScriptableObject
 
     private static PlayerStatus _currentPlayer;
 
+    /*
+     * Need to Change based on what character player ios playing with: the weapon, active class
+     */
     public static PlayerStatus CurrentPlayer
     {
         get {
@@ -55,7 +58,7 @@ public class PlayerStatus : ScriptableObject
                 _currentPlayer.currentLevel = 0;
                 _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
                 _currentPlayer.passiveClass = null;
-                _currentPlayer.weaponStat = (BottleStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Bottle/BottleStat.asset", typeof(BottleStat));
+                _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
                 _currentPlayer.hideFlags = HideFlags.HideAndDontSave;
             }
             return _currentPlayer;

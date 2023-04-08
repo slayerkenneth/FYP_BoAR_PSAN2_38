@@ -9,6 +9,7 @@ TagManager:
   - Tower(C)
   - WinUI
   - LoseUI
+  - PushItem
   layers:
   - Default
   - TransparentFX
