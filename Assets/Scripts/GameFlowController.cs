@@ -351,7 +351,7 @@ public class GameFlowController : MonoBehaviour
     public void RewardNextStage()
     {
         playerGlobalStatus.money++;
-        playerGlobalStatus.speed++;
+        playerGlobalStatus.speedLv++;
         playerGlobalStatus.currentHP = (int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP();
         // playerGlobalStatus.currentLevel++; // cannot change this
         

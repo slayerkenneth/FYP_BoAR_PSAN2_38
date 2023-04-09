@@ -13,6 +13,7 @@ public class CharacterMovementController : MonoBehaviour
     [Header("Character param")]
     [SerializeField] private Vector3 playerVelocity;
     [SerializeField] private float playerSpeed = 2.0f;
+    private float currentSpeed;
     [SerializeField] private float rollingSpeed = 4.0f;
     [SerializeField] private Vector3 rollingDir;
     [SerializeField] private float jumpHeight = 0.4f;
@@ -66,6 +67,7 @@ public class CharacterMovementController : MonoBehaviour
         maxHP = playerOwnHealthSystem.GetHealthSystem().GetHealthMax();
         playerOwnCombatHandler.InitHP(maxHP);
         PlayerWeaponSkillCtrl = FindObjectOfType<PlayerWeaponSkillController>();
+        currentSpeed = playerSpeed;
     }
 
     void Update()
@@ -86,7 +88,7 @@ public class CharacterMovementController : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("rolling")) 
             controller.Move(rollingDir * Time.deltaTime * rollingSpeed); 
         else
-            controller.Move(move.normalized * Time.deltaTime * playerSpeed);
+            controller.Move(move.normalized * Time.deltaTime * currentSpeed);
 
         if (move != Vector3.zero)
         {
@@ -176,7 +178,17 @@ public class CharacterMovementController : MonoBehaviour
         return transform.localPosition;
     }
 
-    public void increaseSpeed(float speedIncrease, float time) { 
-    
+    public void setSpeed(float speed)
+    {
+        currentSpeed = speed;
+    }
+
+    public void resetSpeed()
+    {
+        currentSpeed = playerSpeed;
+    }
+    public float getSpeed()
+    {
+        return playerSpeed;
     }
 }

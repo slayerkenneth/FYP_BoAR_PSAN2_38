@@ -164,7 +164,8 @@ public class PhoneCamera : MonoBehaviour
         int requiredWidth;
 
         var cameraView = getCameraView();
-        StartCoroutine(detector.Detect(IsArCamera ? SceenshotArCamera(out rect, out requiredWidth) : SceenshotWebCamera(out rect, out requiredWidth), requiredWidth, rect,  boxes =>
+        StartCoroutine(
+            detector.Detect(IsArCamera ? SceenshotArCamera(out rect, out requiredWidth) : SceenshotWebCamera(out rect, out requiredWidth), requiredWidth, rect,  boxes =>
         {
             Resources.UnloadUnusedAssets();
 

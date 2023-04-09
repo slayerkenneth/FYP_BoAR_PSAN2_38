@@ -29,6 +29,7 @@ public class EnemyPathfinding : MonoBehaviour
     // private float gravityValue = -9.81f;
     // private Vector3 enemyVelocity;
     // private bool groundedPlayer;
+    private float currentSpeed;
 
 
     //State
@@ -70,6 +71,8 @@ public class EnemyPathfinding : MonoBehaviour
         //player = GameObject.FindGameObjectWithTag("Player").transform;
         //tower = GameObject.FindGameObjectWithTag("Tower(D)").transform;
         //Debug.Log(GameObject.FindGameObjectWithTag("Tower(D)"));
+
+        currentSpeed = walkingSpeed;
     }
 
     private void OnGameboardCreated(GameboardCreatedArgs args)
@@ -338,7 +341,7 @@ public class EnemyPathfinding : MonoBehaviour
             else
             {
                 //move on step towards target waypoint
-                interval += Time.deltaTime * walkingSpeed;
+                interval += Time.deltaTime * currentSpeed;
                 actor.position = Vector3.Lerp(startPosition, path[destIdx].WorldPosition, interval);
             }
 
@@ -397,4 +400,12 @@ public class EnemyPathfinding : MonoBehaviour
         actor.position = to;
     }
 
+    public void setSpeed(float speed) {
+        currentSpeed = speed;
+    }
+
+    public void resetSpeed()
+    {
+        currentSpeed = walkingSpeed;
+    }
 }

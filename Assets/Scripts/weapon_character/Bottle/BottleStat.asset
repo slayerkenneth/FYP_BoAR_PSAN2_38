@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54222999d5f92b74191b22190d3d708f, type: 3}
   m_Name: BottleStat
   m_EditorClassIdentifier: 
-  lv: 9
+  lv: 0
   upgradeHint:
   - 
   - 

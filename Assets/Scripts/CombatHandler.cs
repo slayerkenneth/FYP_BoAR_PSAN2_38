@@ -17,12 +17,14 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] private CombatHandler AttackTarget;
     [SerializeField] private CombatHandler DamageSource;
     [SerializeField] private HealthSystemComponent healthSystemComponent;
+    [SerializeField] private float extraDamage = 0.0F;
 
 
     [Header("Reference")] 
     [SerializeField] private ARController ARCtrl;
     [SerializeField] private GameFlowController GameFlowCtrl;
     [SerializeField] private CentralBattleController CentralBattleCtrl;
+
 
     // Start is called before the first frame update
     void Start()
@@ -36,9 +38,17 @@ public class CombatHandler : MonoBehaviour
         
     }
 
+    public void setExtraDamage(float extra) {
+        extraDamage = extra;
+    }
+
+    public void resetExtraDamage() {
+        extraDamage = 0.0F;
+    }
+
     public void DoDamage(CombatHandler targetHitTarget, float damageAmount)
     {
-        CentralBattleCtrl.DamageTransfer(targetHitTarget, damageAmount, this);
+        CentralBattleCtrl.DamageTransfer(targetHitTarget, damageAmount + extraDamage, this);
     }
 
     public void ReceiveDamage(float damageAmount, CombatHandler attacker)

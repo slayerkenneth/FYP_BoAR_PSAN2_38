@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ebd8188f1319443b22b6bd371cf357, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  currentHP: 100
+  maxHPLv: 0
+  money: 0
+  speedLv: 0
+  weaponLv: 0
+  currentLevel: 0
+  activeClass: {fileID: 11400000, guid: 42d64901243d5274c8708dbd3785a585, type: 2}
+  passiveClass: {fileID: 11400000, guid: f48509eeb843a5244889865f5d58c93f, type: 2}
+  weaponStat: {fileID: 11400000, guid: 02a7c1ace04c74343be4ee4d9e3c1aa6, type: 2}
+  maxHPStat: 640000006e00000078000000820000008c00000096000000a0000000aa000000b4000000be000000
+  speedStat:
+  - 1
+  - 1.1
+  - 1.2
+  - 1.3
+  - 1.4
+  - 1.5
+  - 1.6
+  - 1.7
+  - 1.8
+  - 1.9

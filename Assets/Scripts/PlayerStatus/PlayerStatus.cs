@@ -33,12 +33,15 @@ public abstract class WeaponStat : ScriptableObject
     public abstract void UpdateStat(GameObject player);
 }
 
+[CreateAssetMenu(fileName = "PlayerStatus", menuName = "PlayerStatus")]
 public class PlayerStatus : ScriptableObject
 {
-    public int currentHP, maxHP, money, speed, weaponLv, currentLevel;
+    public int currentHP, maxHPLv, money, speedLv, weaponLv, currentLevel;
     public ActiveClass activeClass;
     public PassiveClass passiveClass;
     public WeaponStat weaponStat;
+    public List<int> maxHPStat;
+    public List<float> speedStat;
 
     private static PlayerStatus _currentPlayer;
 
@@ -46,17 +49,9 @@ public class PlayerStatus : ScriptableObject
     {
         get {
             if (!_currentPlayer) {
-                _currentPlayer = ScriptableObject.CreateInstance<PlayerStatus>();
-                _currentPlayer.currentHP = 100;
-                _currentPlayer.maxHP = 100;
-                _currentPlayer.money = 0;
-                _currentPlayer.speed = 1;
-                _currentPlayer.weaponLv = 0;
-                _currentPlayer.currentLevel = 0;
-                _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
-                _currentPlayer.passiveClass = (GoldRicePassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/PassiveClass/GoldRiceBowl/GoldRicePassive.asset", typeof(GoldRicePassive));
-                _currentPlayer.weaponStat = (BottleStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Bottle/BottleStat.asset", typeof(BottleStat));
-                _currentPlayer.hideFlags = HideFlags.HideAndDontSave;
+                //_currentPlayer = (PlayerStatus)AssetDatabase.LoadAssetAtPath("Assets/Scripts/PlayerStatus/Default.asset", typeof(PlayerStatus));
+                _currentPlayer = (PlayerStatus)Resources.Load<PlayerStatus>("PlayerStatus/Default");
+                DontDestroyOnLoad(_currentPlayer);
             }
             return _currentPlayer;
         }

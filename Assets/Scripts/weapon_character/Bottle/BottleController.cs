@@ -37,17 +37,10 @@ public class BottleController : MonoBehaviour
         if (!Activated) {
             if (TimeElapsed >= EjectTime) {
                 transform.position = OriginWeanpon.transform.position;
-                //transform.rotation = OriginWeanpon.transform.rotation;
                 transform.rotation = Quaternion.identity;
-                //GetComponent<Rigidbody>().velocity = character.transform.forward * Speed;
-                Debug.Log("velocity: " + character.transform.forward * Speed);
-                //Debug.Log("velocity: " + OriginWeanpon.transform.rotation * Vector3.forward * Speed);
-                //Debug.Log("velocity: " + OriginWeanpon.transform.rotation * character.transform.forward * Speed);
-                //GetComponent<Rigidbody>().velocity = Quaternion.Euler(0, OriginWeanpon.transform.rotation.y, 0) * Vector3.forward * Speed;
 
                 var dir = character.transform.forward * Speed + character.transform.right * Speed * 0.2F;
                 GetComponent<Rigidbody>().AddForce(dir, ForceMode.VelocityChange);
-                //GetComponent<Rigidbody>().AddForce(character.transform.up * Speed, ForceMode.VelocityChange);
                
                 Activated = true;
                 TimeElapsed -= EjectTime;
@@ -78,23 +71,6 @@ public class BottleController : MonoBehaviour
 
         if (Activated)
         {
-            //if (other.CompareTag("Enemy"))
-            //{
-            //
-            //    Debug.Log("backpack: "+HitCount);
-            //    HitCount++;
-            //    if (HitCount == MaxHitCount)
-            //    {
-            //        Despawn();
-            //        return;
-            //    }
-            //    LastEnemy = other.gameObject.name;
-            //    combatHandler.DoDamage(other.gameObject.GetComponent<CombatHandler>(), Damage);
-            //}
-            //else if(TimeElapsed > 2.0F && !other.CompareTag("Player") && DespawnByBuilding)
-            //{
-            //    Despawn();
-            //}
 
             var enemyList = GameObject.FindGameObjectsWithTag("Enemy");
 
