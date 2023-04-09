@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44402242, g: 0.49316543, b: 0.5722324, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2476,7 +2476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _arCamera: {fileID: 619056670}
-  _agentPrefab: {fileID: 1556040939566342, guid: 012f75391d50dcd49a42dfb8ef8bf5db,
+  _agentPrefab: {fileID: 7647134206250791342, guid: f6c860a8016f31047b722c8bafea8071,
     type: 3}
   playerSpawnParent: {fileID: 1049136496}
   HitTestType: 16
