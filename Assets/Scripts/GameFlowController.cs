@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeMonkey.HealthSystemCM;
 using Niantic.ARDK.Extensions.Gameboard;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
 public class GameFlowController : MonoBehaviour
 {
@@ -57,8 +59,8 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] private CharacterMovementController playerMovementCtrl;
     [SerializeField] private CentralBattleController CentralBattleCtrl;
     [SerializeField] private CombatHandler playerOwnCombatHandler;
-    [SerializeField] private DefenceTarget DefTarget;
-    
+    [SerializeField] public bool BattleEndFlag = false;
+
     [Header("Debug logs")] 
     [SerializeField] private Text DebugText;
     [SerializeField] private Text AreaText;
@@ -123,10 +125,12 @@ public class GameFlowController : MonoBehaviour
     [Header("DefenseTower")]
     [SerializeField] public GameObject DefenseTowerParentPrefab;
     [SerializeField] public GameObject ActiveDefenseTowerParent;
+    [SerializeField] private DefenceTarget DefTarget;
     
     [Header("CaptureTower")]
     [SerializeField] public GameObject CaptureTowerParentPrefab;
     [SerializeField] public GameObject ActiveCaptureTowerParent;
+    [SerializeField] private CaptureTarget CapTarget;
     
     [Header("Dungeon")]
     [SerializeField] public GameObject DungeonParentPrefab;
@@ -135,6 +139,7 @@ public class GameFlowController : MonoBehaviour
     [Header("PushCar")]
     [SerializeField] public GameObject PushCarParentPrefab;
     [SerializeField] public GameObject ActivePushCarParent;
+    [SerializeField] private PushTarget PushTarget;
     
     [Header("BossFight")]
     [SerializeField] public GameObject BossFightParentPrefab;
@@ -166,6 +171,7 @@ public class GameFlowController : MonoBehaviour
 
         EnemySpawnPositionList = new List<Vector3>();
         
+        BattleUICanvasParent.SetActive(false);
         startFightUI.SetActive(false);
     }
     
@@ -210,6 +216,19 @@ public class GameFlowController : MonoBehaviour
     //         PlayerSpawnActive = true;
     //     }
     // }
+    private void CheckPlayerAndGameEndCondition()
+    {
+        // no player exist or inside battle conclusion stage then no need to check
+        if (playerMovementCtrl == null || battleSceneState == PVEBattleSceneState.BattleConclusion) return;
+        if (playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP() <= 0)
+        {
+            battleSceneState = PVEBattleSceneState.LossBattle;
+            DebugText.text = " Player Died and loss! Back to Start Point";
+            playerGlobalStatus.currentLevel = 0;
+            LossRestartFromBeginning();
+            battleSceneState = PVEBattleSceneState.BattleConclusion;
+        }
+    }
 
     void Update()
     {
@@ -252,6 +271,7 @@ public class GameFlowController : MonoBehaviour
              * - Loop
              *   -->Detect game end condition
              */
+            CheckPlayerAndGameEndCondition();
             // Conclusion State
         }
         
@@ -272,6 +292,15 @@ public class GameFlowController : MonoBehaviour
              * - Loop
              *   -->Detect game end condition
              */
+            CheckPlayerAndGameEndCondition();
+
+            if (DTower.GetRemainingTime() <= 0)
+            {
+                battleSceneState = PVEBattleSceneState.WinBattle;
+                DebugText.text = " Player Win !";
+                RewardNextStage();
+                battleSceneState = PVEBattleSceneState.BattleConclusion;
+            }
             // Conclusion State
         }
         else if (battleSceneState is PVEBattleSceneState.DungeonMode)
@@ -288,6 +317,15 @@ public class GameFlowController : MonoBehaviour
              * - Loop
              *   -->Detect game end condition
              */
+            CheckPlayerAndGameEndCondition();
+
+            if (BattleEndFlag)
+            {
+                battleSceneState = PVEBattleSceneState.WinBattle;
+                DebugText.text = " Player Win !";
+                RewardNextStage();
+                battleSceneState = PVEBattleSceneState.BattleConclusion;
+            }
             // Conclusion State
         }
         
@@ -305,6 +343,15 @@ public class GameFlowController : MonoBehaviour
              * - Loop
              *   -->Detect game end condition
              */
+            CheckPlayerAndGameEndCondition();
+
+            if (BattleEndFlag)
+            {
+                battleSceneState = PVEBattleSceneState.WinBattle;
+                DebugText.text = " Player Win !";
+                RewardNextStage();
+                battleSceneState = PVEBattleSceneState.BattleConclusion;
+            }
             // Conclusion State
         }
         
@@ -320,6 +367,15 @@ public class GameFlowController : MonoBehaviour
              * - Loop
              *   -->Detect game end condition
              */
+            CheckPlayerAndGameEndCondition();
+
+            if (BattleEndFlag)
+            {
+                battleSceneState = PVEBattleSceneState.WinBattle;
+                DebugText.text = " Player Win !";
+                RewardNextStage();
+                battleSceneState = PVEBattleSceneState.BattleConclusion;
+            }
             // Conclusion State
             
             // Save character build
@@ -330,22 +386,26 @@ public class GameFlowController : MonoBehaviour
         // Map selection  (returns to map)
         else if (battleSceneState is PVEBattleSceneState.MapActive)
         {
-            BattleUICanvasParent.SetActive(false);
-            MapParent.SetActive(true);
+            // BattleUICanvasParent.SetActive(false);
+            ShopUIParent.SetActive(false);
             BackgroundCanvasParent.SetActive(true);
+            MapParent.SetActive(true);
         }
         
         // Shop / Event (story) mode
         else if (battleSceneState is PVEBattleSceneState.ShopActive)
         {
-            BattleUICanvasParent.SetActive(false);
+            // BattleUICanvasParent.SetActive(false);
+            MapParent.SetActive(false);
             ShopUIParent.SetActive(true);
-            BackgroundCanvasParent.SetActive(true);
+            ShopUIParent.SetActive(true);
         }
         
         else if (battleSceneState is PVEBattleSceneState.EventActive)
         {
-            BattleUICanvasParent.SetActive(false);
+            // BattleUICanvasParent.SetActive(false);
+            ShopUIParent.SetActive(false);
+            MapParent.SetActive(false);
             BackgroundCanvasParent.SetActive(true);
         }
     }
@@ -538,7 +598,7 @@ public class GameFlowController : MonoBehaviour
                 var endTile = PostApocalypseTilePrefab;
                 Instantiate(endTile, location, rotQ , TileParent.transform);
                 var bpd = endTile.GetComponent<BattlePathDest>();
-                bpd.SetBattleMode(BattleMode);
+                bpd.SetBattleMode(BattleMode, this);
             }
             else Instantiate(tile, location, rotQ , TileParent.transform);
             count++;
@@ -640,7 +700,13 @@ public class GameFlowController : MonoBehaviour
              * Shop, event, Boss session
              */
             case LevelType.Shop:
+                battleSceneState = PVEBattleSceneState.ShopActive;
                 BattleMode = PVEBattleSceneState.ShopActive;
+                
+                BattleUICanvasParent.SetActive(false);
+                MapParent.SetActive(false);
+                ShopUIParent.SetActive(true);
+                BattleEndFlag = false;
                 break;
             
             case LevelType.Event:
@@ -652,15 +718,35 @@ public class GameFlowController : MonoBehaviour
                 InitBossFight();
                 break;
         }
-        // Set up UI for battle / scan mode
+        // Inital Set up UI for battle / scan mode
         if (battleSceneState is 
             (PVEBattleSceneState.Scanning or PVEBattleSceneState.BossFight or PVEBattleSceneState.CapturePointMode 
             or PVEBattleSceneState.DefencePointMode or PVEBattleSceneState.DungeonMode or PVEBattleSceneState.PushCarBattleMode or PVEBattleSceneState.BossFight)
            )
         {
-            BattleUICanvasParent.GetComponent<Canvas>().enabled = true;
-            MapParent.GetComponent<Canvas>().enabled = false;
-            BackgroundCanvasParent.GetComponent<Canvas>().enabled = false;
+            BattleUICanvasParent.SetActive(true);
+            MapParent.SetActive(false);
+            BackgroundCanvasParent.SetActive(false);
+            ShopUIParent.SetActive(false);
+            BattleEndFlag = false;
+        }
+        
+        // Re entering the scene with different mode:
+        else if (battleSceneState is PVEBattleSceneState.MapActive)
+        {
+            MapParent.SetActive(false);
+            BackgroundCanvasParent.SetActive(false);
+            ShopUIParent.SetActive(false);
+            battleSceneState = BattleMode;
+            if (BattleMode is
+                PVEBattleSceneState.BossFight or PVEBattleSceneState.CapturePointMode
+                or PVEBattleSceneState.DefencePointMode or PVEBattleSceneState.DungeonMode
+                or PVEBattleSceneState.PushCarBattleMode)
+            {
+                BattleUICanvasParent.SetActive(true);
+            }
+            
+            BattleEndFlag = false;
         }
     }
 
@@ -678,6 +764,14 @@ public class GameFlowController : MonoBehaviour
     //     });
     //
     // }
+
+    public void ExitShopReEnterMap()
+    {
+        MapParent.SetActive(true);
+        ShopUIParent.SetActive(false);
+        battleSceneState = PVEBattleSceneState.MapActive;
+        BattleEndFlag = false;
+    }
     #endregion
 
     #region Spawn Object
@@ -762,6 +856,7 @@ public class GameFlowController : MonoBehaviour
     {
         CalculateTowerLocation();
         ActiveCaptureTowerParent = Instantiate(CaptureTowerParentPrefab);
+        CapTarget = ActiveCaptureTowerParent.GetComponentInChildren<CaptureTarget>();
         ActiveCaptureTowerParent.transform.position = Vector3.zero;
         startFightUI.GetComponent<Button>().onClick.AddListener(() =>
         {
@@ -780,6 +875,7 @@ public class GameFlowController : MonoBehaviour
     void InitDefenseTowerMode()
     {
         ActiveDefenseTowerParent = Instantiate(DefenseTowerParentPrefab);
+        DefTarget = ActiveDefenseTowerParent.GetComponentInChildren<DefenceTarget>();
         ActiveDefenseTowerParent.transform.position = Vector3.zero;
         startFightUI.GetComponent<Button>().onClick.AddListener(() =>
         {
@@ -809,6 +905,7 @@ public class GameFlowController : MonoBehaviour
     void InitPushCarMode()
     {
         ActivePushCarParent = Instantiate(PushCarParentPrefab);
+        PushTarget = ActivePushCarParent.GetComponentInChildren<PushTarget>();
         ActivePushCarParent.transform.position = Vector3.zero;
     }
 
@@ -824,55 +921,6 @@ public class GameFlowController : MonoBehaviour
 
     #endregion
 
-    #region Flow Condition Check
-
-    private void CheckGameEndCondition()
-    {
-        // no player exist or inside battle conclusion stage then no need to check
-        if (playerMovementCtrl == null || battleSceneState == PVEBattleSceneState.BattleConclusion) return;
-        if (playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP() <= 0)
-        {
-            battleSceneState = PVEBattleSceneState.LossBattle;
-            DebugText.text = " Player Died and loss! Back to Start Point";
-            playerGlobalStatus.currentLevel = 0;
-            LossRestartFromBeginning();
-            battleSceneState = PVEBattleSceneState.BattleConclusion;
-            return;
-        }
-        
-        if (BattleMode == PVEBattleSceneState.CapturePointMode)
-        {
-            
-        }
-        else if (BattleMode == PVEBattleSceneState.DefencePointMode)
-        {
-            if (DTower.GetRemainingTime() <= 0)
-            {
-                battleSceneState = PVEBattleSceneState.WinBattle;
-                DebugText.text = " Player Win !";
-                RewardNextStage();
-                battleSceneState = PVEBattleSceneState.BattleConclusion;
-
-                return;
-            }
-            
-        }
-        else if (BattleMode == PVEBattleSceneState.DungeonMode)
-        {
-            
-        }
-        else if (BattleMode == PVEBattleSceneState.PushCarBattleMode)
-        {
-            
-        }
-        else
-        {
-            // not possible
-        }
-    }
-
-    #endregion
-    
     #region Getter / Setter
     public CharacterMovementController GetPlayerMovementCtrl ()
     {
@@ -963,11 +1011,18 @@ public class GameFlowController : MonoBehaviour
     }
 
 
-    public void ReturningToMapScene()
+    public void ReturningToMap()
     {
-        // WinPopUpWindow.SetActive(false);
-        // LossPopUpWindow.SetActive(false);
-        SceneManager.LoadScene(1);
+        WinPopUpWindow.SetActive(false);
+        LossPopUpWindow.SetActive(false);
+        
+        BackgroundCanvasParent.SetActive(true);
+        BattleUICanvasParent.SetActive(false);
+        MapParent.SetActive(true);
+        
+        
+
+        battleSceneState = PVEBattleSceneState.MapActive;
     }
 
     public void ReturnToTitlePage()

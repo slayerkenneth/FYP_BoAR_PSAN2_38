@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Niantic.ARDK.Extensions.Gameboard;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,14 +15,14 @@ public class CaptureTarget : MonoBehaviour
 
     [Header("C Tower Parameters")] 
     private float hp = 100f;
-    public float DefenceRange;
     public GameObject TowerPrefab;
     public Vector3 TowerPosition;
-    [SerializeField] private float DefenceTime;
     private bool hasTowerSpawned = false;
     public CombatHandler towerCombatHandler;
     private GameObject SpawnedTower;
-    
+    public List<Collider> enemyCollidersInsideTower;
+    public float captureProgress;
+    public float captureRequirement;
 
     [Header("UI")] 
     public Canvas CaptureModeUICanvas;
@@ -41,7 +42,7 @@ public class CaptureTarget : MonoBehaviour
         if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && !hasTowerSpawned && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningTower)
         {
             SpawnedTower = Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
-            GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.DefencePointMode;
+            GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.CapturePointMode;
             hasTowerSpawned = true;
             GameFlowCtrl.cloneTower = SpawnedTower;
         }
@@ -64,4 +65,16 @@ public class CaptureTarget : MonoBehaviour
         return TowerPosition;
     }
     
+
+    public void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            enemyCollidersInsideTower.Add(other);
+        }
+        if (other.CompareTag("Player") && enemyCollidersInsideTower.Exists(i => i != null))
+        {
+            captureProgress += Time.deltaTime;
+        }
+    }
 }

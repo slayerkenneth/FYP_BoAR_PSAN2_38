@@ -69,7 +69,7 @@ public class CableController : MonoBehaviour
     {
         casting = false;
 
-        if (combatHandler.GetAttackingColliders() != null)
+        if (combatHandler.GetAttackingColliders().Capacity > 0)
         {
             var targetPos = combatHandler.GetAttackingColliders()[0].transform.position;
             var playerTransform = PlayerAnimator.transform;

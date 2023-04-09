@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerStatus: {fileID: 0}
+  GameFlowCtrl: {fileID: 1451593558}
   recentHealth: 0
   totalHealth: 0
   recentMoney: 0
@@ -1645,7 +1646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27d1ecd8b98fe8b44b789fb91fa59a3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CarPrefab: {fileID: 919132149155446097, guid: 52f8be42e694db243b86ed29aae505f3,
+  CarPrefab: {fileID: 6277496389183865309, guid: 887168661fa2d554c81c54c8e25534d6,
     type: 3}
 --- !u!1001 &399850315
 PrefabInstance:
@@ -4536,12 +4537,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameFlowCtrl: {fileID: 1451593558}
   ARCtrl: {fileID: 619056682}
-  DefenceRange: 0
   TowerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,
     type: 3}
   TowerPosition: {x: 0, y: 0, z: 0}
-  DefenceTime: 0
   towerCombatHandler: {fileID: 1094842684}
+  enemyCollidersInsideTower: []
+  captureProgress: 0
+  captureRequirement: 0
   CaptureModeUICanvas: {fileID: 0}
 --- !u!1 &1096763722
 GameObject:
@@ -5588,7 +5590,7 @@ MonoBehaviour:
   playerMovementCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 1451593561}
   playerOwnCombatHandler: {fileID: 0}
-  DefTarget: {fileID: 1429391864}
+  BattleEndFlag: 0
   DebugText: {fileID: 4098587495805698984}
   AreaText: {fileID: 4098587496407768986}
   AreaLimit: 500
@@ -5610,7 +5612,7 @@ MonoBehaviour:
   RouteTiles: []
   TileParent: {fileID: 331931139}
   MaxTilesCount: 25
-  CyberpunkTilePrefab: {fileID: 4932088507883938021, guid: 0e5709a7ddb77924090c112cf73bb98a,
+  CyberpunkTilePrefab: {fileID: 4381127082073477494, guid: 8948b2ae395f68642bac01c75aeb8e41,
     type: 3}
   PostApocalypseTilePrefab: {fileID: 7986504087968017091, guid: 12a56ee4630040c4eb17ae9707ed4cef,
     type: 3}
@@ -5634,12 +5636,15 @@ MonoBehaviour:
   MapParent: {fileID: 1785446425}
   DefenseTowerParentPrefab: {fileID: 1249809416}
   ActiveDefenseTowerParent: {fileID: 0}
+  DefTarget: {fileID: 1429391864}
   CaptureTowerParentPrefab: {fileID: 1545443209}
   ActiveCaptureTowerParent: {fileID: 0}
+  CapTarget: {fileID: 0}
   DungeonParentPrefab: {fileID: 674969097}
   ActiveDungeonParent: {fileID: 0}
   PushCarParentPrefab: {fileID: 1801687159}
   ActivePushCarParent: {fileID: 0}
+  PushTarget: {fileID: 0}
   BossFightParentPrefab: {fileID: 1372125105}
   ActiveBossFightParent: {fileID: 0}
   DummyEvent:
@@ -6437,7 +6442,7 @@ MonoBehaviour:
   m_SendPointerHoverToParent: 1
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
-  m_XRTrackingOrigin: {fileID: 0}
+  m_XRTrackingOrigin: {fileID: 619056671}
   m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
   m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018,
@@ -7049,12 +7054,12 @@ PrefabInstance:
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
@@ -7074,7 +7079,7 @@ PrefabInstance:
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -334.75684
       objectReference: {fileID: 0}
     - target: {fileID: 2676646422958666006, guid: 534bee0d16062a44a8017f88491aedcd,
         type: 3}
@@ -21610,7 +21615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &4098587496591411370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21658,7 +21663,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4098587496591411369}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -21883,7 +21888,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4098587496650325801}
   - component: {fileID: 4098587496650325803}
-  - component: {fileID: 4098587496650325802}
+  - component: {fileID: 4098587496650325804}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -21906,26 +21911,6 @@ Transform:
   m_Father: {fileID: 4098587496591411373}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4098587496650325802
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4098587496650325800}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!114 &4098587496650325803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21941,6 +21926,47 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 5
+--- !u!114 &4098587496650325804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4098587496650325800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!114 &4098587496651932250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22373,6 +22399,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1451593558}
+    - target: {fileID: 4650435057103446883, guid: f046b1f01694e470da076f1ef5407667,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ReturningToMap
+      objectReference: {fileID: 0}
     - target: {fileID: 4650435058328801574, guid: f046b1f01694e470da076f1ef5407667,
         type: 3}
       propertyPath: m_Name

@@ -8,6 +8,7 @@ public class UIController : MonoBehaviour
 {
     [Header("Global Reference")] [SerializeField]
     public PlayerStatus PlayerStatus;
+    public GameFlowController GameFlowCtrl;
 
     public ProgressBar HPBar;
     public Button QuitButton;
@@ -124,7 +125,7 @@ public class UIController : MonoBehaviour
         MainMenu.style.opacity = 0.5f;
         Item5Text.style.display = DisplayStyle.Flex;
         Debug.Log("Exit pressed");
-        SceneController.LoadMapScene();
+        GameFlowCtrl.ExitShopReEnterMap();
     }
 
     void RestoreButtonPressed() 
@@ -282,8 +283,9 @@ public class UIController : MonoBehaviour
         totalHealth = PlayerStatus.maxHP;
         recentMoney = PlayerStatus.money;
         recentWeaponLV = PlayerStatus.weaponLv;
-        recentClass1LV = PlayerStatus.activeClass.lv;
-        recentClass2LV = PlayerStatus.passiveClass.lv;
+        
+        if (PlayerStatus.activeClass != null) recentClass1LV = PlayerStatus.activeClass.lv;
+        if (PlayerStatus.passiveClass != null) recentClass2LV = PlayerStatus.passiveClass.lv;
 
         MoneyText.text = recentMoney.ToString();
         HPBar.highValue = totalHealth;
