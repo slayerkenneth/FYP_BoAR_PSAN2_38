@@ -33,7 +33,9 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -1713548092879142639}
   - {fileID: 2242156563446411876}
-  m_RendererFeatureMap: 1101649a164138e864b208d783bd1d1f
+  - {fileID: 2423152716874326938}
+  - {fileID: 2722547409949512399}
+  m_RendererFeatureMap: 1101649a164138e864b208d783bd1d1f9a23d1bd8ec4a021cf5233d6716ec825
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -87,3 +89,55 @@ MonoBehaviour:
   m_Name: DepthMeshRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
+--- !u!114 &2423152716874326938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ae4d376c05df421b98c5b39b25b0d29, type: 3}
+  m_Name: ARBackgroundRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+--- !u!114 &2722547409949512399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: SemanticLabels
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    passTag: SemanticLabels
+    Event: 300
+    filterSettings:
+      RenderQueueType: 0
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 208
+      PassNames: []
+    overrideMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
+    overrideMaterialPassIndex: 0
+    overrideDepthState: 0
+    depthCompareFunction: 4
+    enableWrite: 1
+    stencilSettings:
+      overrideStencilState: 0
+      stencilReference: 0
+      stencilCompareFunction: 8
+      passOperation: 0
+      failOperation: 0
+      zFailOperation: 0
+    cameraSettings:
+      overrideCamera: 0
+      restoreCamera: 1
+      offset: {x: 0, y: 0, z: 0, w: 0}
+      cameraFieldOfView: 60
