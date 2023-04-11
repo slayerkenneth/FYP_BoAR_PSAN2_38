@@ -55,7 +55,7 @@ public class EnemyPathfinding : MonoBehaviour
 
     // [Header("Agent Settings")]
     // [SerializeField]
-    [SerializeField] private float walkingSpeed = 3.0f;
+    [SerializeField] public float walkingSpeed = 3.0f;
 
     private float sightRange;
     private float attackRange;

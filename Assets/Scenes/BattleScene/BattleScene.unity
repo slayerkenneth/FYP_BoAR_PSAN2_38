@@ -5596,6 +5596,7 @@ MonoBehaviour:
   - {fileID: 100048, guid: ed555ad10d4b22b46b2839f56410b9ca, type: 3}
   - {fileID: 7487410016656624447, guid: d5e8785ac420c8a4d86ea77525af60f5, type: 3}
   - {fileID: 6860756994242604922, guid: 9e48bd9c7f40b0744a756f68c92112c9, type: 3}
+  EnemyAtkTowerPositionList: []
   EnemyParentObj: {fileID: 1934517721}
   MaxEnemyCount: 5
   EnemySpawnLocationList: []
@@ -21819,7 +21820,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4098587496650325801
 Transform:
   m_ObjectHideFlags: 0
