@@ -10,16 +10,14 @@ using UnityEngine.UI;
 
 public class CharacterMovementController : MonoBehaviour
 {
-    [Header("Character param")]
+    [Header("Character param")] 
     [SerializeField] private Vector3 playerVelocity;
     [SerializeField] private float playerSpeed = 2.0f;
-    [SerializeField] private float rollingSpeed = 4.0f;
-    [SerializeField] private Vector3 rollingDir;
     [SerializeField] private float jumpHeight = 0.4f;
     [SerializeField] private float gravityValue = -9.81f;
     [SerializeField] private bool groundedPlayer;
-
-    [Header("Movement reference")]
+    
+    [Header("Movement reference")] 
     private CharacterControlMap mapper;
     [SerializeField] private CharacterController controller;
     [SerializeField] private int characterState;
@@ -27,8 +25,8 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Vector3 nearestBoardPosition;
 
-    [Header("Gameboard environment reference")]
-    [SerializeField]
+    [Header("Gameboard environment reference")] 
+    [SerializeField] 
     public ARController ARController;
     public IGameboard _activeGameboard;
     private SpatialTree SpatialTree;
@@ -40,7 +38,7 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] private HealthSystemComponent playerOwnHealthSystem;
     [SerializeField] private float maxHP;
     [SerializeField] private PlayerWeaponSkillController PlayerWeaponSkillCtrl;
-
+    
     [Header("Debug")]
     public Text debugLog;
     private void Awake()
@@ -79,15 +77,12 @@ public class CharacterMovementController : MonoBehaviour
         Vector2 movementInput = mapper.Player.Move.ReadValue<Vector2>();
         Vector3 move = (cameraTransform.forward * movementInput.y + cameraTransform.right * movementInput.x);
         move.y = 0;
-
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("rolling")) 
-            controller.Move(rollingDir * Time.deltaTime * rollingSpeed); 
-        else
-            controller.Move(move.normalized * Time.deltaTime * playerSpeed);
+        
+        controller.Move(move * Time.deltaTime * playerSpeed);
 
         if (move != Vector3.zero)
         {
-            gameObject.transform.forward = move.normalized;
+            gameObject.transform.forward = move;
         }
 
         if (movementInput.magnitude != 0)
@@ -97,38 +92,30 @@ public class CharacterMovementController : MonoBehaviour
             debugLog.text = debugLog.text + " Player nearest board pos " + nearestBoardPosition.ToString();
         }
 
-        //// Changes the height position of the player.. (Button for Testing)
-        //if (mapper.Player.Jump.triggered && groundedPlayer)
-        //{
-        //    playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        //    animator.Play("Jump");
-        //}
+        // Changes the height position of the player.. (Button for Testing)
+        if (mapper.Player.Jump.triggered && groundedPlayer)
+        {
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+            animator.Play("Jump");
+        }
 
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
-
+        
         if (mapper.Player.NormalAttack.triggered)
         {
             NormalAttack();
         }
         else if (mapper.Player.Defense.triggered)
         {
-            rollingDir = gameObject.transform.forward.normalized;
-            Rolling();
-        }
-        else if (mapper.Player.CastSkill.triggered)
+            Defense();
+        } else if (mapper.Player.CastSkill.triggered)
         {
             CastSkill();
         }
-        else if (mapper.Player.HoldAttack.triggered)
-        {
-            StartHoldAttack();
-        }
-        else if (mapper.Player.HoldAttack.WasReleasedThisFrame())
-        {
-            EndHoldAttack();
-        }
+
     }
+
     public Vector3 GetPlayerPosition()
     {
         return nearestBoardPosition;
@@ -141,27 +128,20 @@ public class CharacterMovementController : MonoBehaviour
 
     public void NormalAttack()
     {
+        animator.Play("NormalAttack1");
         PlayerWeaponSkillCtrl.NormalAttack();
     }
 
-    public void Rolling()
+    public void Defense()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))animator.Play("rolling");
-        PlayerWeaponSkillCtrl.Rolling();
+        animator.Play("ReceiveDamage");
+        PlayerWeaponSkillCtrl.Defense();
     }
 
     public void CastSkill()
     {
         PlayerWeaponSkillCtrl.CastSkill();
-        //transform.position = new Vector3(0, 1, 0);
-    }
-    public void StartHoldAttack()
-    {
-        PlayerWeaponSkillCtrl.StartHoldAttack();
-    }
-    public void EndHoldAttack()
-    {
-        PlayerWeaponSkillCtrl.EndHoldAttack();
+        transform.position = new Vector3(0, 1, 0);
     }
 
     public Vector3 getPlayerPosition()
@@ -169,12 +149,8 @@ public class CharacterMovementController : MonoBehaviour
         return transform.localPosition;
     }
 
-    public void increaseSpeed(float speedIncrease, float time) { 
-    
-    }
-
     public Transform getCharacterTransform()
     {
-        return this.transform;
+        return transform;
     }
 }
