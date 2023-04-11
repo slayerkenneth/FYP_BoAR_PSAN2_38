@@ -10,6 +10,7 @@ TagManager:
   - WinUI
   - LoseUI
   - PushItem
+  - AttackPoint
   layers:
   - Default
   - TransparentFX
@@ -22,6 +23,7 @@ TagManager:
   - Player
   - Enemy
   - Glow_object
+  - Tower
   - 
   - 
   - 

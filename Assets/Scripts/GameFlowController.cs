@@ -990,6 +990,9 @@ public class GameFlowController : MonoBehaviour
     public SceneTheme GetBattleSceneTheme()
     {
         return currentSceneTheme;
+    public CombatHandler GetPlayerCombatHandler()
+    {       
+        return playerOwnCombatHandler;
     }
     #endregion
 

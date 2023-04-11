@@ -854,9 +854,9 @@ GameObject:
   - component: {fileID: 9500000}
   - component: {fileID: 4545591192432722176}
   - component: {fileID: 6648586720052623577}
-  - component: {fileID: 7256580693890250708}
+  - component: {fileID: 3239322224325566373}
   - component: {fileID: 4994458117732575418}
-  - component: {fileID: -3548919817997530587}
+  - component: {fileID: 7575089619415434805}
   m_Layer: 9
   m_Name: FootmanHP
   m_TagString: Enemy
@@ -878,6 +878,7 @@ Transform:
   m_Children:
   - {fileID: 400046}
   - {fileID: 400044}
+  - {fileID: 1020735913524162691}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -913,11 +914,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b430f1e2a98846c41bbf8a95d427b3f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameFlowCtrl: {fileID: 0}
   CombatHandler: {fileID: 6648586720052623577}
-  AttackingColliders:
-  - {fileID: 7256580693890250708}
-  DamageTakingColliders:
-  - {fileID: 7256580693890250708}
+  attackRange: 0.165
+  sightRange: 0.4
+  colliderRange: 0.025
+  DamageAmount: 2
+  attackTime: 2
+  attackPoint: {fileID: 1020735913524162691}
+  type: 0
+  RangePrefab: {fileID: 0}
+  RangeSpawnPoint: {fileID: 0}
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 256
+  whatIsTower:
+    serializedVersion: 2
+    m_Bits: 1024
+  ValidHit: 0
+  currentAttackingTarget: {fileID: 0}
 --- !u!114 &6648586720052623577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -933,16 +948,16 @@ MonoBehaviour:
   hp: 100
   skillCoolDown: 0
   AttackingColliders:
-  - {fileID: -3548919817997530587}
+  - {fileID: 2002268339065775555}
   DamageTakingColliders:
-  - {fileID: -3548919817997530587}
+  - {fileID: 3239322224325566373}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 4994458117732575418}
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}
---- !u!136 &7256580693890250708
+--- !u!136 &3239322224325566373
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -951,11 +966,11 @@ CapsuleCollider:
   m_GameObject: {fileID: 100048}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
-  m_Radius: 1.75
-  m_Height: 3
+  m_Enabled: 1
+  m_Radius: 0.7
+  m_Height: 2.2
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0.1}
+  m_Center: {x: 0, y: 0.9, z: 0.1}
 --- !u!114 &4994458117732575418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -970,16 +985,64 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmountMax: 100
   startingHealthAmount: 100
---- !u!65 &-3548919817997530587
-BoxCollider:
+--- !u!54 &7575089619415434805
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100048}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!1 &2470563775232153411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1020735913524162691}
+  - component: {fileID: 2002268339065775555}
+  m_Layer: 0
+  m_Name: AttackPoint
+  m_TagString: AttackPoint
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1020735913524162691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2470563775232153411}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.34, y: 1, z: 1.68}
+  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 400048}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &2002268339065775555
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2470563775232153411}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.96, y: 7.06, z: 1.41}
-  m_Center: {x: 0, y: 1.04, z: 0}
+  m_Radius: 0.10025287
+  m_Center: {x: 0.009592377, y: 0.0014757514, z: 0}

@@ -41,6 +41,16 @@ public abstract class PlayerWeaponSkillController : MonoBehaviour
     public abstract void NormalAttack();
 
     public abstract void Rolling();
+    // public abstract void NormalAttack();
+
+    // public abstract void StartHoldAttack();
+
+    // public abstract void EndHoldAttack();
+
+    public void Defense()
+    {
+        
+    }
 
     public abstract void CastSkill();
 

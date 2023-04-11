@@ -13,7 +13,7 @@ public class CentralBattleController : MonoBehaviour
     // Start is called before the first frame update
     public void DamageTransfer(CombatHandler targetHitTarget, float damageAmount, CombatHandler attacker)
     {
-        Debug.Log("Dmg transfer");
+        //Debug.Log("Dmg transfer");
         if (targetHitTarget.GetCurrentHP() > 0)
         {
             targetHitTarget.ReceiveDamage(damageAmount, attacker);
@@ -21,6 +21,7 @@ public class CentralBattleController : MonoBehaviour
             {
                 currentEnemyAttackedByPlayer = targetHitTarget;
                 GameFlowCtrl.SetCurrentEnemyBeenAttacked(currentEnemyAttackedByPlayer);
+                
             }
         }
     }
