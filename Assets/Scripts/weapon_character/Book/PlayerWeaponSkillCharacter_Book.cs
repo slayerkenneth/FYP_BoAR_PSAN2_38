@@ -14,10 +14,10 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
     private CharacterMovementController CharMoveCtrl;
     
     private float NormalAttackTime;
-    private bool isNormalAttack = false;
     private bool isHoldAttack = false;
-    public Vector3 maxScale;
-    public float rotationSpeed;
+    public float maxScale;
+    public float rotationSpeed_NormalAttack;
+    public float rotationSpeed_HoldAttack;
     private Vector3 originalScale;
     private Vector3 originalPosition;
 
@@ -29,7 +29,7 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
     // Start is called before the first frame update
     void Start()
     {
-        // PlayerStatus.CurrentPlayer.weaponStat.UpdateStat(gameObject);
+        PlayerStatus.CurrentPlayer.weaponStat.UpdateStat(gameObject);
         NormalAttackTime = 0;
         originalScale = bookPrefab.transform.localScale;
         originalPosition = bookPrefab.transform.localPosition;
@@ -39,6 +39,12 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
     // Update is called once per frame
     void Update()
     {
+        if (Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        {
+            var controller = bookPrefab.GetComponent<BookController>();
+            controller.isAttack = false;
+        }
+
         if (SkillCDRemain > 0.0F) SkillCDRemain -= Time.deltaTime;
         if (isHoldAttack)
         {
@@ -49,9 +55,9 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
             temp_scale.x += Time.deltaTime;
             temp_scale.y += Time.deltaTime;
             temp_scale.z += Time.deltaTime;
-            if (temp_scale.x > maxScale.x) temp_scale.x = maxScale.x;
-            if (temp_scale.y > maxScale.y) temp_scale.y = maxScale.y;
-            if (temp_scale.z > maxScale.z) temp_scale.z = maxScale.z;
+            if (temp_scale.x > maxScale) temp_scale.x = maxScale;
+            if (temp_scale.y > maxScale) temp_scale.y = maxScale;
+            if (temp_scale.z > maxScale) temp_scale.z = maxScale;
 
             //Position
             temp_position.x = temp_scale.x * 1.6f + 0.55f;
@@ -64,19 +70,24 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("NormalAttack"))
         {
             Vector3 temp = CharMoveCtrl.getPlayerPosition();
-            bookPrefab.transform.RotateAround(temp, Vector3.up, Time.deltaTime * rotationSpeed);
-            NormalAttackTime += Time.deltaTime;
+            if (NormalAttackTime < Animator.GetCurrentAnimatorStateInfo(0).length / 2f)
+            {
+                bookPrefab.transform.RotateAround(temp, Vector3.up, -Time.deltaTime * rotationSpeed_NormalAttack);
+            }
+            if (NormalAttackTime >= Animator.GetCurrentAnimatorStateInfo(0).length / 2f)
+            {
+                bookPrefab.transform.RotateAround(temp, Vector3.up, Time.deltaTime * rotationSpeed_NormalAttack);
+            }
+            NormalAttackTime += Time.deltaTime;           
         }
-        if (isNormalAttack && Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        if (NormalAttackTime > 0 && Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
-            isNormalAttack = false;
-            Vector3 temp = CharMoveCtrl.getPlayerPosition();
-            bookPrefab.transform.RotateAround(temp, Vector3.up, -NormalAttackTime * rotationSpeed);
+            NormalAttackTime = 0;
         }
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("HoldAttack"))
         {
             Vector3 temp = CharMoveCtrl.getPlayerPosition();
-            bookPrefab.transform.RotateAround(temp, Vector3.up, Time.deltaTime * rotationSpeed);
+            bookPrefab.transform.RotateAround(temp, Vector3.up, -Time.deltaTime * rotationSpeed_HoldAttack);
         }
         if (Animator.GetBool("EndAttack") && Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
@@ -95,9 +106,8 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
 
             var controller = bookPrefab.GetComponent<BookController>();
             controller.Damage = NormalAttackDamage;
-            // controller.OriginWeanpon = Weapon;
+            controller.isAttack = true;
             controller.combatHandler = combatHandler;
-            isNormalAttack = true;
             // combatHandler.AddAttackingColliders(shield.GetComponent<Collider>());
         }
     }
@@ -129,6 +139,7 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
         var controller = bookPrefab.GetComponent<BookController>();
         controller.Damage = HoldAttackDamage;
         controller.combatHandler = combatHandler;
+        controller.isAttack = true;
         // Animator.SetBool("Shield", false);
         // var centerAngle = this.transform.rotation.eulerAngles.y;
         // var enemyList = GameObject.FindGameObjectsWithTag("Enemy");

@@ -33,7 +33,7 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (!AttackingColliders.Contains(other) && !DamageTakingColliders.Contains(other))
         {
-            if (other.transform.CompareTag("Player"))
+            if (other.transform.CompareTag("Player") || other.transform.CompareTag("PlayerMinion"))
             {
                 CombatHandler.DoDamage(other.transform.GetComponent<CombatHandler>(), 10f);
             }

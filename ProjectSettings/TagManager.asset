@@ -9,6 +9,7 @@ TagManager:
   - Tower(C)
   - WinUI
   - LoseUI
+  - PlayerMinion
   layers:
   - Default
   - TransparentFX
