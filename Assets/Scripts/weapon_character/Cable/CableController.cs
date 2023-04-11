@@ -14,9 +14,13 @@ public class CableController : MonoBehaviour
     public GameObject thunder;
     public List<LineRenderer> thunderRenderers;
     private bool thunderActive;
+    public Transform USB_Head;
+
+    [Header("VFX")] public ParticleSystem USB_Sparks;
 
     public float aimTime = 0;
     public bool casting = false;
+    private static readonly int Dash = Animator.StringToHash("Dash");
 
     private void Start()
     {
@@ -26,6 +30,7 @@ public class CableController : MonoBehaviour
             go.enabled = false;
             thunderActive = false;
         }
+        USB_Sparks.Stop();
     }
 
     private void Update()
@@ -54,28 +59,39 @@ public class CableController : MonoBehaviour
 
     public IEnumerator AnimateThunder()
     {
+        USB_Sparks.Play();
         thunderActive = true;
         yield return new WaitForSeconds(1.5f);
         thunderActive = false;
+        USB_Sparks.Stop();
     }
     
 
     public void Aim()
     {
         casting = true;
+        CableAnimator.Play("CableLonger");
+        USB_Sparks.Play();
     }
 
     public void DashAttack(float damage)
     {
         casting = false;
-
-        if (combatHandler.GetAttackingColliders().Capacity > 0)
-        {
-            var targetPos = combatHandler.GetAttackingColliders()[0].transform.position;
-            var playerTransform = PlayerAnimator.transform;
-            var playerPos = playerTransform.position;
-        }
-        
+        CableAnimator.SetTrigger(Dash);
+        HoldAttackDamage = damage;
         aimTime = 0;
+        USB_Sparks.Stop();
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.CompareTag("Enemy"))
+        {
+            var enemyCombat = other.GetComponent<CombatHandler>();
+            if (!enemyCombat) return;
+            combatHandler.DoDamage(enemyCombat, HoldAttackDamage / 2);
+            combatHandler.AddAttackingColliders(other);
+            Debug.Log("Extended Cable Hit");
+        }
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8997627446758184518}
   - component: {fileID: 8275303532959191813}
   - component: {fileID: 5528598668886907069}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: obelisk_plate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6350029878262010255}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Capture/DefensePointCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,8 +125,8 @@ GameObject:
   - component: {fileID: 2183710516522777639}
   - component: {fileID: 593859230819194797}
   - component: {fileID: 4524895006623363282}
-  m_Layer: 10
-  m_Name: Obelisk_zodiac_low
+  m_Layer: 11
+  m_Name: DefenseTower
   m_TagString: Tower(D)
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 2958340227487425243}
   - component: {fileID: 881997242303287840}
   - component: {fileID: 8327626095128621763}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: obelisk_plate_side
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -282,7 +282,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3896410968213987104}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Capture/DefensePoint1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,7 +313,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1611996858782177649}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Capture/DefensePoint4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 283641726316442407}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Capture/DefensePoint2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -375,7 +375,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7456713851602820783}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Capture/DefensePoint3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -408,7 +408,7 @@ GameObject:
   - component: {fileID: 2399352660026973734}
   - component: {fileID: 18246142228171260}
   - component: {fileID: 6819180917013648682}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: obelisk_main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -491,7 +491,7 @@ GameObject:
   - component: {fileID: 7217041297222056461}
   - component: {fileID: 4309268096639938502}
   - component: {fileID: 7848478916152045112}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: obelisk_side
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,6 +570,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2183710516522777639}
     m_Modifications:
+    - target: {fileID: 606317162780701244, guid: a1679d0b0bea61f489b22113b4462374,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 797784518864179116, guid: a1679d0b0bea61f489b22113b4462374,
         type: 3}
       propertyPath: lengthInSec
@@ -579,6 +584,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Radius
       value: 1.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 1089537346222119763, guid: a1679d0b0bea61f489b22113b4462374,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2247373928026659947, guid: a1679d0b0bea61f489b22113b4462374,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3574362967237534929, guid: a1679d0b0bea61f489b22113b4462374,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3650638188812647480, guid: a1679d0b0bea61f489b22113b4462374,
         type: 3}
@@ -654,6 +674,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Magic circle
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744133877081091469, guid: a1679d0b0bea61f489b22113b4462374,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7673830656541891808, guid: a1679d0b0bea61f489b22113b4462374,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 969148064699086170, guid: a1679d0b0bea61f489b22113b4462374, type: 3}
