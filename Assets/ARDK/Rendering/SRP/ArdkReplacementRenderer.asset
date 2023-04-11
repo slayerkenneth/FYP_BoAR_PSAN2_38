@@ -1,5 +1,33 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7604478923572598622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ae4d376c05df421b98c5b39b25b0d29, type: 3}
+  m_Name: ARBackgroundRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+--- !u!114 &-1580675415441071964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 725810a0501574c09844b394e6a907a9, type: 3}
+  m_Name: ARSessionFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    IsBackgroundPassEnabled: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17,14 +45,13 @@ MonoBehaviour:
       type: 3}
   m_RendererFeatures:
   - {fileID: 2804613763663772903}
-  - {fileID: -8094089460958663801}
-  - {fileID: -4806731884941675367}
   - {fileID: 3206297849630984946}
-  - {fileID: -7202407928232712125}
   - {fileID: 4485822789137169420}
   - {fileID: 8628055639418965293}
   - {fileID: 8446053753103129177}
-  m_RendererFeatureMap: e7bc59cb5bfdeb26876b53038504ac8f99f4815bd10e4bbdf28a5a13e80e7f2c43683b3626e80b9c0c7cdf4f0fd8403e2d8ddf01e402bd77591a91ab23693675
+  - {fileID: -7604478923572598622}
+  - {fileID: -1580675415441071964}
+  m_RendererFeatureMap: e7bc59cb5bfdeb26f28a5a13e80e7f2c0c7cdf4f0fd8403e2d8ddf01e402bd77591a91ab23693675a2a88292b5767796a420719d155010ea
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -130,7 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1614fc811f8f184697d9bee70ab9fe5, type: 3}
   m_Name: DecalRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   m_Settings:
     technique: 0
     maxDrawDistance: 1000
