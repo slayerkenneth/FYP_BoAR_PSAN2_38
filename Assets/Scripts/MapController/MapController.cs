@@ -179,7 +179,7 @@ public class MapController : MonoBehaviour
     private LevelType randomizeType(int sequence) {
         if (sequence == 1 || sequence == 0 || sequence == -1)
         {
-            switch (Random.Range(1, 4))
+            switch (Random.Range(1, 5))
             {
                 case 1:
                     return LevelType.PushCarBattleMode;
@@ -191,7 +191,7 @@ public class MapController : MonoBehaviour
                     return LevelType.CapturePointBattleMode;
             }
         }
-        switch (Random.Range(1, 5))
+        switch (Random.Range(1, 6))
         {
             case 1:
                 return LevelType.Shop;

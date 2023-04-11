@@ -20,6 +20,7 @@ public class CaptureTarget : MonoBehaviour
     private bool hasTowerSpawned = false;
     public CombatHandler towerCombatHandler;
     private GameObject SpawnedTower;
+    public List<Transform> TowerPointsTransforms;
     public List<Collider> enemyCollidersInsideTower;
     public float captureProgress;
     public float captureRequirement;
@@ -42,6 +43,7 @@ public class CaptureTarget : MonoBehaviour
         if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && !hasTowerSpawned && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningTower)
         {
             SpawnedTower = Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
+            TowerPointsTransforms = SpawnedTower.GetComponent<Tower>().GetTowerPoints();
             GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.CapturePointMode;
             hasTowerSpawned = true;
             GameFlowCtrl.cloneTower = SpawnedTower;
@@ -76,5 +78,10 @@ public class CaptureTarget : MonoBehaviour
         {
             captureProgress += Time.deltaTime;
         }
+    }
+    
+    public List<Transform> GetTowerPointsTransforms()
+    {
+        return TowerPointsTransforms;
     }
 }

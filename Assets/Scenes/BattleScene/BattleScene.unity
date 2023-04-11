@@ -2740,6 +2740,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1451593558}
+        m_TargetAssemblyTypeName: GameFlowController, Assembly-CSharp
+        m_MethodName: EnterNewBattle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &581750064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4465,6 +4477,7 @@ MonoBehaviour:
     type: 3}
   TowerPosition: {x: 0, y: 0, z: 0}
   towerCombatHandler: {fileID: 1094842684}
+  TowerPointsTransforms: []
   enemyCollidersInsideTower: []
   captureProgress: 0
   captureRequirement: 0
@@ -5430,6 +5443,7 @@ MonoBehaviour:
   DefenceTime: 90
   startMinute: 0
   towerCombatHandler: {fileID: 1429391865}
+  TowerPointsTransforms: []
   DefenceModeUICanvas: {fileID: 4098587496591411372}
   CurrentTimeText: {fileID: 4098587496175638028}
 --- !u!114 &1429391865
@@ -5574,6 +5588,7 @@ MonoBehaviour:
   DummyEvent:
     m_PersistentCalls:
       m_Calls: []
+  restartBattle: 0
   cloneTower: {fileID: 0}
 --- !u!114 &1451593559
 MonoBehaviour:
@@ -5600,6 +5615,8 @@ MonoBehaviour:
   EnemyParentObj: {fileID: 1934517721}
   MaxEnemyCount: 5
   EnemySpawnLocationList: []
+  DefenceTarget: {fileID: 0}
+  CaptureTarget: {fileID: 0}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64

@@ -149,7 +149,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] UnityEvent DummyEvent;
     [SerializeField] Action DummyAction;
 
-
+    public bool restartBattle = false;
     public GameObject cloneTower;
     
     // Start is called before the first frame update
@@ -272,7 +272,15 @@ public class GameFlowController : MonoBehaviour
              *   -->Detect game end condition
              */
             CheckPlayerAndGameEndCondition();
-            // Conclusion State
+
+            if (BattleEndFlag)
+            {
+                battleSceneState = PVEBattleSceneState.WinBattle;
+                DebugText.text = " Player Win !";
+                Destroy(ActiveCaptureTowerParent);
+                RewardNextStage();
+                battleSceneState = PVEBattleSceneState.BattleConclusion;
+            }
         }
         
         else if (battleSceneState is PVEBattleSceneState.DefencePointMode)
@@ -294,10 +302,11 @@ public class GameFlowController : MonoBehaviour
              */
             CheckPlayerAndGameEndCondition();
 
-            if (DTower.GetRemainingTime() <= 0)
+            if (BattleEndFlag)
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
+                Destroy(ActiveDefenseTowerParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
             }
@@ -323,6 +332,7 @@ public class GameFlowController : MonoBehaviour
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
+                Destroy(ActiveDungeonParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
             }
@@ -349,6 +359,7 @@ public class GameFlowController : MonoBehaviour
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
+                Destroy(ActivePushCarParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
             }
@@ -373,6 +384,7 @@ public class GameFlowController : MonoBehaviour
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
+                Destroy(ActiveBossFightParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
             }
@@ -734,19 +746,15 @@ public class GameFlowController : MonoBehaviour
         // Re entering the scene with different mode:
         else if (battleSceneState is PVEBattleSceneState.MapActive)
         {
+            battleSceneState = BattleMode;
+            restartBattle = true;
+            BattleEndFlag = false;
+            BattleUICanvasParent.SetActive(true);
+            startFightUI.SetActive(true);
+            
             MapParent.SetActive(false);
             BackgroundCanvasParent.SetActive(false);
             ShopUIParent.SetActive(false);
-            battleSceneState = BattleMode;
-            if (BattleMode is
-                PVEBattleSceneState.BossFight or PVEBattleSceneState.CapturePointMode
-                or PVEBattleSceneState.DefencePointMode or PVEBattleSceneState.DungeonMode
-                or PVEBattleSceneState.PushCarBattleMode)
-            {
-                BattleUICanvasParent.SetActive(true);
-            }
-            
-            BattleEndFlag = false;
         }
     }
 
@@ -771,6 +779,37 @@ public class GameFlowController : MonoBehaviour
         ShopUIParent.SetActive(false);
         battleSceneState = PVEBattleSceneState.MapActive;
         BattleEndFlag = false;
+    }
+
+    public void EnterNewBattle()
+    {
+        if (!restartBattle) return;
+        switch (BattleMode)
+        {
+            case PVEBattleSceneState.DefencePointMode:
+                ActiveDefenseTowerParent.SetActive(true);
+                restartBattle = false;
+                break;
+            case PVEBattleSceneState.CapturePointMode:
+                ActiveCaptureTowerParent.SetActive(true);
+                restartBattle = false;
+                break;
+            case PVEBattleSceneState.DungeonMode:
+                battleSceneState = BattleMode;
+                ActiveDungeonParent.SetActive(true);
+                restartBattle = false;
+                break;
+            case PVEBattleSceneState.PushCarBattleMode:
+                battleSceneState = BattleMode;
+                ActivePushCarParent.SetActive(true);
+                restartBattle = false;
+                break;
+            case PVEBattleSceneState.BossFight:
+                battleSceneState = BattleMode;
+                ActiveBossFightParent.SetActive(true);
+                restartBattle = false;
+                break;
+        }
     }
     #endregion
 
@@ -860,10 +899,11 @@ public class GameFlowController : MonoBehaviour
         ActiveCaptureTowerParent.transform.position = Vector3.zero;
         startFightUI.GetComponent<Button>().onClick.AddListener(() =>
         {
-            ActiveCaptureTowerParent.SetActive(true);
+            if (ActiveCaptureTowerParent != null) ActiveCaptureTowerParent.SetActive(true);
+            if (BattleMode != PVEBattleSceneState.CapturePointMode) return;
             battleSceneState = PVEBattleSceneState.SpawningTower;
-            var dt = ActiveDefenseTowerParent.GetComponentInChildren<CaptureTarget>();
-            dt.SpawnTower();
+            var ct = ActiveCaptureTowerParent.GetComponentInChildren<CaptureTarget>();
+            ct.SpawnTower();
             battleSceneState = PVEBattleSceneState.CapturePointMode;
         });
     }
@@ -879,7 +919,8 @@ public class GameFlowController : MonoBehaviour
         ActiveDefenseTowerParent.transform.position = Vector3.zero;
         startFightUI.GetComponent<Button>().onClick.AddListener(() =>
         {
-            ActiveDefenseTowerParent.SetActive(true);
+            if (ActiveDefenseTowerParent != null) ActiveDefenseTowerParent.SetActive(true);
+            if (BattleMode != PVEBattleSceneState.DefencePointMode) return;
             battleSceneState = PVEBattleSceneState.SpawningTower;
             var dt = ActiveDefenseTowerParent.GetComponentInChildren<DefenceTarget>();
             dt.SpawnTower();
@@ -895,6 +936,7 @@ public class GameFlowController : MonoBehaviour
     void InitDungeonMode()
     {
         ActiveDungeonParent = Instantiate(DungeonParentPrefab);
+        if (ActiveDungeonParent != null) ActiveDungeonParent.SetActive(true);
         ActiveDungeonParent.transform.position = Vector3.zero;
     }
 
@@ -905,6 +947,7 @@ public class GameFlowController : MonoBehaviour
     void InitPushCarMode()
     {
         ActivePushCarParent = Instantiate(PushCarParentPrefab);
+        if (ActivePushCarParent != null) ActivePushCarParent.SetActive(true);
         PushTarget = ActivePushCarParent.GetComponentInChildren<PushTarget>();
         ActivePushCarParent.transform.position = Vector3.zero;
     }
@@ -939,11 +982,13 @@ public class GameFlowController : MonoBehaviour
     public void SetDefenseTower(DefenceTarget tower)
     {
         DTower = tower;
+        EnemySpawner.SetDefenseTarget(tower);
     }
 
     public void SetCaptureTower(CaptureTarget tower)
     {
         CTower = tower;
+        EnemySpawner.SetCaptureTarget(tower);
     }
 
     public void SetCurrentEnemyBeenAttacked(CombatHandler enemyCombatHandler)
@@ -1003,17 +1048,46 @@ public class GameFlowController : MonoBehaviour
 
     public void RewardNextStage()
     {
-        playerGlobalStatus.money++;
-        playerGlobalStatus.speed++;
-        playerGlobalStatus.currentHP = (int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP();
-        // playerGlobalStatus.currentLevel++; // cannot change this
-        
         WinPopUpWindow.SetActive(true);
+        EnemySpawner.ClearEnemyOnScene();
+        PlayerSpawner.DespawnPlayer((int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP(), playerGlobalStatus.money+1, playerGlobalStatus.weaponLv);
+        ActiveDefenseTowerParent = null;
+        ActiveCaptureTowerParent = null;
+        ActiveDungeonParent = null;
+        ActivePushCarParent = null;
+        ActiveBossFightParent = null;
     }
 
     public void LossRestartFromBeginning()
     {
         LossPopUpWindow.SetActive(true);
+        EnemySpawner.ClearEnemyOnScene();
+        switch (BattleMode)
+        {
+            case PVEBattleSceneState.DefencePointMode:
+                Destroy(ActiveDefenseTowerParent);
+                break;
+            case PVEBattleSceneState.CapturePointMode:
+                Destroy(ActiveCaptureTowerParent);
+                break;
+            case PVEBattleSceneState.DungeonMode:
+                Destroy(ActiveDungeonParent);
+                break;
+            case PVEBattleSceneState.PushCarBattleMode:
+                Destroy(ActivePushCarParent);
+                break;
+            case PVEBattleSceneState.BossFight:
+                Destroy(ActiveBossFightParent);
+                break;
+        }
+
+        ActiveDefenseTowerParent = null;
+        ActiveCaptureTowerParent = null;
+        ActiveDungeonParent = null;
+        ActivePushCarParent = null;
+        ActiveBossFightParent = null;
+        
+        PlayerSpawner.DespawnPlayer(100, 0, 0);
     }
 
 
@@ -1026,8 +1100,6 @@ public class GameFlowController : MonoBehaviour
         BattleUICanvasParent.SetActive(false);
         MapParent.SetActive(true);
         
-        
-
         battleSceneState = PVEBattleSceneState.MapActive;
     }
 

@@ -19,7 +19,10 @@ public class EnemySpawner : MonoBehaviour
     public List<Vector3> EnemySpawnLocationList;
     private bool EnemySpawnEnable = false;
     public static int currentEnemyCount;
+    public List<GameObject> activeEnemies;
 
+    public DefenceTarget DefenceTarget;
+    public CaptureTarget CaptureTarget;
     private Vector3 towerPosition;
     public LayerMask whatIsGround; //ARDK_Gameboard
     public LayerMask whatIsPlayer; //add a layer mask on player
@@ -38,9 +41,32 @@ public class EnemySpawner : MonoBehaviour
     {
         for (int i=0; i < EnemySpawnLocationList.Count; i++)
         {
-            EnemyAtkTowerPositionList.Add(getTowerPosition());
             if (!EnemySpawnEnable || EnemySpawnPrefabList.Count == 0 || EnemySpawnLocationList.Count == 0 || currentEnemyCount >= MaxEnemyCount) return;
-            StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], EnemyAtkTowerPositionList[i]));
+            
+            if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.DefencePointMode)
+            {
+                if (DefenceTarget == null) return; // Optimize later
+                DefenceTarget.GetTowerPointsTransforms().ForEach(t =>
+                {
+                    EnemyAtkTowerPositionList.Add(t.position);
+                });
+                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], EnemyAtkTowerPositionList[i]));
+            }
+            else if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.CapturePointMode)
+            {
+                if (CaptureTarget == null) return; // Optimize later
+                CaptureTarget.GetTowerPointsTransforms().ForEach(t =>
+                {
+                    EnemySpawnLocationList.Add(t.position);        
+                });
+                // Need to review enemyPathfinding logic
+                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
+            }
+            else
+            {
+                // Need to review enemyPathfinding logic
+                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
+            }
             currentEnemyCount++;
         }
         
@@ -63,6 +89,8 @@ public class EnemySpawner : MonoBehaviour
         e.GetComponent<EnemyPathfinding>().whatIsPlayer = whatIsPlayer;
         e.GetComponent<CombatHandler>().SetCentralCombatHandler(centralBattleCtrl);
         e.GetComponent<EnemyPathfinding>().whatIsEnemy = whatIsEnemy;
+        
+        activeEnemies.Add(e);
         yield return new WaitForSeconds(time);
     }
 
@@ -87,5 +115,20 @@ public class EnemySpawner : MonoBehaviour
     private void ResetEnemySpawnLocationList()
     {
         EnemySpawnLocationList.Clear();
+    }
+
+    public void ClearEnemyOnScene()
+    {
+        activeEnemies.ForEach(Destroy);
+    }
+
+    public void SetDefenseTarget(DefenceTarget dt)
+    {
+        DefenceTarget = dt;
+    }
+
+    public void SetCaptureTarget(CaptureTarget ct)
+    {
+        CaptureTarget = ct;
     }
 }
