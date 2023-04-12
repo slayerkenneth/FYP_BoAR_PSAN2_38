@@ -5547,7 +5547,14 @@ MonoBehaviour:
   DTower: {fileID: 1429391864}
   CTower: {fileID: 1094842685}
   currentSceneTheme: 0
-  RouteTiles: []
+  MaxRouteDisplacement: 10
+  MinRouteDisplacement: 8
+  AverageMainPointDistance: 2
+  MainPointDistanceVariance: 1
+  PossibleRouteMainEndPoints: []
+  PossibleRouteMainSecPoints: []
+  ActiveRouteTilesLocations: []
+  ActiveRouteTiles: []
   TileParent: {fileID: 331931139}
   MaxTilesCount: 25
   CyberpunkTilePrefab: {fileID: 4381127082073477494, guid: 8948b2ae395f68642bac01c75aeb8e41,
@@ -5580,9 +5587,15 @@ MonoBehaviour:
   CapTarget: {fileID: 0}
   DungeonParentPrefab: {fileID: 674969097}
   ActiveDungeonParent: {fileID: 0}
+  tileInterval: 0.6
+  EndDungeonTile: {fileID: 7986504087968017091, guid: 84c931b6016ac4480b64a45b06b726a2,
+    type: 3}
   PushCarParentPrefab: {fileID: 1801687159}
   ActivePushCarParent: {fileID: 0}
   PushTarget: {fileID: 0}
+  CheckPointPrefab: {fileID: 3377181292992421420, guid: 8ee7f9dc0cd1e4db493dd752de8fec65,
+    type: 3}
+  CarCheckPointGameObjects: []
   BossFightParentPrefab: {fileID: 1372125105}
   ActiveBossFightParent: {fileID: 0}
   DummyEvent:
@@ -5615,6 +5628,7 @@ MonoBehaviour:
   EnemyParentObj: {fileID: 1934517721}
   MaxEnemyCount: 5
   EnemySpawnLocationList: []
+  activeEnemies: []
   DefenceTarget: {fileID: 0}
   CaptureTarget: {fileID: 0}
   whatIsGround:

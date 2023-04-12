@@ -18,7 +18,6 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] public int MaxEnemyCount;
     public List<Vector3> EnemySpawnLocationList;
     private bool EnemySpawnEnable = false;
-    public static int currentEnemyCount;
     public List<GameObject> activeEnemies;
 
     public DefenceTarget DefenceTarget;
@@ -34,14 +33,13 @@ public class EnemySpawner : MonoBehaviour
     void Start()
     {
         _activeGameboard = ARCtrl.GetActiveGameboard();
-        currentEnemyCount = 0;
     }
     
     void Update()
     {
         for (int i=0; i < EnemySpawnLocationList.Count; i++)
         {
-            if (!EnemySpawnEnable || EnemySpawnPrefabList.Count == 0 || EnemySpawnLocationList.Count == 0 || currentEnemyCount >= MaxEnemyCount) return;
+            if (!EnemySpawnEnable || EnemySpawnPrefabList.Count == 0 || EnemySpawnLocationList.Count == 0 || activeEnemies.Count >= MaxEnemyCount) return;
             
             if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.DefencePointMode)
             {
@@ -67,7 +65,6 @@ public class EnemySpawner : MonoBehaviour
                 // Need to review enemyPathfinding logic
                 StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
             }
-            currentEnemyCount++;
         }
         
     }
@@ -120,6 +117,7 @@ public class EnemySpawner : MonoBehaviour
     public void ClearEnemyOnScene()
     {
         activeEnemies.ForEach(Destroy);
+        activeEnemies.Clear();
     }
 
     public void SetDefenseTarget(DefenceTarget dt)
@@ -130,5 +128,11 @@ public class EnemySpawner : MonoBehaviour
     public void SetCaptureTarget(CaptureTarget ct)
     {
         CaptureTarget = ct;
+    }
+
+    public void ResetTowerTargetReference()
+    {
+        DefenceTarget = null;
+        CaptureTarget = null;
     }
 }
