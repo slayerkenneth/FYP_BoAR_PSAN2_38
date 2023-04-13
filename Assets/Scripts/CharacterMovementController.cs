@@ -175,7 +175,7 @@ public class CharacterMovementController : MonoBehaviour
 
     public void increaseSpeed(float speedIncrease, float time) { 
         //???
-        }
+    }
     
     public Transform getCharacterTransform()
     {
