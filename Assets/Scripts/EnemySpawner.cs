@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Niantic.ARDK.Extensions.Gameboard;
 using UnityEngine;
+using CodeMonkey.HealthSystemCM;
+using UnityEditor;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -28,8 +31,8 @@ public class EnemySpawner : MonoBehaviour
     public LayerMask whatIsEnemy;
     public GameObject towerPrefab;
     public GameObject playerPrefab;
-    
-    
+    public static List<EventHandler> OnEnemyDead = new List<EventHandler>();
+
     void Start()
     {
         _activeGameboard = ARCtrl.GetActiveGameboard();
@@ -85,9 +88,13 @@ public class EnemySpawner : MonoBehaviour
         e.GetComponent<EnemyPathfinding>().whatIsGround = whatIsGround;
         e.GetComponent<EnemyPathfinding>().whatIsPlayer = whatIsPlayer;
         e.GetComponent<CombatHandler>().SetCentralCombatHandler(centralBattleCtrl);
-        e.GetComponent<EnemyPathfinding>().whatIsEnemy = whatIsEnemy;
-        
-        activeEnemies.Add(e);
+        // e.GetComponent<EnemyPathfinding>().playerPrefab = playerPrefab;
+        e.GetComponent<EnemyPathfinding>().whatIsEnemy = whatIsEnemy; 
+        var healthSystem = e.GetComponent<HealthSystemComponent>().GetHealthSystem();
+        foreach (EventHandler eventHandler in OnEnemyDead)
+        {
+            healthSystem.OnDead += eventHandler;
+        }
         yield return new WaitForSeconds(time);
     }
 

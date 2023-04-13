@@ -77,3 +77,6 @@ crashlytics-build.properties
 
 # Saved Image from testing Object Recognition
 SaveImages/
+
+# ONNX model files from Object Recognition
+*.onnx

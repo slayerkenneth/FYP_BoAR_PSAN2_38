@@ -856,6 +856,7 @@ public class GameFlowController : MonoBehaviour
 
     public void EnterMapNode(LevelType levelType)
     {
+        Debug.Log("Enter map node");
         if (battleSceneState == PVEBattleSceneState.Invalid)
         {
             // Wait until Game board session is init and started
@@ -1239,6 +1240,11 @@ public class GameFlowController : MonoBehaviour
 
     public void RewardNextStage()
     {
+        playerGlobalStatus.money++;
+        playerGlobalStatus.speedLv++;
+        playerGlobalStatus.currentHP = (int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP();
+        // playerGlobalStatus.currentLevel++; // cannot change this
+        
         WinPopUpWindow.SetActive(true);
         EnemySpawner.ClearEnemyOnScene();
         PlayerSpawner.DespawnPlayer((int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP(), playerGlobalStatus.money+1, playerGlobalStatus.weaponLv);

@@ -28,6 +28,7 @@ public class ObjectSpawningController : MonoBehaviour
     [SerializeField] public List<string> objectClass = new List<string>();
     [SerializeField] public List<GameObject> objectPrefabs = new List<GameObject>();
     public ARController ARCtrl;
+    public CentralBattleController CentralBattleController;
     public float ClusteringDistance = 0.1F;
 
     private SortedDictionary<float, Tuple<string, Vector3>> objectList;
@@ -39,13 +40,6 @@ public class ObjectSpawningController : MonoBehaviour
     {
         objectList = new SortedDictionary<float, Tuple<string, Vector3>>(new DescendingComparer<float>());
         objectClass = new List<string>(Regex.Split(this.labelsFile.text, "\n|\r|\r\n").Where(s => !String.IsNullOrEmpty(s)));
-        //GameObject[] temp = new GameObject[3];
-        //temp[0] = objectPrefabs[0];
-        //temp[1] = objectPrefabs[1];
-        //temp[2] = objectPrefabs[2];
-        for (int i = 1; i < 80; i++) {
-            objectPrefabs[i] = objectPrefabs[0];
-        }
     }
 
     // Update is called once per frame
@@ -55,6 +49,24 @@ public class ObjectSpawningController : MonoBehaviour
     }
 
     public void spawnSceneItems() {
+        /*
+        var num = new List<int>();
+        num.Add(0);
+        num.Add(2);
+        num.Add(4);
+        num.Add(5);
+        num.Add(8);
+        num.Add(12);
+        num.Add(14);
+        if (_placedObjects.Count != 0) return;
+        Debug.Log("spawn: wrong");
+        for (int i = 0; i < 7; i++)
+        {
+            var landscape = Instantiate(objectPrefabs[i], new Vector3(i *0.3F, -1.199F, 0), Quaternion.identity);
+
+            _placedObjects.Add(landscape);  
+        }
+        */
         phoneCamera.StopInference();
         objectList.Clear();
         Debug.Log("spawn: A" + phoneCamera.SceneItemsLocations.Count);
@@ -73,6 +85,7 @@ public class ObjectSpawningController : MonoBehaviour
 
         spawnFilterObject(maxObjectNum);
         Debug.Log("spawn: D" + _placedObjects.Count);
+        
     }
 
     private Dictionary<string, HashSet<DataPoint>> TransformRays(List<Tuple<Ray, string, float>> Rays) {
@@ -150,31 +163,30 @@ public class ObjectSpawningController : MonoBehaviour
     private void spawnFilterObject(int maxObjectNum) {
         Debug.Log("spawn: " + objectList.Count);
 
-        int index = 0;
         IGameboard gameboard = ARCtrl.GetActiveGameboard();
         foreach (var x in objectList)
         {
-            if (index < maxObjectNum)
-            {
-                index++;
-                if (/*gameboard.CheckFit(center: x.Value.Item2, 0.01f)*/true)
-                {
-                    int i = objectClass.FindIndex(a => a == x.Value.Item1);
-                    Debug.Log("spawn: "+i+" " +x.Value.Item1);
-                    Debug.Log("spawn: " + objectClass[3]);
-                    if (i>= 0)
-                    {
-                        Debug.Log("spawn: spawn");
-                        var landscape = Instantiate(objectPrefabs[i], x.Value.Item2, Quaternion.identity);
-                        var test = landscape.GetComponentInChildren<TextMeshPro>();
-                        test.text = x.Value.Item1;
-                        landscape.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                        _placedObjects.Add(landscape);
-                        continue;
-                    }
-                }
+            if (_placedObjects.Count >= maxObjectNum) break;
+
+            if (/*!gameboard.CheckFit(center: x.Value.Item2, 0.01f)*/
+        false) continue;
+            
+            int i = objectClass.FindIndex(a => a == x.Value.Item1);
+            Debug.Log("spawn: "+i+" " +x.Value.Item1);
+
+            if (i< 0) continue;
+
+
+            Debug.Log("spawn: spawn");
+            var landscape = Instantiate(objectPrefabs[i], x.Value.Item2, Quaternion.identity);
+
+            if (objectPrefabs[i].name == "TextCube Variant") {
+                var text = landscape.GetComponentInChildren<TextMeshPro>();
+                text.text = x.Value.Item1;
+                landscape.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
-            objectList.Remove(x.Key);
+
+            _placedObjects.Add(landscape);            
         }
     }
 
@@ -185,7 +197,6 @@ public class ObjectSpawningController : MonoBehaviour
                                                            // Intersect the Gameboard with the ray
         if (b)
         {
-            Debug.Log("spawn: true");
             // Check whether the object can be fit in the resulting position
             if (gameboard.CheckFit(center: hitPoint, 0.01f))
             {

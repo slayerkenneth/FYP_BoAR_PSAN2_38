@@ -15,7 +15,7 @@ namespace CodeMonkey.HealthSystemCM {
 
 
         private void Awake() {
-            healthSystem = new HealthSystem(100);
+            healthSystem = new HealthSystem(100, gameObject);
 
             healthSystem.OnDead += HealthSystem_OnDead;
             healthSystem.OnDamaged += HealthSystem_OnDamaged;

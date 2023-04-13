@@ -33,12 +33,15 @@ public abstract class WeaponStat : ScriptableObject
     public abstract void UpdateStat(GameObject player);
 }
 
+[CreateAssetMenu(fileName = "PlayerStatus", menuName = "PlayerStatus")]
 public class PlayerStatus : ScriptableObject
 {
-    public int currentHP, maxHP, money, speed, weaponLv, currentLevel;
+    public int currentHP, maxHPLv, money, speedLv, weaponLv, currentLevel;
     public ActiveClass activeClass;
     public PassiveClass passiveClass;
     public WeaponStat weaponStat;
+    public List<int> maxHPStat;
+    public List<float> speedStat;
 
     private static PlayerStatus _currentPlayer;
 
@@ -49,13 +52,17 @@ public class PlayerStatus : ScriptableObject
     {
         get {
             if (!_currentPlayer) {
-                _currentPlayer = ScriptableObject.CreateInstance<PlayerStatus>();
+                PlayerStatus defaultStat = (PlayerStatus)Resources.Load<PlayerStatus>("PlayerStatus/Default");
+                _currentPlayer = CreateInstance<PlayerStatus>();
                 _currentPlayer.currentHP = 100;
-                _currentPlayer.maxHP = 100;
+                _currentPlayer.maxHPLv = 0;
                 _currentPlayer.money = 0;
-                _currentPlayer.speed = 1;
+                _currentPlayer.speedLv = 1;
                 _currentPlayer.weaponLv = 0;
                 _currentPlayer.currentLevel = 0;
+                _currentPlayer.maxHPStat = defaultStat.maxHPStat;
+                _currentPlayer.speedStat = defaultStat.speedStat;
+
                 _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
                 // _currentPlayer.activeClass = (ProfessorActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
                 _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));

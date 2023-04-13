@@ -79,6 +79,23 @@ namespace Assets.Scripts
             return (upper > test && lower < test);        
         }
 
+        Tensor ExecuteInParts(IWorker worker, Tensor I, int syncEveryNthLayer = 5)
+        {
+            var executor = worker.StartManualSchedule(I);
+            var it = 0;
+            bool hasMoreWork;
+
+            do
+            {
+                hasMoreWork = executor.MoveNext();
+                if (++it % syncEveryNthLayer == 0)
+                    worker.FlushSchedule();
+
+            } while (hasMoreWork);
+
+            return worker.PeekOutput("output0");
+        }
+
         public IEnumerator Detect(Color32[] picture, int width, Rect rect, System.Action<IList<BoundingBox>> callback)
         {
 
@@ -87,15 +104,38 @@ namespace Assets.Scripts
                 var inputs = new Dictionary<string, Tensor>();
                 var layer = new Dictionary<int, Tensor>();
                 inputs.Add(INPUT_NAME, tensor);
-                yield return StartCoroutine(worker.StartManualSchedule(inputs));
-
+                //yield return StartCoroutine(worker.StartManualSchedule(inputs));
+                worker.Execute(inputs);
                 var output = worker.PeekOutput("output0");
+                //var output = ExecuteInParts(worker, tensor);
+
+
+
+
+                //var executor = worker.StartManualSchedule(tensor);
+                //var it = 0;
+                //bool hasMoreWork;
+                //
+                //do
+                //{
+                //    hasMoreWork = executor.MoveNext();
+                //    if (++it % 10 == 0)
+                //        yield return new WaitForEndOfFrame();
+                //
+                //} while (hasMoreWork);
+                //
+                //var output = worker.PeekOutput("output0");
+
+
+
+
 
                 var results = ParseYoloV8Output(output, MINIMUM_CONFIDENCE);
                 var boxes = FilterBoundingBoxes(results, OBJECTS_LIMIT, MINIMUM_CONFIDENCE);
                 foreach (KeyValuePair<int, Tensor> l in layer) l.Value.Dispose();
                 tensor.Dispose();
                 callback(boxes);
+                yield return null;
             }
         }
 
@@ -137,15 +177,15 @@ namespace Assets.Scripts
             }
 
 
-            var dirPath = Application.dataPath + "/../SaveImages/";
-
-            byte[] bytes2 = test.EncodeToPNG();
-            if (!System.IO.Directory.Exists(dirPath))
-            {
-                print(dirPath);
-                Directory.CreateDirectory(dirPath);
-            }
-            File.WriteAllBytes(dirPath + "Image4.png", bytes2);
+            //var dirPath = Application.dataPath + "/../SaveImages/";
+            //
+            //byte[] bytes2 = test.EncodeToPNG();
+            //if (!System.IO.Directory.Exists(dirPath))
+            //{
+            //    print(dirPath);
+            //    Directory.CreateDirectory(dirPath);
+            //}
+            //File.WriteAllBytes(dirPath + "Image4.png", bytes2);
 
 
 

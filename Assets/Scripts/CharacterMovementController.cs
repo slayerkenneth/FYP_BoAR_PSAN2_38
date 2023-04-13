@@ -13,6 +13,7 @@ public class CharacterMovementController : MonoBehaviour
     [Header("Character param")]
     [SerializeField] private Vector3 playerVelocity;
     [SerializeField] private float playerSpeed = 2.0f;
+    private float currentSpeed;
     [SerializeField] private float rollingSpeed = 4.0f;
     [SerializeField] private Vector3 rollingDir;
     [SerializeField] private float jumpHeight = 0.4f;
@@ -66,6 +67,7 @@ public class CharacterMovementController : MonoBehaviour
         maxHP = playerOwnHealthSystem.GetHealthSystem().GetHealthMax();
         playerOwnCombatHandler.InitHP(maxHP);
         PlayerWeaponSkillCtrl = FindObjectOfType<PlayerWeaponSkillController>();
+        currentSpeed = playerSpeed;
     }
 
     void Update()
@@ -86,7 +88,7 @@ public class CharacterMovementController : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("rolling")) 
             controller.Move(rollingDir * Time.deltaTime * rollingSpeed); 
         else
-            controller.Move(move.normalized * Time.deltaTime * playerSpeed);
+            controller.Move(move.normalized * Time.deltaTime * currentSpeed);
 
         if (move != Vector3.zero)
         {
@@ -95,7 +97,6 @@ public class CharacterMovementController : MonoBehaviour
 
         if (movementInput.magnitude != 0)
         {
-            Debug.Log("Move: " + movementInput);
             if(animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) animator.Play("Run");
             _activeGameboard.FindNearestFreePosition(transform.position, out nearestBoardPosition);
             debugLog.text = debugLog.text + " Player nearest board pos " + nearestBoardPosition.ToString();
@@ -118,6 +119,10 @@ public class CharacterMovementController : MonoBehaviour
         else if (mapper.Player.Defense.triggered)
         {
             rollingDir = gameObject.transform.forward.normalized;
+            //if (PlayerStatus.CurrentPlayer.passiveClass != null) {
+            //    Debug.Log("dead: end");
+            //    PlayerStatus.CurrentPlayer.passiveClass.EndPassive(gameObject); 
+            //}
             Rolling();
         }
         else if (mapper.Player.CastSkill.triggered)
@@ -173,13 +178,23 @@ public class CharacterMovementController : MonoBehaviour
         return transform.localPosition;
     }
 
-    public void increaseSpeed(float speedIncrease, float time) { 
-        //???
-    }
     
     public Transform getCharacterTransform()
     {
         return transform;
+    }
     
+    public void setSpeed(float speed)
+    {
+        currentSpeed = speed;
+    }
+
+    public void resetSpeed()
+    {
+        currentSpeed = playerSpeed;
+    }
+    public float getSpeed()
+    {
+        return playerSpeed;
     }
 }

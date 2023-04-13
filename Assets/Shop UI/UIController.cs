@@ -280,9 +280,9 @@ public class UIController : MonoBehaviour
         if (PlayerStatus== null) return;
         Debug.Log(PlayerStatus);
         recentHealth = PlayerStatus.currentHP;
-        totalHealth = PlayerStatus.maxHP;
+        totalHealth = PlayerStatus.maxHPStat[PlayerStatus.maxHPLv];
         recentMoney = PlayerStatus.money;
-        recentWeaponLV = PlayerStatus.weaponLv;
+        recentWeaponLV = PlayerStatus.weaponStat.lv;
         recentClass1LV = PlayerStatus.activeClass.lv;
         recentClass2LV = PlayerStatus.passiveClass.lv;
 

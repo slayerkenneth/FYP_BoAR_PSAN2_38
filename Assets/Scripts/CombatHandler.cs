@@ -10,6 +10,7 @@ public class CombatHandler : MonoBehaviour
     // Every Enemy, Player, maybe DTower, and anything interact with Central Battle Controller have this component
     [Header("Battle Parameters")] 
     [SerializeField] private float hp;
+    [SerializeField] private float shield;
     [SerializeField] private float skillCoolDown;
     public float UpgradeDamagePercentage = 100;
     [SerializeField] private List<Collider> AttackingColliders;
@@ -17,12 +18,14 @@ public class CombatHandler : MonoBehaviour
     [SerializeField] private CombatHandler AttackTarget;
     [SerializeField] private CombatHandler DamageSource;
     [SerializeField] private HealthSystemComponent healthSystemComponent;
+    [SerializeField] private float extraDamage = 0.0F;
 
 
     [Header("Reference")] 
     [SerializeField] private ARController ARCtrl;
     [SerializeField] private GameFlowController GameFlowCtrl;
     [SerializeField] private CentralBattleController CentralBattleCtrl;
+
 
     // Start is called before the first frame update
     void Start()
@@ -36,41 +39,76 @@ public class CombatHandler : MonoBehaviour
         
     }
 
+    public void setExtraDamage(float extra) {
+        extraDamage = extra;
+    }
+
+    public void resetExtraDamage() {
+        extraDamage = 0.0F;
+    }
+
     public void DoDamage(CombatHandler targetHitTarget, float damageAmount)
     {
-        damageAmount = damageAmount * UpgradeDamagePercentage / 100;
-        Debug.Log(this + " " + damageAmount);
-        CentralBattleCtrl.DamageTransfer(targetHitTarget, damageAmount, this);
+        CentralBattleCtrl.DamageTransfer(targetHitTarget, damageAmount + extraDamage, this);
     }
 
     public void ReceiveDamage(float damageAmount, CombatHandler attacker)
     {
-        Debug.Log("ReceiveDamage");
         float modifiedDamageAmount;
         PlayerWeaponSkillController playerWeaponSkillController;
         if (TryGetComponent<PlayerWeaponSkillController>(out playerWeaponSkillController))
         {
             modifiedDamageAmount = playerWeaponSkillController.OnrecieveDamage(damageAmount, attacker);
-            Debug.Log("Receive no Damage: " + modifiedDamageAmount);
         }
         else {
             modifiedDamageAmount = damageAmount;
         }
         
-        var tempHP = hp - modifiedDamageAmount;
-        if (hp <= 0)
+        shield -= modifiedDamageAmount;
+        if (shield < 0)
         {
-            hp = 0;
+            hp += shield;
+            shield = 0;
+
+            if (hp < 0)
+            {
+                hp = 0;
+            }
+        }
+
+        healthSystemComponent.GetHealthSystem().Damage(modifiedDamageAmount);
+    }
+
+    public void ReceiveHeal(float healAmount)
+    {
+        
+        var tempHP = hp + healAmount;
+        var maxHP = healthSystemComponent.GetHealthSystem().GetHealthMax();
+        if (tempHP > maxHP)
+        {
+            hp = maxHP;
         }
         else hp = tempHP;
-        healthSystemComponent.GetHealthSystem().Damage(modifiedDamageAmount);
+        healthSystemComponent.GetHealthSystem().Heal(healAmount);
+    }
+
+    public void ReceiveShield(float shieldAmount)
+    {
+
+        shield += shieldAmount;
+        healthSystemComponent.GetHealthSystem().Shield(shieldAmount);
     }
 
     public float GetCurrentHP()
     {
         return hp;
     }
-    
+
+    public float GetCurrentShield()
+    {
+        return shield;
+    }
+
     // Only called in initialization
     public void InitHP(float initHP)
     {
