@@ -36,8 +36,8 @@ public class PlayerSpawner : MonoBehaviour
                 // ui.SetHealthSystem(new HealthSystem(PlayerStatusRef.maxHP));
                 ui.SetHealthSystem(charCombat.GetHealthSystemComponent().GetHealthSystem());
                 charCombat.GetHealthSystemComponent().GetHealthSystem()
-                    .SetHealthMax(PlayerStatusRef.maxHP, true);
-                charCombat.GetHealthSystemComponent().GetHealthSystem().Damage(PlayerStatusRef.maxHP- PlayerStatusRef.currentHP);
+                    .SetHealthMax(PlayerStatusRef.maxHPStat[PlayerStatusRef.maxHPLv], true);
+                charCombat.GetHealthSystemComponent().GetHealthSystem().SetHealth(PlayerStatusRef.currentHP);
             }
         }
         

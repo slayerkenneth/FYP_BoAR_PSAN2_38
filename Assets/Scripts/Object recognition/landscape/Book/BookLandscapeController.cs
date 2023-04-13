@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BookController : LandscapeController
+public class BookLandscapeController : LandscapeController
 {
     public float duration;              //duration that the prompt last
     public GameObject PromptPrefabs;
