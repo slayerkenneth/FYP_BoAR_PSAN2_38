@@ -52,6 +52,8 @@ public class StatueController : LandscapeController
             Active = false;
             remainCD = CD;
             ActiveSign.Stop();
+            OnCollectStart();
+
             var combat = other.GetComponent<CombatHandler>();
             combat.setExtraDamage(extraDamage);
             var movement = other.GetComponent<CharacterMovementController>();

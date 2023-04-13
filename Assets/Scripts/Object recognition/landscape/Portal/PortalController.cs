@@ -19,8 +19,9 @@ public class PortalController : LandscapeController
             Active = false;
             remainCD = CD;
             ActiveSign.Stop();
-        
-            foreach(var part in teleportEffect)part.Play();
+            OnCollectStart();
+
+            foreach (var part in teleportEffect)part.Play();
         
             TimeEclipse = 0;
             onEffect = true;

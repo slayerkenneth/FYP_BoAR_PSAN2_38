@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHP: 100
   maxHPLv: 0
-  money: 0
+  money: 940
   speedLv: 0
   weaponLv: 0
   currentLevel: 0
-  activeClass: {fileID: 11400000, guid: 42d64901243d5274c8708dbd3785a585, type: 2}
-  passiveClass: {fileID: 11400000, guid: f48509eeb843a5244889865f5d58c93f, type: 2}
+  activeClass: {fileID: 11400000, guid: 54a2b9faa325f2a438cbf4c0647395d8, type: 2}
+  passiveClass: {fileID: 11400000, guid: 2def4a4df52d4a044a4fb2aa6782f3b4, type: 2}
   weaponStat: {fileID: 11400000, guid: 02a7c1ace04c74343be4ee4d9e3c1aa6, type: 2}
   maxHPStat: 640000006e00000078000000820000008c00000096000000a0000000aa000000b4000000be000000
   speedStat:

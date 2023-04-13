@@ -18,6 +18,8 @@ public class WaterfallController : LandscapeController
             Active = false;
             remainCD = CD;
             ActiveSign.Stop();
+            OnCollectStart();
+
             TimeEclipse = 0;
             isHealing = true;
             target = other.GetComponent<CombatHandler>();

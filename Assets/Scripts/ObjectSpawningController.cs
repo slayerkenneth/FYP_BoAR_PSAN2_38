@@ -49,7 +49,8 @@ public class ObjectSpawningController : MonoBehaviour
     }
 
     public void spawnSceneItems() {
-        /*var num = new List<int>();
+        /*
+        var num = new List<int>();
         num.Add(0);
         num.Add(2);
         num.Add(4);
@@ -61,9 +62,11 @@ public class ObjectSpawningController : MonoBehaviour
         Debug.Log("spawn: wrong");
         for (int i = 0; i < 7; i++)
         {
-            
-        }*/
+            var landscape = Instantiate(objectPrefabs[i], new Vector3(i *0.3F, -1.199F, 0), Quaternion.identity);
 
+            _placedObjects.Add(landscape);  
+        }
+        */
         phoneCamera.StopInference();
         objectList.Clear();
         Debug.Log("spawn: A" + phoneCamera.SceneItemsLocations.Count);
@@ -82,6 +85,7 @@ public class ObjectSpawningController : MonoBehaviour
 
         spawnFilterObject(maxObjectNum);
         Debug.Log("spawn: D" + _placedObjects.Count);
+        
     }
 
     private Dictionary<string, HashSet<DataPoint>> TransformRays(List<Tuple<Ray, string, float>> Rays) {
@@ -164,7 +168,8 @@ public class ObjectSpawningController : MonoBehaviour
         {
             if (_placedObjects.Count >= maxObjectNum) break;
 
-            if (/*!gameboard.CheckFit(center: x.Value.Item2, 0.01f)*/false) continue;
+            if (/*!gameboard.CheckFit(center: x.Value.Item2, 0.01f)*/
+        false) continue;
             
             int i = objectClass.FindIndex(a => a == x.Value.Item1);
             Debug.Log("spawn: "+i+" " +x.Value.Item1);

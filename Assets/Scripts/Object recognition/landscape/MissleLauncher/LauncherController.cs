@@ -16,6 +16,7 @@ public class LauncherController : LandscapeController
             Active = false;
             remainCD = CD;
             ActiveSign.Stop();
+            OnCollectStart();
 
             var enemyList = GameObject.FindGameObjectsWithTag("Enemy");
 

@@ -27,6 +27,7 @@ public class BookController : LandscapeController
             Active = false;
             remainCD = CD;
             ActiveSign.Stop();
+            OnCollectStart();
 
             Player = other.gameObject;
             TimeEclipse = 0;
