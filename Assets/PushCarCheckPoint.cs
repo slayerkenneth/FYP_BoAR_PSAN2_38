@@ -7,10 +7,15 @@ public class PushCarCheckPoint : MonoBehaviour
 {
     public static List<PushCarCheckPoint> GlobalCheckPoints = new List<PushCarCheckPoint>();
     public bool CarPassed = false;
+    public PushCarCheckPoint nextCheckPoint;
     // Start is called before the first frame update
     void Start()
     {
         GlobalCheckPoints.Add(this);
+        if (GlobalCheckPoints.Count > 1)
+        {
+            GlobalCheckPoints[^1].nextCheckPoint = this;
+        }
     }
 
     public void OnTriggerEnter(Collider other)
@@ -18,6 +23,10 @@ public class PushCarCheckPoint : MonoBehaviour
         if (other.CompareTag("PushItem"))
         {
             CarPassed = true;
+            if (nextCheckPoint)
+            {
+                other.GetComponent<PushTarget>().SetOrientation(nextCheckPoint.transform);
+            }
         }
     }
 }

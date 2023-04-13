@@ -12,6 +12,8 @@ public class PushCarController : MonoBehaviour
     private void Start()
     {
         SpawnCar();
+        var Position = PushCarCheckPoint.GlobalCheckPoints[1].transform.position;
+        ActiveCar.transform.position = Position;
     }
 
     public void Update()

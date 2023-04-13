@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PushTarget : MonoBehaviour
 {
+    public float speed;
+    public float rotationSpeed;
     public float nearByRadius;
     public bool pushing;
     public List<GameObject> checkPoints;
@@ -33,8 +35,10 @@ public class PushTarget : MonoBehaviour
         
     }
 
-    public void SetOrientation(Vector3 direction)
+    public void SetOrientation(Transform target)
     {
-        
+        Vector3 direction = (target.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
     }
 }
