@@ -79,7 +79,6 @@ public class BackpackController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         if (Activated)
         {
             if (other.CompareTag("Enemy"))

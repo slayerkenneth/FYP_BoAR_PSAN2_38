@@ -103,8 +103,10 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            ValidHit = true;
-            currentAttackingTarget = other.transform.GetComponent<CombatHandler>();
+            if (other.transform.CompareTag("Player") || other.transform.CompareTag("PlayerMinion"))
+            {
+                CombatHandler.DoDamage(other.transform.GetComponent<CombatHandler>(), 10f);
+            }
         }
     }
 

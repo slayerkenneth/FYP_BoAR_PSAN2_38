@@ -180,5 +180,6 @@ public class CharacterMovementController : MonoBehaviour
     public Transform getCharacterTransform()
     {
         return transform;
+    
     }
 }

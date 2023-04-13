@@ -11,6 +11,7 @@ public class CombatHandler : MonoBehaviour
     [Header("Battle Parameters")] 
     [SerializeField] private float hp;
     [SerializeField] private float skillCoolDown;
+    public float UpgradeDamagePercentage = 100;
     [SerializeField] private List<Collider> AttackingColliders;
     [SerializeField] private List<Collider> DamageTakingColliders;
     [SerializeField] private CombatHandler AttackTarget;
@@ -37,6 +38,8 @@ public class CombatHandler : MonoBehaviour
 
     public void DoDamage(CombatHandler targetHitTarget, float damageAmount)
     {
+        damageAmount = damageAmount * UpgradeDamagePercentage / 100;
+        Debug.Log(this + " " + damageAmount);
         CentralBattleCtrl.DamageTransfer(targetHitTarget, damageAmount, this);
     }
 
@@ -78,6 +81,11 @@ public class CombatHandler : MonoBehaviour
     public void SetCentralCombatHandler(CentralBattleController cbc)
     {
         CentralBattleCtrl = cbc;
+    }
+
+    public CentralBattleController GetCentralCombatHandler()
+    {
+        return CentralBattleCtrl;
     }
 
     public List<Collider> GetAttackingColliders()

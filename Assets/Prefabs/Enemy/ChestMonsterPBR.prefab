@@ -815,6 +815,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 100
   skillCoolDown: 0
+  UpgradeDamagePercentage: 100
   AttackingColliders:
   - {fileID: 5893417353482831913}
   DamageTakingColliders:

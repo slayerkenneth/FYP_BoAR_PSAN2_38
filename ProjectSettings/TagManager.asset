@@ -11,6 +11,7 @@ TagManager:
   - LoseUI
   - PushItem
   - AttackPoint
+  - PlayerMinion
   layers:
   - Default
   - TransparentFX
