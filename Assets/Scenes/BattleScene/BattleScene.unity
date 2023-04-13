@@ -1648,6 +1648,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CarPrefab: {fileID: 6277496389183865309, guid: 887168661fa2d554c81c54c8e25534d6,
     type: 3}
+  ActiveCar: {fileID: 6277496389183865309, guid: 887168661fa2d554c81c54c8e25534d6,
+    type: 3}
+  GameFlowController: {fileID: 1451593558}
 --- !u!1001 &399850315
 PrefabInstance:
   m_ObjectHideFlags: 0

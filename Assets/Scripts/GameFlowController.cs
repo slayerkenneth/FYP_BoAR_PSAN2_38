@@ -375,6 +375,7 @@ public class GameFlowController : MonoBehaviour
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
                 ClearActiveRouteTiles();
+                ActivePushCarParent.GetComponentInChildren<PushCarController>().DespawnCar();
                 Destroy(ActivePushCarParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
@@ -634,7 +635,18 @@ public class GameFlowController : MonoBehaviour
             foreach (var checkpoint in ActiveRouteTilesLocations)
             {
                 var checkObject = Instantiate(CheckPointPrefab, checkpoint, rotQ , TileParent.transform);
+                CarCheckPointGameObjects.Add(checkObject);
             }
+            
+            // Scene init
+            ActivePushCarParent = Instantiate(PushCarParentPrefab);
+            if (ActivePushCarParent != null) ActivePushCarParent.SetActive(true);
+            var pcCtrl = ActivePushCarParent.GetComponentInChildren<PushCarController>();
+            pcCtrl.GameFlowController = this;
+            pcCtrl.SetCheckPoint(CarCheckPointGameObjects);
+
+            ActivePushCarParent.transform.position = Vector3.zero;
+            
             var final = GenerateConnectingTileLocations(ActiveRouteTilesLocations, tileInterval);
             ClearActiveRouteTileLocations();
             foreach (var point in final)
@@ -1122,10 +1134,13 @@ public class GameFlowController : MonoBehaviour
 
     void InitPushCarMode()
     {
-        ActivePushCarParent = Instantiate(PushCarParentPrefab);
-        if (ActivePushCarParent != null) ActivePushCarParent.SetActive(true);
-        PushTarget = ActivePushCarParent.GetComponentInChildren<PushTarget>();
-        ActivePushCarParent.transform.position = Vector3.zero;
+        // ActivePushCarParent = Instantiate(PushCarParentPrefab);
+        // if (ActivePushCarParent != null) ActivePushCarParent.SetActive(true);
+        // var pcCtrl = ActivePushCarParent.GetComponentInChildren<PushCarController>();
+        // pcCtrl.GameFlowController = this;
+        // pcCtrl.SetCheckPoint(CarCheckPointGameObjects);
+        //
+        // ActivePushCarParent.transform.position = Vector3.zero;
     }
 
     #endregion
