@@ -8,23 +8,26 @@ public class PushCarController : MonoBehaviour
     public GameObject CarPrefab;
     public GameObject ActiveCar;
     public GameFlowController GameFlowController;
-
+    
+    private bool gameEnd = true;
     private void Start()
     {
         SpawnCar();
-        var Position = PushCarCheckPoint.GlobalCheckPoints[1].transform.position;
+        var Position = PushCarCheckPoint.GlobalCheckPoints[0].transform.position;
         ActiveCar.transform.position = Position;
+        ActiveCar.GetComponent<PushTarget>().SetOrientation(PushCarCheckPoint.GlobalCheckPoints[1].transform);
     }
 
     public void Update()
     {
-        if (PushCarCheckPoint.GlobalCheckPoints.Count < 1) return;
-        if (PushCarCheckPoint.GlobalCheckPoints.TrueForAll(car => car.CarPassed))
+        // Assume game end 
+        gameEnd = true;
+        PushCarCheckPoint.GlobalCheckPoints.ForEach(point =>
         {
-            GameFlowController.BattleEndFlag = true;
-            PushCarCheckPoint.GlobalCheckPoints.ForEach(i=> Destroy(i.transform));
-            PushCarCheckPoint.GlobalCheckPoints.Clear();
-        }
+            if (!point.CarPassed) gameEnd = false;
+        });
+
+        if (gameEnd) GameFlowController.BattleEndFlag = true;
     }
 
     public void SpawnCar()
