@@ -14,19 +14,7 @@ public class PushCarCheckPoint : MonoBehaviour
         GlobalCheckPoints.Add(this);
         if (GlobalCheckPoints.Count > 1)
         {
-            GlobalCheckPoints[^1].nextCheckPoint = this;
-        }
-    }
-
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("PushItem"))
-        {
-            CarPassed = true;
-            if (nextCheckPoint)
-            {
-                other.GetComponent<PushTarget>().SetOrientation(nextCheckPoint.transform);
-            }
+            GlobalCheckPoints[GlobalCheckPoints.Count - 2].nextCheckPoint = this;
         }
     }
 }

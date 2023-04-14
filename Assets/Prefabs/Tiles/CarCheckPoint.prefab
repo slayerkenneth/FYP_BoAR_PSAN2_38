@@ -19546,7 +19546,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 1.16
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4220177997078855700
 MonoBehaviour:
@@ -19560,6 +19560,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a302ef4bdb0e47d1b606452f700fcea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CarPassed: 0
+  nextCheckPoint: {fileID: 0}
 --- !u!1 &8598798586939600705
 GameObject:
   m_ObjectHideFlags: 0
