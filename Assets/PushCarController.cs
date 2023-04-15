@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PushCarController : MonoBehaviour
@@ -27,7 +28,12 @@ public class PushCarController : MonoBehaviour
             if (!point.CarPassed) gameEnd = false;
         });
 
-        if (gameEnd) GameFlowController.BattleEndFlag = true;
+        if (gameEnd)
+        {
+            GameFlowController.BattleEndFlag = true;
+            PushCarCheckPoint.GlobalCheckPoints.ForEach(o=>Destroy(o.GameObject()));
+            PushCarCheckPoint.GlobalCheckPoints.Clear();
+        }
     }
 
     public void SpawnCar()
