@@ -6,9 +6,9 @@ Enemy: ykdj@gh42gio
 You: What did you say?
 Enemy: You better watch out...
 -> Run
-    <<jump Run>>
+    [[Run]]
 -> Talk it out
-    <<jump TalkItOut>>
+    [[TalkItOut]]
 ===
 title: Run
 ---
