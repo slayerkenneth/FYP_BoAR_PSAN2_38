@@ -95,7 +95,7 @@ public class CharacterMovementController : MonoBehaviour
 
         if (movementInput.magnitude != 0)
         {
-            Debug.Log("Move: " + movementInput);
+            //Debug.Log("Move: " + movementInput);
             if(animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) animator.Play("Run");
             _activeGameboard.FindNearestFreePosition(transform.position, out nearestBoardPosition);
             debugLog.text = debugLog.text + " Player nearest board pos " + nearestBoardPosition.ToString();

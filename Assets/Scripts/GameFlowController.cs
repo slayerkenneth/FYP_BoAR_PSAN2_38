@@ -997,6 +997,11 @@ public class GameFlowController : MonoBehaviour
     {       
         return playerOwnCombatHandler;
     }
+
+    public PVEBattleSceneState GetBattleSceneState()
+    {       
+        return battleSceneState;
+    }
     #endregion
 
     #region End Battle Sequence Conclusion(Reward or Die to return start)

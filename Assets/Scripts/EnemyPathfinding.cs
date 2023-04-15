@@ -11,6 +11,7 @@ using UnityEngine.AI;
 
 public class EnemyPathfinding : MonoBehaviour
 {
+
     
     public LayerMask whatIsGround; //ARDK_Gameboard
     public LayerMask whatIsPlayer; //add a layer mask on player
@@ -22,6 +23,7 @@ public class EnemyPathfinding : MonoBehaviour
     //public GameObject playerPrefab;
     //private bool attackTower;
     private Transform player;
+    private bool hasSpawnPlayer = false;
     private Transform tower;
     public GameFlowController GameFlowCtrl;
     private bool towerSpawned;
@@ -62,8 +64,8 @@ public class EnemyPathfinding : MonoBehaviour
     private float colliderRange;
     private float attackTime;
     
+    //Jump
     private float jumpDistance = 1;
-    
     private int jumpPenalty = 2;
     
     private PathFindingBehaviour pathFindingBehaviour = PathFindingBehaviour.InterSurfacePreferResults;
@@ -138,66 +140,141 @@ public class EnemyPathfinding : MonoBehaviour
     {
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-        calmDownTime = calmDownTime - Time.deltaTime;
-        if (calmDownTime <= 0)
-        {
-            calmDown = false;
-        }
-        
-        //using check capsules
-        hitColliders = Physics.OverlapSphere(this.transform.position, colliderRange, whatIsEnemy); 
-        if(hitColliders.Length == 1 && hitColliders[0].gameObject == this.gameObject)
-        {
-            dealWithOverlap = false;
-        }
-        else
-        {
-            dealWithOverlap = true;
-            for (int i = 0; i < hitColliders.Length; ++i)
-            { 
-                if (hitColliders[i].gameObject != this.gameObject)
-                {
-                    //Debug.Log(this.name + " " + hitColliders[i].gameObject.name);
-                    DealWithOverlap(hitColliders[i]);
-                }
-            } 
-        }     
+        // if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer)
+        //     hasSpawnPlayer = true;
 
         if(!dealWithOverlap)
         {
-            if (calmDown || (!playerInSightRange && !playerInAttackRange))
+            if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.PushCarBattleMode)
             {
-                if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer)
+                Debug.Log("Halo1");
+            }
+            else if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.CapturePointMode)
+            {
+                Debug.Log("Halo2");
+            }
+
+            else if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.DefencePointMode)
+            {
+                Debug.Log("Halo3");
+                if (!playerInSightRange && !playerInAttackRange)
+                {
                     GoToTower();
+                }
+                if (playerInSightRange && !playerInAttackRange) 
+                {
+                    ChasePlayer();
+                }
+                if (playerInAttackRange && playerInSightRange) 
+                {
+                    AttackPlayer();
+                }
             }
-                
-            if (!calmDown && playerInSightRange && !playerInAttackRange) 
+            else if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.DungeonMode)
             {
-                ChasePlayer();
+                Debug.Log("Halo4");
             }
-            if (!calmDown && playerInAttackRange && playerInSightRange) 
+            else if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.BossFight)
             {
-                AttackPlayer();
+                Debug.Log("Halo5");
             }
-        }       
+        }  
+             
     }
+
+    // public void DealWithOverlap(Collider hitCollider)
+    // {   
+    //     Vector3 newPosition;
+    //     if (playerInSightRange)
+    //     {
+    //         playerPosition = GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition();
+    //         playerToCollider = Vector3.Distance(hitCollider.gameObject.transform.position, playerPosition);
+    //         playerToThis = Vector3.Distance(this.transform.position, playerPosition);
+    //         //Debug.Log("Show Player Distance: " + playerToCollider + " " + playerToThis);
+    //         if (playerToThis >= playerToCollider)
+    //         {
+    //             GoToTower();
+    //             calmDownTime = 5.0f;
+    //             calmDown = true;
+    //         }
+    //     }
+    // }
+
+    private void OnTriggerStay(Collider other) 
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            dealWithOverlap = true;
+            DealWithOverlap(other);
+        }
+        
+    }
+
+    private void OnTriggerExit(Collider other) 
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            dealWithOverlap = false;
+        }
+        
+    }
+
+    // public GameObject FindClosestPlayer(GameObject[] playerList)
+    // {
+    //     float distance = float.PositiveInfinity;
+    //     GameObject result_player = null;
+    //     foreach (GameObject player in playerList) 
+    //     {
+    //         Debug.Log(player.transform.name);
+    //         float temp_distance = Vector3.Distance(transform.localPosition, player.transform.localPosition);
+    //         // Debug.Log(enemy.transform.name + " " + temp_distance);
+    //         if (temp_distance < distance)
+    //         {
+    //             distance = temp_distance;
+    //             result_player = player;
+    //         }
+    //     }
+    //     return result_player;
+    // }
 
     public void DealWithOverlap(Collider hitCollider)
     {   
         Vector3 newPosition;
-        if (playerInSightRange)
+        var playerList = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
+        //GameObject closest_player = FindClosestPlayer(playerList);
+        float ColliderToPlayer = Vector3.Distance(hitCollider.gameObject.transform.position, playerList.transform.position);
+        float ThisToPlayer = Vector3.Distance(transform.position, playerList.transform.position);
+        //Debug.Log("Show Player Distance: " + ColliderToEnemy + " " + ThisToEnemy);
+        if (ThisToPlayer > ColliderToPlayer)
         {
-            playerPosition = GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition();
-            playerToCollider = Vector3.Distance(hitCollider.gameObject.transform.position, playerPosition);
-            playerToThis = Vector3.Distance(this.transform.position, playerPosition);
-            //Debug.Log("Show Player Distance: " + playerToCollider + " " + playerToThis);
-            if (playerToThis >= playerToCollider)
+            newPosition = CalculatingEnemyNewPath(gameObject);
+            transform.localPosition = Vector3.MoveTowards(transform.position, newPosition, 0.1f * Time.deltaTime);
+        }
+    }
+
+    public Vector3 CalculatingEnemyNewPath(GameObject col)
+    {
+        Vector3 newPosition;
+        float theta;
+        if (transform.localEulerAngles.y > col.transform.localEulerAngles.y)
+        {
+            theta = transform.localEulerAngles.y - 120;
+            if (theta < -180)
             {
-                GoToTower();
-                calmDownTime = 5.0f;
-                calmDown = true;
+                theta = 360 + theta;
             }
         }
+        else
+        {
+            theta = transform.localEulerAngles.y + 120;
+            if (theta > 180)
+            {
+                theta = 360 - theta;
+            }
+        }
+        
+        newPosition = new Vector3(transform.position.x + Mathf.Sin(theta) * 0.5f, transform.position.y, transform.position.z + Mathf.Cos(theta) * 0.5f);
+        return newPosition;
     }
 
     public void GoToTower()
@@ -260,12 +337,6 @@ public class EnemyPathfinding : MonoBehaviour
         else
             return false;
     }
-
-    public void RangeAttack()
-    {
-        
-    }
-
 
     public void StopMoving()
     {

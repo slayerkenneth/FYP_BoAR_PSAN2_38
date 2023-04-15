@@ -9,8 +9,11 @@ public class RangeAttack : MonoBehaviour
     public Transform enemy;
     public Transform target;
     private bool stopRangeAttack = false;
-    private float stayTime = 7f;
-    private Vector3 tempPosition;
+    private float stayTime = 5f;
+    private Vector3 player_tempPosition;
+    private Vector3 enemy_tempPosition;
+    private bool keepMoving = false;
+    private float changeInX, changeInY;
 
     public CombatHandler CombatHandler;
     public GameFlowController GameFlowCtrl;
@@ -25,54 +28,51 @@ public class RangeAttack : MonoBehaviour
     {
         if (target)
         {
-            if (stayTime == 7f)
+            if (stayTime == 5f)
             {
-                tempPosition = target.position;
+                player_tempPosition = target.localPosition;
+                enemy_tempPosition = enemy.localPosition;
+                transform.rotation = Quaternion.Euler(new Vector3(0, enemy.localEulerAngles.y, 0));
             }
-            transform.rotation = Quaternion.Euler(new Vector3(0, enemy.rotation.y * 180, 0));
-            transform.position = Vector3.MoveTowards(transform.position, tempPosition, velocity * Time.deltaTime);
+            
             stayTime -= Time.deltaTime;
 
             if (!stopRangeAttack)
             {      
+                // var direction = Mathf.Atan2(player_tempPosition.x - enemy_tempPosition.x, player_tempPosition.z - enemy_tempPosition.z) * Mathf.Rad2Deg;
+                // Debug.Log(direction);
                 if (Vector3.Distance(transform.position, target.position) < 0.05f)
                 {
-                    Debug.Log("Halo");
                     CombatHandler.DoDamage(target.GetComponent<CombatHandler>(), DamageAmount);
                     stopRangeAttack = true;
                     Destroy(gameObject);
                 }
-                else if (Vector3.Distance(transform.position, tempPosition) < 0.05f)
+                else 
                 {
-                    Destroy(gameObject);
-                }
-            // if (stayTime == 7f)
-            // {
-            //     tempPosition = target.position;
-            // }
-            // Debug.Log(enemy.rotation.z);
-            // transform.rotation = Quaternion.Euler(new Vector3(-90f, 0, enemy.rotation.y * 180));
-            // rb.AddForce(transform.forward * velocity, ForceMode.Impulse);
-            // //transform.position = Vector3.MoveTowards(transform.position, tempPosition, velocity * Time.deltaTime);
-            // stayTime -= Time.deltaTime;
+                    // Debug.Log("Halo2");
+                    if (Vector3.Distance(transform.position, player_tempPosition) < 0.05f || keepMoving)
+                    {
+                        var dir = Mathf.Atan2(player_tempPosition.x - enemy_tempPosition.x, player_tempPosition.z - enemy_tempPosition.z) * Mathf.Rad2Deg;
+                        // Debug.Log(dir);
+                        if (dir > 0)
+                            changeInX = Mathf.Abs(Mathf.Sin(dir * Mathf.Deg2Rad));
+                        else
+                            changeInX = -Mathf.Abs(Mathf.Sin(dir * Mathf.Deg2Rad));
 
-            // if (!stopRangeAttack)
-            // {
-            //     if(Vector3.Distance(transform.position, target.position) < 0.05f)
-            //     {
-            //         if (target.CompareTag("Player"))
-            //         {
-            //             CombatHandler.DoDamage(GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform().GetComponent<CombatHandler>(), damage);
-            //             stopRangeAttack = true;
-            //             Destroy(gameObject);
-            //         }
-            //     }
-            //     if (stayTime <= 0)
-            //     {
-            //         stopRangeAttack = true;
-            //         Destroy(gameObject);
-            //     }
-            // }
+                        if (dir > -90 && dir < 90)
+                            changeInY = Mathf.Abs(Mathf.Cos(dir * Mathf.Deg2Rad));
+                        else
+                            changeInY = -Mathf.Abs(Mathf.Cos(dir * Mathf.Deg2Rad));
+                            
+                        player_tempPosition = new Vector3(transform.position.x + changeInX, transform.position.y, transform.position.z + changeInY);
+                        transform.position = Vector3.MoveTowards(transform.position, player_tempPosition, velocity * Time.deltaTime);
+                        keepMoving = true;
+                    }
+                    else
+                        transform.position = Vector3.MoveTowards(transform.position, player_tempPosition, velocity * Time.deltaTime);
+                    
+                    // Debug.Log(transform.localEulerAngles.y + " " + changeInX + " " + changeInY);
+                }
             }
             else
             {
