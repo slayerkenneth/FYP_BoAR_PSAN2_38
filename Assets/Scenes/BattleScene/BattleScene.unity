@@ -1648,6 +1648,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CarPrefab: {fileID: 6277496389183865309, guid: 887168661fa2d554c81c54c8e25534d6,
     type: 3}
+  ActiveCar: {fileID: 6277496389183865309, guid: 887168661fa2d554c81c54c8e25534d6,
+    type: 3}
+  GameFlowController: {fileID: 1451593558}
 --- !u!1001 &399850315
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2731,6 +2734,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1451593558}
         m_TargetAssemblyTypeName: GameFlowController, Assembly-CSharp
         m_MethodName: GenerateSpawnRouteTile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1451593558}
+        m_TargetAssemblyTypeName: GameFlowController, Assembly-CSharp
+        m_MethodName: EnterNewBattle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4461,10 +4476,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameFlowCtrl: {fileID: 1451593558}
   ARCtrl: {fileID: 619056682}
-  TowerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,
+  TowerPrefab: {fileID: 1514838442195789469, guid: cf267ad5c7370455685c4987d3716ab7,
     type: 3}
   TowerPosition: {x: 0, y: 0, z: 0}
   towerCombatHandler: {fileID: 1094842684}
+  TowerPointsTransforms: []
   enemyCollidersInsideTower: []
   captureProgress: 0
   captureRequirement: 0
@@ -5430,6 +5446,7 @@ MonoBehaviour:
   DefenceTime: 90
   startMinute: 0
   towerCombatHandler: {fileID: 1429391865}
+  TowerPointsTransforms: []
   DefenceModeUICanvas: {fileID: 4098587496591411372}
   CurrentTimeText: {fileID: 4098587496175638028}
 --- !u!114 &1429391865
@@ -5533,7 +5550,14 @@ MonoBehaviour:
   DTower: {fileID: 1429391864}
   CTower: {fileID: 1094842685}
   currentSceneTheme: 0
-  RouteTiles: []
+  MaxRouteDisplacement: 10
+  MinRouteDisplacement: 8
+  AverageMainPointDistance: 2
+  MainPointDistanceVariance: 1
+  PossibleRouteMainEndPoints: []
+  PossibleRouteMainSecPoints: []
+  ActiveRouteTilesLocations: []
+  ActiveRouteTiles: []
   TileParent: {fileID: 331931139}
   MaxTilesCount: 25
   CyberpunkTilePrefab: {fileID: 4381127082073477494, guid: 8948b2ae395f68642bac01c75aeb8e41,
@@ -5566,14 +5590,21 @@ MonoBehaviour:
   CapTarget: {fileID: 0}
   DungeonParentPrefab: {fileID: 674969097}
   ActiveDungeonParent: {fileID: 0}
+  tileInterval: 0.6
+  EndDungeonTile: {fileID: 7986504087968017091, guid: 84c931b6016ac4480b64a45b06b726a2,
+    type: 3}
   PushCarParentPrefab: {fileID: 1801687159}
   ActivePushCarParent: {fileID: 0}
   PushTarget: {fileID: 0}
+  CheckPointPrefab: {fileID: 3377181292992421420, guid: 8ee7f9dc0cd1e4db493dd752de8fec65,
+    type: 3}
+  CarCheckPointGameObjects: []
   BossFightParentPrefab: {fileID: 1372125105}
   ActiveBossFightParent: {fileID: 0}
   DummyEvent:
     m_PersistentCalls:
       m_Calls: []
+  restartBattle: 0
   cloneTower: {fileID: 0}
 --- !u!114 &1451593559
 MonoBehaviour:
@@ -5600,6 +5631,9 @@ MonoBehaviour:
   EnemyParentObj: {fileID: 1934517721}
   MaxEnemyCount: 5
   EnemySpawnLocationList: []
+  activeEnemies: []
+  DefenceTarget: {fileID: 0}
+  CaptureTarget: {fileID: 0}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64

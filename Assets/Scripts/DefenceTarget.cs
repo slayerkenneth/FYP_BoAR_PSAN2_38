@@ -24,7 +24,8 @@ public class DefenceTarget : MonoBehaviour
     public int startMinute;
     public CombatHandler towerCombatHandler;
     private GameObject SpawnedTower;
-    
+    public List<Transform> TowerPointsTransforms;
+
 
     [Header("UI")] 
     public Canvas DefenceModeUICanvas;
@@ -40,13 +41,13 @@ public class DefenceTarget : MonoBehaviour
     {
         //Debug.Log(TowerPosition);
         if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer) StartCountDown();
-        if (stopWatchActive == true)
+        if (stopWatchActive)
         {
             CurrentTime = CurrentTime - Time.deltaTime;
             if (CurrentTime <= 0)
             {
                 stopWatchActive = false;
-                
+                GameFlowCtrl.BattleEndFlag = true;
             }
         }
         TimeSpan timeSpan = TimeSpan.FromSeconds(CurrentTime);
@@ -58,6 +59,7 @@ public class DefenceTarget : MonoBehaviour
         if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && !hasTowerSpawned && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningTower)
         {
             SpawnedTower = Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
+            TowerPointsTransforms = SpawnedTower.GetComponent<Tower>().GetTowerPoints();
             GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.DefencePointMode;
             hasTowerSpawned = true;
             GameFlowCtrl.cloneTower = SpawnedTower;
@@ -94,5 +96,10 @@ public class DefenceTarget : MonoBehaviour
     public float GetRemainingTime()
     {
         return CurrentTime;
+    }
+
+    public List<Transform> GetTowerPointsTransforms()
+    {
+        return TowerPointsTransforms;
     }
 }

@@ -53,7 +53,6 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (CombatHandler.GetCurrentHP() <= 0)
         {
-            EnemySpawner.currentEnemyCount--;
             //GameFlowController.EnemyKillCount++;
             Destroy(gameObject);
         }

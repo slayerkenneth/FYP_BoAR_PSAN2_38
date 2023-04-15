@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeMonkey.HealthSystemCM;
 using Niantic.ARDK.Extensions.Gameboard;
+using Unity.Barracuda;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ using UnityEngine.Events;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
+using Random = UnityEngine.Random;
 
 public class GameFlowController : MonoBehaviour
 {
@@ -89,9 +91,16 @@ public class GameFlowController : MonoBehaviour
     [Header("Capture Point reference")] public CaptureTarget CTower;
 
     [Header("AR theme")] public SceneTheme currentSceneTheme;
-        
+
     [Header("Route, Item Gen Reference")] 
-    public List<Vector3> RouteTiles;
+    public float MaxRouteDisplacement;
+    public float MinRouteDisplacement;
+    public float AverageMainPointDistance;
+    public float MainPointDistanceVariance;
+    public List<Vector3> PossibleRouteMainEndPoints;
+    public List<Vector3> PossibleRouteMainSecPoints;
+    public List<Vector3> ActiveRouteTilesLocations;
+    public List<GameObject> ActiveRouteTiles;
     public GameObject TileParent;
     public int MaxTilesCount;
     public GameObject CyberpunkTilePrefab,
@@ -135,12 +144,16 @@ public class GameFlowController : MonoBehaviour
     [Header("Dungeon")]
     [SerializeField] public GameObject DungeonParentPrefab;
     [SerializeField] public GameObject ActiveDungeonParent;
+    [SerializeField] public float tileInterval;
+    [SerializeField] public GameObject EndDungeonTile;
     
     [Header("PushCar")]
     [SerializeField] public GameObject PushCarParentPrefab;
     [SerializeField] public GameObject ActivePushCarParent;
     [SerializeField] private PushTarget PushTarget;
-    
+    [SerializeField] public GameObject CheckPointPrefab;
+    [SerializeField] public List<GameObject> CarCheckPointGameObjects;
+
     [Header("BossFight")]
     [SerializeField] public GameObject BossFightParentPrefab;
     [SerializeField] public GameObject ActiveBossFightParent;
@@ -149,7 +162,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] UnityEvent DummyEvent;
     [SerializeField] Action DummyAction;
 
-
+    public bool restartBattle = false;
     public GameObject cloneTower;
     
     // Start is called before the first frame update
@@ -246,6 +259,7 @@ public class GameFlowController : MonoBehaviour
             // now Only call once in AR controller after scan completed
             // GetAllTileCoordinatesAndMarkWalls();
             startFightUI.SetActive(true);
+            GenerateFixedMapRoutePointsList();
         }
         
         // Only if all map tile and coordinates are confirm, the game flow continues
@@ -272,7 +286,15 @@ public class GameFlowController : MonoBehaviour
              *   -->Detect game end condition
              */
             CheckPlayerAndGameEndCondition();
-            // Conclusion State
+
+            if (BattleEndFlag)
+            {
+                battleSceneState = PVEBattleSceneState.WinBattle;
+                DebugText.text = " Player Win !";
+                Destroy(ActiveCaptureTowerParent);
+                RewardNextStage();
+                battleSceneState = PVEBattleSceneState.BattleConclusion;
+            }
         }
         
         else if (battleSceneState is PVEBattleSceneState.DefencePointMode)
@@ -294,10 +316,11 @@ public class GameFlowController : MonoBehaviour
              */
             CheckPlayerAndGameEndCondition();
 
-            if (DTower.GetRemainingTime() <= 0)
+            if (BattleEndFlag)
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
+                Destroy(ActiveDefenseTowerParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
             }
@@ -323,6 +346,8 @@ public class GameFlowController : MonoBehaviour
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
+                ClearActiveRouteTiles();
+                Destroy(ActiveDungeonParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
             }
@@ -349,6 +374,9 @@ public class GameFlowController : MonoBehaviour
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
+                ClearActiveRouteTiles();
+                ActivePushCarParent.GetComponentInChildren<PushCarController>().DespawnCar();
+                Destroy(ActivePushCarParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
             }
@@ -373,6 +401,7 @@ public class GameFlowController : MonoBehaviour
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
+                Destroy(ActiveBossFightParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
             }
@@ -498,119 +527,287 @@ public class GameFlowController : MonoBehaviour
     }
 
     /*
+     * Call After all fixed point are found from initial scan
+     * And Call before every battle, including first battle (D, PC mode)
      * Generate a route
-     * For Dungeon and Push Car
      * Then Spawn those map tile with corresponding theme
      */
     public void GenerateSpawnRouteTile()
+    {
+        GenerateAndSpawnRouteTile();
+    }
+    
+    public void GenerateAndSpawnRouteTile()
     {
         if (BattleMode == PVEBattleSceneState.BossFight ||
             BattleMode == PVEBattleSceneState.CapturePointMode ||
             BattleMode == PVEBattleSceneState.DefencePointMode) return;
         
-        ClearRouteTile();
+        if (PossibleRouteMainEndPoints.Count < 1 || PossibleRouteMainSecPoints.Count < 1) return;
 
-        // Player Starting Position (0,y,0) should always be the starting position
-        RouteTiles.Add(new Vector3(0, -1.1f, 0));
-        int tileCount = 0;
-        Vector3 pos = new Vector3();
-        while (_activeGameboard.FindRandomPosition(out pos) && tileCount != MaxTilesCount)
+        ClearActiveRouteTileLocations();
+        var startRoutePoint = new Vector3(0, -1.1f, 0);
+        ActiveRouteTilesLocations.Add(startRoutePoint);
+
+        // Randomly set Second and Last point
+        int index = Random.Range(1, PossibleRouteMainSecPoints.Count-1);
+        var secondMainPoint = PossibleRouteMainSecPoints[index];
+        // Add second Main Point
+        ActiveRouteTilesLocations.Add(secondMainPoint);
+        
+        // Generating end point
+        var endMainPoint = new Vector3();
+        for(var i = PossibleRouteMainEndPoints.Count; i>1; i--)
         {
-            var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
-            if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
+            index = Random.Range(1, i-1);
+            var dist1 = Vector3.Distance(secondMainPoint, PossibleRouteMainEndPoints[index]);
+            var dist2 = Vector3.Distance(startRoutePoint, PossibleRouteMainEndPoints[index]);
+            if (dist2 >= dist1)
             {
-                RouteTiles.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.1f, v.y * _activeGameboard.Settings.TileSize));
-                tileCount++;
+                endMainPoint = PossibleRouteMainEndPoints[index];
+                break;
             }
         }
-
-        var connectingPositions = new List<Vector3>();
-        var distanceThreshold = _activeGameboard.Settings.TileSize;
-        int offset = 0;
-        connectingPositions.Add(RouteTiles[0]);
-
-        for (int i = 0; i < RouteTiles.Count; i++)
+        if (endMainPoint.x == 0 && endMainPoint.z == 0)
         {
-            connectingPositions.Add(RouteTiles[0]); 
-            RouteTiles.Remove(RouteTiles[0]);
+            Debug.Log("End invalid");
+            endMainPoint = PossibleRouteMainEndPoints[PossibleRouteMainEndPoints.Count/2];
+        }
+        
+        // Generate remaining main points along the axis:
+        List<Vector3> IntermediateMains = GenerateIntermediateMainPoints(secondMainPoint, endMainPoint);
+        IntermediateMains.ForEach(vec3 => ActiveRouteTilesLocations.Add(vec3));
+        ActiveRouteTilesLocations.Add(endMainPoint);
 
-            var ClosestPos = new Vector3();
-            if (RouteTiles.Capacity >= 1)
+        if (BattleMode == PVEBattleSceneState.DungeonMode)
+        {
+            var final = GenerateConnectingTileLocations(ActiveRouteTilesLocations, tileInterval);
+            ClearActiveRouteTileLocations();
+            foreach (var point in final)
             {
-                ClosestPos = RouteTiles[0];
+                ActiveRouteTilesLocations.Add(point);
             }
-            else return;
-            
-            var shortestDistance = Vector3.Distance(ClosestPos, connectingPositions[i+1+offset]);
-            foreach (var tilePos in RouteTiles)
+            var tile = CyberpunkTilePrefab;
+            switch (currentSceneTheme)
             {
-                var dist = Vector3.Distance(tilePos, connectingPositions[i+1+offset]);
-                if (dist < shortestDistance)
+                case SceneTheme.Cyberpunk:
+                    tile = CyberpunkTilePrefab;
+                    break;
+                case SceneTheme.Fantasy:
+                    tile = FantasyTilePrefab;
+                    break;
+                case SceneTheme.PostApocalypse:
+                    tile = PostApocalypseTilePrefab;
+                    break;
+                case SceneTheme.Xianxia:
+                    tile = XianxiaTilePrefab;
+                    break;
+                case SceneTheme.Modern:
+                    tile = ModernTilePrefab;
+                    break;
+            }
+
+            var rotQ = new Quaternion(0, 0, 0, 0);
+            var count = 0;
+
+            foreach (var location in ActiveRouteTilesLocations)
+            {
+                if (count == ActiveRouteTilesLocations.Count-1)
                 {
-                    ClosestPos = tilePos;
-                    shortestDistance = dist;
+                    Instantiate(tile, location, rotQ , TileParent.transform); // Dummy tile
+                    var t = Instantiate(EndDungeonTile, location, rotQ , TileParent.transform);
+                    ActiveRouteTiles.Add(t);
+                    var bpd = t.GetComponent<BattlePathDest>();
+                    bpd.SetBattleMode(BattleMode, this);
                 }
+                else
+                {
+                    var t = Instantiate(tile, location, rotQ , TileParent.transform);
+                    ActiveRouteTiles.Add(t);
+                }
+                count++;
+            }
+        } 
+        else if (BattleMode == PVEBattleSceneState.PushCarBattleMode)
+        {
+            var rotQ = new Quaternion(0, 0, 0, 0);
+            
+            foreach (var checkpoint in ActiveRouteTilesLocations)
+            {
+                var checkObject = Instantiate(CheckPointPrefab, checkpoint, rotQ , TileParent.transform);
+                CarCheckPointGameObjects.Add(checkObject);
             }
             
-            Debug.Log("Shortest: " + ClosestPos + " ;Shortest Distance / threshold: " + shortestDistance / distanceThreshold);
-            /*
-             * Avoid the tile being too close
-             */
-            if (shortestDistance / distanceThreshold >= 9)
+            // Scene init
+            ActivePushCarParent = Instantiate(PushCarParentPrefab);
+            if (ActivePushCarParent != null) ActivePushCarParent.SetActive(true);
+            var pcCtrl = ActivePushCarParent.GetComponentInChildren<PushCarController>();
+            pcCtrl.GameFlowController = this;
+            pcCtrl.SetCheckPoint(CarCheckPointGameObjects);
+
+            ActivePushCarParent.transform.position = Vector3.zero;
+            
+            var final = GenerateConnectingTileLocations(ActiveRouteTilesLocations, tileInterval);
+            ClearActiveRouteTileLocations();
+            foreach (var point in final)
             {
-                connectingPositions.Add(ClosestPos);    
-                // If two tiles are too far, add middle tile(s)
-                connectingPositions.Add(Vector3.Lerp(ClosestPos, connectingPositions[i + 1], 0.5f));
-                offset++;
+                ActiveRouteTilesLocations.Add(point);
             }
-            RouteTiles.Remove(ClosestPos);
+
+            var tile = CyberpunkTilePrefab;
+            switch (currentSceneTheme)
+            {
+                case SceneTheme.Cyberpunk:
+                    tile = CyberpunkTilePrefab;
+                    break;
+                case SceneTheme.Fantasy:
+                    tile = FantasyTilePrefab;
+                    break;
+                case SceneTheme.PostApocalypse:
+                    tile = PostApocalypseTilePrefab;
+                    break;
+                case SceneTheme.Xianxia:
+                    tile = XianxiaTilePrefab;
+                    break;
+                case SceneTheme.Modern:
+                    tile = ModernTilePrefab;
+                    break;
+            }
+            foreach (var location in ActiveRouteTilesLocations)
+            {
+                var t = Instantiate(tile, location, rotQ , TileParent.transform);
+                ActiveRouteTiles.Add(t);
+            }
         }
-        
-        ClearRouteTile();
-        RouteTiles = connectingPositions;
-        
-        var tile = CyberpunkTilePrefab;
-        switch (currentSceneTheme)
+    }
+    
+    private List<Vector3> GenerateIntermediateMainPoints(Vector3 second, Vector3 end)
+    {
+        // // Generate third Main point s.t. third to start > second to start
+        // var biasedRange = Random.Range(AverageMainPointDistance - MainPointDistanceVariance,
+        //     AverageMainPointDistance - MainPointDistanceVariance);
+        // _activeGameboard.FindNearestFreePosition(secondMainPoint, 
+        //     biasedRange, out thirdMain);
+        // while (Vector3.Distance(thirdMain, startRoutePoint) < SecToStartDistance)
+        // {
+        //     biasedRange = Random.Range(AverageMainPointDistance - MainPointDistanceVariance,
+        //         AverageMainPointDistance - MainPointDistanceVariance);
+        //     _activeGameboard.FindNearestFreePosition(secondMainPoint, 
+        //         biasedRange, out thirdMain);
+        // }
+        //
+        // // Generate fifth Main point s.t. fifth to start < end to start
+        // biasedRange = Random.Range(AverageMainPointDistance - MainPointDistanceVariance,
+        //     AverageMainPointDistance - MainPointDistanceVariance);
+        // _activeGameboard.FindNearestFreePosition(endMainPoint, 
+        //     biasedRange, out fifthMain);
+        // while (Vector3.Distance(fifthMain, startRoutePoint) > EndToStartDistance)
+        // {
+        //     biasedRange = Random.Range(AverageMainPointDistance - MainPointDistanceVariance,
+        //         AverageMainPointDistance - MainPointDistanceVariance);
+        //     _activeGameboard.FindNearestFreePosition(endMainPoint, 
+        //         biasedRange, out fifthMain);
+        // }
+        //
+        // // Generate fourth Main point interpolating third and fifth Main point
+        // fourthMain = Vector3.Lerp(thirdMain, fifthMain, 0.5f);
+        var finalList = new List<Vector3>();
+
+        Vector3 middle, front, back;
+        if (end.magnitude > second.magnitude)
         {
-            case SceneTheme.Cyberpunk:
-                tile = CyberpunkTilePrefab;
-                break;
-            case SceneTheme.Fantasy:
-                tile = FantasyTilePrefab;
-                break;
-            case SceneTheme.PostApocalypse:
-                tile = PostApocalypseTilePrefab;
-                break;
-            case SceneTheme.Xianxia:
-                tile = XianxiaTilePrefab;
-                break;
-            case SceneTheme.Modern:
-                tile = ModernTilePrefab;
-                break;
+            middle = (end - second)/2 + second;
+            front = (middle - second)/2 + second;
+            back = (end - middle)/2 + middle;     
+        }
+        else
+        {
+            middle = (second - end)/2 + end;
+            front = (second - middle)/2 + middle;
+            back = (middle - end)/2 + end;     
         }
 
-        var rotQ = new Quaternion(0, 0, 0, 0);
-        var count = 0;
-        foreach (var location in RouteTiles)
+        var VarVec = new Vector3(Random.Range(-MainPointDistanceVariance, MainPointDistanceVariance), -1.1f,
+            Random.Range(-MainPointDistanceVariance, MainPointDistanceVariance));
+        _activeGameboard.FindNearestFreePosition(front + VarVec, AverageMainPointDistance, out front);
+        
+        VarVec = new Vector3(Random.Range(-MainPointDistanceVariance, MainPointDistanceVariance), -1.1f,
+            Random.Range(-MainPointDistanceVariance, MainPointDistanceVariance));
+        _activeGameboard.FindNearestFreePosition(middle + VarVec, AverageMainPointDistance, out middle);
+        
+        VarVec = new Vector3(Random.Range(-MainPointDistanceVariance, MainPointDistanceVariance), -1.1f,
+            Random.Range(-MainPointDistanceVariance, MainPointDistanceVariance));
+        _activeGameboard.FindNearestFreePosition(back + VarVec, AverageMainPointDistance, out back);
+
+        finalList.Add(front);
+        finalList.Add(middle);
+        finalList.Add(back);
+        
+        return finalList;
+    }
+
+    /*
+     * Generate 5-th and 2-nd possible points and store them into list
+     */
+    private void GenerateFixedMapRoutePointsList()
+    {
+        // Player Starting Position (0,y,0) should always be the starting position
+        Vector3 StartPoint = new Vector3(0, -1.1f, 0);
+        foreach (var coord in AllGridNodeCoordinates)
         {
-            if (count == RouteTiles.Count-1)
+            var CoordVec3 = new Vector3(coord.x * _activeGameboard.Settings.TileSize, -1.1f,
+                coord.y * _activeGameboard.Settings.TileSize);
+
+            var distanceToStart = Vector3.Distance(CoordVec3, StartPoint);
+            if (distanceToStart > MinRouteDisplacement - MainPointDistanceVariance 
+                && distanceToStart <= MaxRouteDisplacement + MainPointDistanceVariance 
+                && !PossibleRouteMainEndPoints.Contains(CoordVec3))
             {
-                var endTile = PostApocalypseTilePrefab;
-                Instantiate(endTile, location, rotQ , TileParent.transform);
-                var bpd = endTile.GetComponent<BattlePathDest>();
-                bpd.SetBattleMode(BattleMode, this);
+                PossibleRouteMainEndPoints.Add(CoordVec3);
             }
-            else Instantiate(tile, location, rotQ , TileParent.transform);
-            count++;
+            else if (distanceToStart > AverageMainPointDistance - MainPointDistanceVariance 
+                     && distanceToStart <= AverageMainPointDistance + MainPointDistanceVariance 
+                     && !PossibleRouteMainSecPoints.Contains(CoordVec3))
+            { 
+                PossibleRouteMainSecPoints.Add(CoordVec3);
+            }
         }
     }
 
-    public void ClearRouteTile()
+    public void ClearActiveRouteTileLocations()
     {
-        if (RouteTiles.Capacity != 0)
+        if (ActiveRouteTilesLocations.Capacity != 0)
         {
-            RouteTiles.Clear();
+            ActiveRouteTilesLocations.Clear();
         }
+    }
+
+    public void ClearActiveRouteTiles()
+    {
+        ActiveRouteTiles.ForEach(Destroy);
+        ActiveRouteTiles.Clear();
+    }
+
+    private List<Vector3> GenerateConnectingTileLocations(List<Vector3> Mains, float intervalLength)
+    {
+        var finalList = new List<Vector3>();
+
+        for (var i = 1; i < Mains.Count; i++)
+        {
+            finalList.Add(Mains[i-1]);
+            var dist = (Mains[i] - Mains[i - 1]).magnitude;
+            var direction = (Mains[i] - Mains[i - 1]).normalized;
+
+            int numIntervals = Mathf.CeilToInt(dist / intervalLength);
+            float actualIntervalLength = dist / numIntervals;
+            for (int j = 1; j < numIntervals; j++)
+            {
+                Vector3 point = Mains[i-1] + direction * (j * actualIntervalLength);
+                finalList.Add(point);
+            }
+            finalList.Add(Mains[i]);
+        }
+        return finalList;
     }
     #endregion
 
@@ -734,19 +931,15 @@ public class GameFlowController : MonoBehaviour
         // Re entering the scene with different mode:
         else if (battleSceneState is PVEBattleSceneState.MapActive)
         {
+            battleSceneState = BattleMode;
+            restartBattle = true;
+            BattleEndFlag = false;
+            BattleUICanvasParent.SetActive(true);
+            startFightUI.SetActive(true);
+            
             MapParent.SetActive(false);
             BackgroundCanvasParent.SetActive(false);
             ShopUIParent.SetActive(false);
-            battleSceneState = BattleMode;
-            if (BattleMode is
-                PVEBattleSceneState.BossFight or PVEBattleSceneState.CapturePointMode
-                or PVEBattleSceneState.DefencePointMode or PVEBattleSceneState.DungeonMode
-                or PVEBattleSceneState.PushCarBattleMode)
-            {
-                BattleUICanvasParent.SetActive(true);
-            }
-            
-            BattleEndFlag = false;
         }
     }
 
@@ -771,6 +964,40 @@ public class GameFlowController : MonoBehaviour
         ShopUIParent.SetActive(false);
         battleSceneState = PVEBattleSceneState.MapActive;
         BattleEndFlag = false;
+    }
+
+    public void EnterNewBattle()
+    {
+        if (!restartBattle) return;
+        // Reset Spawner then Set again
+        EnemySpawner.SetSpawner(false);
+        EnemySpawner.SetSpawner(true);
+        switch (BattleMode)
+        {
+            case PVEBattleSceneState.DefencePointMode:
+                ActiveDefenseTowerParent.SetActive(true);
+                restartBattle = false;
+                break;
+            case PVEBattleSceneState.CapturePointMode:
+                ActiveCaptureTowerParent.SetActive(true);
+                restartBattle = false;
+                break;
+            case PVEBattleSceneState.DungeonMode:
+                battleSceneState = BattleMode;
+                ActiveDungeonParent.SetActive(true);
+                restartBattle = false;
+                break;
+            case PVEBattleSceneState.PushCarBattleMode:
+                battleSceneState = BattleMode;
+                ActivePushCarParent.SetActive(true);
+                restartBattle = false;
+                break;
+            case PVEBattleSceneState.BossFight:
+                battleSceneState = BattleMode;
+                ActiveBossFightParent.SetActive(true);
+                restartBattle = false;
+                break;
+        }
     }
     #endregion
 
@@ -860,10 +1087,11 @@ public class GameFlowController : MonoBehaviour
         ActiveCaptureTowerParent.transform.position = Vector3.zero;
         startFightUI.GetComponent<Button>().onClick.AddListener(() =>
         {
-            ActiveCaptureTowerParent.SetActive(true);
+            if (ActiveCaptureTowerParent != null) ActiveCaptureTowerParent.SetActive(true);
+            if (BattleMode != PVEBattleSceneState.CapturePointMode) return;
             battleSceneState = PVEBattleSceneState.SpawningTower;
-            var dt = ActiveDefenseTowerParent.GetComponentInChildren<CaptureTarget>();
-            dt.SpawnTower();
+            var ct = ActiveCaptureTowerParent.GetComponentInChildren<CaptureTarget>();
+            ct.SpawnTower();
             battleSceneState = PVEBattleSceneState.CapturePointMode;
         });
     }
@@ -879,7 +1107,8 @@ public class GameFlowController : MonoBehaviour
         ActiveDefenseTowerParent.transform.position = Vector3.zero;
         startFightUI.GetComponent<Button>().onClick.AddListener(() =>
         {
-            ActiveDefenseTowerParent.SetActive(true);
+            if (ActiveDefenseTowerParent != null) ActiveDefenseTowerParent.SetActive(true);
+            if (BattleMode != PVEBattleSceneState.DefencePointMode) return;
             battleSceneState = PVEBattleSceneState.SpawningTower;
             var dt = ActiveDefenseTowerParent.GetComponentInChildren<DefenceTarget>();
             dt.SpawnTower();
@@ -895,6 +1124,7 @@ public class GameFlowController : MonoBehaviour
     void InitDungeonMode()
     {
         ActiveDungeonParent = Instantiate(DungeonParentPrefab);
+        if (ActiveDungeonParent != null) ActiveDungeonParent.SetActive(true);
         ActiveDungeonParent.transform.position = Vector3.zero;
     }
 
@@ -904,9 +1134,13 @@ public class GameFlowController : MonoBehaviour
 
     void InitPushCarMode()
     {
-        ActivePushCarParent = Instantiate(PushCarParentPrefab);
-        PushTarget = ActivePushCarParent.GetComponentInChildren<PushTarget>();
-        ActivePushCarParent.transform.position = Vector3.zero;
+        // ActivePushCarParent = Instantiate(PushCarParentPrefab);
+        // if (ActivePushCarParent != null) ActivePushCarParent.SetActive(true);
+        // var pcCtrl = ActivePushCarParent.GetComponentInChildren<PushCarController>();
+        // pcCtrl.GameFlowController = this;
+        // pcCtrl.SetCheckPoint(CarCheckPointGameObjects);
+        //
+        // ActivePushCarParent.transform.position = Vector3.zero;
     }
 
     #endregion
@@ -939,11 +1173,13 @@ public class GameFlowController : MonoBehaviour
     public void SetDefenseTower(DefenceTarget tower)
     {
         DTower = tower;
+        EnemySpawner.SetDefenseTarget(tower);
     }
 
     public void SetCaptureTower(CaptureTarget tower)
     {
         CTower = tower;
+        EnemySpawner.SetCaptureTarget(tower);
     }
 
     public void SetCurrentEnemyBeenAttacked(CombatHandler enemyCombatHandler)
@@ -1008,17 +1244,50 @@ public class GameFlowController : MonoBehaviour
 
     public void RewardNextStage()
     {
-        playerGlobalStatus.money++;
-        playerGlobalStatus.speed++;
-        playerGlobalStatus.currentHP = (int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP();
-        // playerGlobalStatus.currentLevel++; // cannot change this
-        
         WinPopUpWindow.SetActive(true);
+        EnemySpawner.ClearEnemyOnScene();
+        PlayerSpawner.DespawnPlayer((int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP(), playerGlobalStatus.money+1, playerGlobalStatus.weaponLv);
+        ActiveDefenseTowerParent = null;
+        ActiveCaptureTowerParent = null;
+        ActiveDungeonParent = null;
+        ActivePushCarParent = null;
+        ActiveBossFightParent = null;
+        EnemySpawner.ResetTowerTargetReference();
     }
 
     public void LossRestartFromBeginning()
     {
         LossPopUpWindow.SetActive(true);
+        EnemySpawner.ResetTowerTargetReference();
+        EnemySpawner.ClearEnemyOnScene();
+        switch (BattleMode)
+        {
+            case PVEBattleSceneState.DefencePointMode:
+                Destroy(ActiveDefenseTowerParent);
+                break;
+            case PVEBattleSceneState.CapturePointMode:
+                Destroy(ActiveCaptureTowerParent);
+                break;
+            case PVEBattleSceneState.DungeonMode:
+                Destroy(ActiveDungeonParent);
+                ClearActiveRouteTiles();
+                break;
+            case PVEBattleSceneState.PushCarBattleMode:
+                Destroy(ActivePushCarParent);
+                ClearActiveRouteTiles();
+                break;
+            case PVEBattleSceneState.BossFight:
+                Destroy(ActiveBossFightParent);
+                break;
+        }
+
+        ActiveDefenseTowerParent = null;
+        ActiveCaptureTowerParent = null;
+        ActiveDungeonParent = null;
+        ActivePushCarParent = null;
+        ActiveBossFightParent = null;
+        
+        PlayerSpawner.DespawnPlayer(100, 0, 0);
     }
 
 
@@ -1031,8 +1300,6 @@ public class GameFlowController : MonoBehaviour
         BattleUICanvasParent.SetActive(false);
         MapParent.SetActive(true);
         
-        
-
         battleSceneState = PVEBattleSceneState.MapActive;
     }
 

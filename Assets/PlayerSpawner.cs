@@ -33,15 +33,24 @@ public class PlayerSpawner : MonoBehaviour
         {
             if (ui.tag == "Player")
             {
+                // ui.SetHealthSystem(new HealthSystem(PlayerStatusRef.maxHP));
                 ui.SetHealthSystem(charCombat.GetHealthSystemComponent().GetHealthSystem());
+                charCombat.GetHealthSystemComponent().GetHealthSystem()
+                    .SetHealthMax(PlayerStatusRef.maxHP, true);
+                charCombat.GetHealthSystemComponent().GetHealthSystem().Damage(PlayerStatusRef.maxHP- PlayerStatusRef.currentHP);
             }
         }
         
         GameFlowController.SetPlayerMovementCtrl(CharMoveCtrl);
     }
 
-    public void DestroyPlayer()
+    public void DespawnPlayer(int currentHP, int totalNewMoney, int weaponLv)
     {
+        PlayerStatus.CurrentPlayer.currentHP = currentHP;
+        PlayerStatus.CurrentPlayer.money = totalNewMoney;
+        PlayerStatus.CurrentPlayer.weaponLv = weaponLv;
         
+        Destroy(activeCharacter);
+        activeCharacter = null;
     }
 }
