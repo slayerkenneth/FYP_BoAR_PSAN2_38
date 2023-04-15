@@ -7,24 +7,27 @@ public class PushTarget : MonoBehaviour
 {
     public float speed;
     public float rotationSpeed;
-    public float nearByRadius;
+    public float nearByRadiusForCheckpoints;
+    public float nearByRadiusForBattleDetect;
     public bool pushing;
     public List<GameObject> checkPoints;
-    public List<Collider> nearbyColliders;
+    public List<Collider> nearbyCollidersRange1;
+    public List<Collider> nearbyCollidersRange2;
     public Vector3 targetPosition;
 
     // Update is called once per frame
     void Update()
     {
-        nearbyColliders = Physics.OverlapSphere(transform.position, nearByRadius).ToList();
+        nearbyCollidersRange1 = Physics.OverlapSphere(transform.position, nearByRadiusForCheckpoints).ToList();
         PushCarCheckPoint checkPoint = new PushCarCheckPoint();
-        if (nearbyColliders.Exists(c => c.TryGetComponent<PushCarCheckPoint>(out checkPoint)))
+        if (nearbyCollidersRange1.Exists(c => c.TryGetComponent<PushCarCheckPoint>(out checkPoint)))
         {
             if (checkPoint.nextCheckPoint && !checkPoint.CarPassed) SetOrientation(checkPoint.nextCheckPoint.transform);
             checkPoint.CarPassed = true;
         }
         
-        if (nearbyColliders.Exists( c => c.CompareTag("Enemy")) || !nearbyColliders.Exists( c => c.CompareTag("Player")))
+        nearbyCollidersRange2 = Physics.OverlapSphere(transform.position, nearByRadiusForBattleDetect).ToList();
+        if (nearbyCollidersRange2.Exists( c => c.CompareTag("Enemy")) || !nearbyCollidersRange2.Exists( c => c.CompareTag("Player")))
         {
             pushing = false;
         }

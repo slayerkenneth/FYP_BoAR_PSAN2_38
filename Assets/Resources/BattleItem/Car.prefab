@@ -132,7 +132,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.2
   rotationSpeed: 1
-  nearByRadius: 0.25
+  nearByRadiusForCheckpoints: 0.2
+  nearByRadiusForBattleDetect: 0.6
   pushing: 0
   checkPoints:
   - {fileID: 0}
@@ -141,7 +142,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  nearbyColliders: []
+  nearbyCollidersRange1: []
+  nearbyCollidersRange2: []
   targetPosition: {x: 0, y: 0, z: 0}
 --- !u!136 &4074523797852263975
 CapsuleCollider:
