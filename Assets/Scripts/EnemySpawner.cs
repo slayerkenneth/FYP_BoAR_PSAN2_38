@@ -61,7 +61,8 @@ public class EnemySpawner : MonoBehaviour
                     EnemySpawnLocationList.Add(t.position);        
                 });
                 // Need to review enemyPathfinding logic
-                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
+                // Some Bug here!
+                // StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
             }
             else
             {
