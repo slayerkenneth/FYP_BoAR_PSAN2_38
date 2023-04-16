@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CaptureTarget : MonoBehaviour
+public class CaptureTargetSpawner : MonoBehaviour
 {
     [Header("Gameboard and other controller reference")]
     public IGameboard _activeGameboard;
@@ -33,9 +33,9 @@ public class CaptureTarget : MonoBehaviour
         GameFlowCtrl.SetCaptureTower(this);
     }
 
-    void Update()
+    private void Update()
     {
-
+        enemyCollidersInsideTower.RemoveAll(item => item == null);
     }
 
     public void SpawnTower()
@@ -43,6 +43,8 @@ public class CaptureTarget : MonoBehaviour
         if (GameFlowCtrl.GetTowerSpawnLocationVector(out TowerPosition) && !hasTowerSpawned && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningTower)
         {
             SpawnedTower = Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
+            var ct = SpawnedTower.AddComponent<CaptureTargert>();
+            ct.spawner = this;
             TowerPointsTransforms = SpawnedTower.GetComponent<Tower>().GetTowerPoints();
             GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.CapturePointMode;
             hasTowerSpawned = true;
@@ -57,29 +59,6 @@ public class CaptureTarget : MonoBehaviour
         // }
     }
 
-    public GameObject GetSpawnedTower()
-    {
-        return SpawnedTower;
-    }
-
-    public Vector3 GetTowerPosition()
-    {
-        return TowerPosition;
-    }
-    
-
-    public void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            enemyCollidersInsideTower.Add(other);
-        }
-        if (other.CompareTag("Player") && enemyCollidersInsideTower.Exists(i => i != null))
-        {
-            captureProgress += Time.deltaTime;
-        }
-    }
-    
     public List<Transform> GetTowerPointsTransforms()
     {
         return TowerPointsTransforms;

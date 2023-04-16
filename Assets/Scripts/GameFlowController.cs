@@ -88,7 +88,7 @@ public class GameFlowController : MonoBehaviour
     [Header("Defense Point reference")] 
     public DefenceTarget DTower;
 
-    [Header("Capture Point reference")] public CaptureTarget CTower;
+    [Header("Capture Point reference")] public CaptureTargetSpawner CTower;
 
     [Header("AR theme")] public SceneTheme currentSceneTheme;
 
@@ -139,7 +139,7 @@ public class GameFlowController : MonoBehaviour
     [Header("CaptureTower")]
     [SerializeField] public GameObject CaptureTowerParentPrefab;
     [SerializeField] public GameObject ActiveCaptureTowerParent;
-    [SerializeField] private CaptureTarget CapTarget;
+    [SerializeField] private CaptureTargetSpawner capTargetSpawner;
     
     [Header("Dungeon")]
     [SerializeField] public GameObject DungeonParentPrefab;
@@ -1083,14 +1083,14 @@ public class GameFlowController : MonoBehaviour
     {
         CalculateTowerLocation();
         ActiveCaptureTowerParent = Instantiate(CaptureTowerParentPrefab);
-        CapTarget = ActiveCaptureTowerParent.GetComponentInChildren<CaptureTarget>();
+        capTargetSpawner = ActiveCaptureTowerParent.GetComponentInChildren<CaptureTargetSpawner>();
         ActiveCaptureTowerParent.transform.position = Vector3.zero;
         startFightUI.GetComponent<Button>().onClick.AddListener(() =>
         {
             if (ActiveCaptureTowerParent != null) ActiveCaptureTowerParent.SetActive(true);
             if (BattleMode != PVEBattleSceneState.CapturePointMode) return;
             battleSceneState = PVEBattleSceneState.SpawningTower;
-            var ct = ActiveCaptureTowerParent.GetComponentInChildren<CaptureTarget>();
+            var ct = ActiveCaptureTowerParent.GetComponentInChildren<CaptureTargetSpawner>();
             ct.SpawnTower();
             battleSceneState = PVEBattleSceneState.CapturePointMode;
         });
@@ -1176,7 +1176,7 @@ public class GameFlowController : MonoBehaviour
         EnemySpawner.SetDefenseTarget(tower);
     }
 
-    public void SetCaptureTower(CaptureTarget tower)
+    public void SetCaptureTower(CaptureTargetSpawner tower)
     {
         CTower = tower;
         EnemySpawner.SetCaptureTarget(tower);
