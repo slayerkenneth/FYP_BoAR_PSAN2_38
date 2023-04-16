@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
     public List<GameObject> activeEnemies;
 
     public DefenceTarget DefenceTarget;
-    public CaptureTarget CaptureTarget;
+    public CaptureTargetSpawner captureTargetSpawner;
     private Vector3 towerPosition;
     public LayerMask whatIsGround; //ARDK_Gameboard
     public LayerMask whatIsPlayer; //add a layer mask on player
@@ -55,8 +55,8 @@ public class EnemySpawner : MonoBehaviour
             }
             else if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.CapturePointMode)
             {
-                if (CaptureTarget == null) return; // Optimize later
-                CaptureTarget.GetTowerPointsTransforms().ForEach(t =>
+                if (captureTargetSpawner == null) return; // Optimize later
+                captureTargetSpawner.GetTowerPointsTransforms().ForEach(t =>
                 {
                     EnemySpawnLocationList.Add(t.position);        
                 });
@@ -133,14 +133,14 @@ public class EnemySpawner : MonoBehaviour
         DefenceTarget = dt;
     }
 
-    public void SetCaptureTarget(CaptureTarget ct)
+    public void SetCaptureTarget(CaptureTargetSpawner ct)
     {
-        CaptureTarget = ct;
+        captureTargetSpawner = ct;
     }
 
     public void ResetTowerTargetReference()
     {
         DefenceTarget = null;
-        CaptureTarget = null;
+        captureTargetSpawner = null;
     }
 }
