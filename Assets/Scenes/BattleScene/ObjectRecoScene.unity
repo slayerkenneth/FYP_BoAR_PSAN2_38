@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44402242, g: 0.49316543, b: 0.5722324, a: 1}
+  m_IndirectSpecularColor: {r: 0.4439403, g: 0.4931519, b: 0.5722083, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2459,20 +2459,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _arCamera: {fileID: 619056670}
-  _agentPrefab: {fileID: 7591547633202612116, guid: 9d8ff95812c144ae2b6ae5ec1d272bff,
-    type: 3}
   HitTestType: -1
   _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
   _semanticManager: {fileID: 619056672}
   GameFlowController: {fileID: 1451593558}
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
+  ObjectRecognitionCtrl: {fileID: 0}
   PlacementObjectPf: {fileID: 1286568860655052, guid: a5a90e4ee8f7647c4a0f2f394f2fda71,
     type: 3}
   boxContainer: {fileID: 1716172311}
   boxPrefab: {fileID: 5347304568407062166, guid: efb33e49a6005c544b4a82223b9e2a13,
     type: 3}
   yolov5Detector: {fileID: 2052250690}
+  scanningInstructionUI: {fileID: 0}
 --- !u!1 &622892559
 GameObject:
   m_ObjectHideFlags: 0
@@ -3886,6 +3886,8 @@ MonoBehaviour:
   TowerPosition: {x: 0, y: 0, z: 0}
   DefenceTime: 100
   startMinute: 0
+  towerCombatHandler: {fileID: 0}
+  TowerPointsTransforms: []
   DefenceModeUICanvas: {fileID: 133362076}
   CurrentTimeText: {fileID: 782937916}
 --- !u!1 &1451593556
@@ -3935,13 +3937,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battleSceneState: 0
+  PlayerSpawnActive: 0
   BattleMode: 12
   arCamera: {fileID: 619056670}
   ARCtrl: {fileID: 619056682}
   playerMovementCtrl: {fileID: 0}
+  CentralBattleCtrl: {fileID: 0}
+  playerOwnCombatHandler: {fileID: 0}
+  BattleEndFlag: 0
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
   AreaLimit: 100
+  testScanArea: 0
   AllGridNodeCoordinates: []
   WallCoordinates: []
   maxX: 0
@@ -3953,7 +3960,59 @@ MonoBehaviour:
   EnemySpawner: {fileID: 1451593559}
   EnemySpawnPositionList: []
   enemyRandomSpawnLocationsCount: 5
+  DTower: {fileID: 0}
+  CTower: {fileID: 0}
+  currentSceneTheme: 0
+  MaxRouteDisplacement: 0
+  MinRouteDisplacement: 0
+  AverageMainPointDistance: 0
+  MainPointDistanceVariance: 0
+  PossibleRouteMainEndPoints: []
+  PossibleRouteMainSecPoints: []
+  ActiveRouteTilesLocations: []
+  ActiveRouteTiles: []
+  TileParent: {fileID: 0}
+  MaxTilesCount: 0
+  CyberpunkTilePrefab: {fileID: 0}
+  PostApocalypseTilePrefab: {fileID: 0}
+  FantasyTilePrefab: {fileID: 0}
+  XianxiaTilePrefab: {fileID: 0}
+  ModernTilePrefab: {fileID: 0}
+  BattleUICanvasParent: {fileID: 0}
   PlayerHealthBarUI: {fileID: 0}
+  EnemyHealthBarUI: {fileID: 0}
+  WinPopUpWindow: {fileID: 0}
+  LossPopUpWindow: {fileID: 0}
+  BackgroundCanvasParent: {fileID: 0}
+  startFightUI: {fileID: 0}
+  playerGlobalStatus: {fileID: 0}
+  PlayerSpawner: {fileID: 0}
+  PlayerSpawnLocation: {x: 0, y: 0, z: 0}
+  PlayerSpawnParent: {fileID: 0}
+  ShopUIParent: {fileID: 0}
+  MapParent: {fileID: 0}
+  DefenseTowerParentPrefab: {fileID: 0}
+  ActiveDefenseTowerParent: {fileID: 0}
+  DefTarget: {fileID: 0}
+  CaptureTowerParentPrefab: {fileID: 0}
+  ActiveCaptureTowerParent: {fileID: 0}
+  CapTarget: {fileID: 0}
+  DungeonParentPrefab: {fileID: 0}
+  ActiveDungeonParent: {fileID: 0}
+  tileInterval: 0
+  EndDungeonTile: {fileID: 0}
+  PushCarParentPrefab: {fileID: 0}
+  ActivePushCarParent: {fileID: 0}
+  PushTarget: {fileID: 0}
+  CheckPointPrefab: {fileID: 0}
+  CarCheckPointGameObjects: []
+  BossFightParentPrefab: {fileID: 0}
+  ActiveBossFightParent: {fileID: 0}
+  DummyEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  restartBattle: 0
+  cloneTower: {fileID: 0}
 --- !u!114 &1451593559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3968,19 +4027,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ARCtrl: {fileID: 619056682}
   GameFlowCtrl: {fileID: 1451593558}
+  centralBattleCtrl: {fileID: 0}
   EnemySpawnPrefabList:
   - {fileID: 1953271650171834, guid: dbf7a0c9d76b77a40af3104feac0641d, type: 3}
   - {fileID: 2066896392038628118, guid: 45288819fde2143449a96207b14db0bb, type: 3}
   - {fileID: 1248815240492774, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}
   - {fileID: 174418, guid: 36c38a65d57de7d4a9a582f9ee857701, type: 3}
   - {fileID: 139696, guid: eb58e8f2831a51f45a44a261e6710cdd, type: 3}
+  EnemyAtkTowerPositionList: []
   EnemyParentObj: {fileID: 1934517721}
   MaxEnemyCount: 5
   EnemySpawnLocationList: []
+  activeEnemies: []
+  DefenceTarget: {fileID: 0}
+  CaptureTarget: {fileID: 0}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 0
   whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 0
+  whatIsEnemy:
     serializedVersion: 2
     m_Bits: 0
   towerPrefab: {fileID: 1514838442195789469, guid: 6c5a99a2d80875d4f9087a3fd64bcea1,

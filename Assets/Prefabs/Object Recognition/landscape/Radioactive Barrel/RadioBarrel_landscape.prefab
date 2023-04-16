@@ -83,11 +83,13 @@ MonoBehaviour:
   hp: 1000
   shield: 1000
   skillCoolDown: 1000
+  UpgradeDamagePercentage: 100
   AttackingColliders: []
   DamageTakingColliders: []
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 0}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.4439403, g: 0.4931519, b: 0.5722083, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2545,9 +2545,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _arCamera: {fileID: 619056670}
-  _agentPrefab: {fileID: 8189980434977739222, guid: eb64b54ddc44347478d7c6d3d45f821c,
-    type: 3}
-  playerSpawnParent: {fileID: 1049136496}
   HitTestType: 16
   _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
   _semanticManager: {fileID: 619056672}
@@ -2561,6 +2558,7 @@ MonoBehaviour:
   boxPrefab: {fileID: 5347304568407062166, guid: efb33e49a6005c544b4a82223b9e2a13,
     type: 3}
   yolov5Detector: {fileID: 409333505}
+  scanningInstructionUI: {fileID: 0}
 --- !u!1 &622892559
 GameObject:
   m_ObjectHideFlags: 0
@@ -4266,6 +4264,7 @@ MonoBehaviour:
   DefenceTime: 90
   startMinute: 0
   towerCombatHandler: {fileID: 0}
+  TowerPointsTransforms: []
   DefenceModeUICanvas: {fileID: 4098587496591411372}
   CurrentTimeText: {fileID: 4098587496175638028}
 --- !u!1 &1440348226
@@ -4654,7 +4653,7 @@ MonoBehaviour:
   playerMovementCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 1451593561}
   playerOwnCombatHandler: {fileID: 0}
-  DefTarget: {fileID: 1429391864}
+  BattleEndFlag: 0
   DebugText: {fileID: 4098587495805698984}
   AreaText: {fileID: 4098587496407768986}
   AreaLimit: 500
@@ -4670,12 +4669,58 @@ MonoBehaviour:
   EnemySpawner: {fileID: 1451593559}
   EnemySpawnPositionList: []
   enemyRandomSpawnLocationsCount: 5
-  Tower: {fileID: 1429391864}
+  DTower: {fileID: 0}
+  CTower: {fileID: 0}
+  currentSceneTheme: 0
+  MaxRouteDisplacement: 0
+  MinRouteDisplacement: 0
+  AverageMainPointDistance: 0
+  MainPointDistanceVariance: 0
+  PossibleRouteMainEndPoints: []
+  PossibleRouteMainSecPoints: []
+  ActiveRouteTilesLocations: []
+  ActiveRouteTiles: []
+  TileParent: {fileID: 0}
+  MaxTilesCount: 0
+  CyberpunkTilePrefab: {fileID: 0}
+  PostApocalypseTilePrefab: {fileID: 0}
+  FantasyTilePrefab: {fileID: 0}
+  XianxiaTilePrefab: {fileID: 0}
+  ModernTilePrefab: {fileID: 0}
+  BattleUICanvasParent: {fileID: 0}
   PlayerHealthBarUI: {fileID: 3450456933618736479}
   EnemyHealthBarUI: {fileID: 3450456933082368580}
   WinPopUpWindow: {fileID: 1242954834}
   LossPopUpWindow: {fileID: 2121741730}
+  BackgroundCanvasParent: {fileID: 0}
+  startFightUI: {fileID: 0}
   playerGlobalStatus: {fileID: 0}
+  PlayerSpawner: {fileID: 0}
+  PlayerSpawnLocation: {x: 0, y: 0, z: 0}
+  PlayerSpawnParent: {fileID: 0}
+  ShopUIParent: {fileID: 0}
+  MapParent: {fileID: 0}
+  DefenseTowerParentPrefab: {fileID: 0}
+  ActiveDefenseTowerParent: {fileID: 0}
+  DefTarget: {fileID: 1429391864}
+  CaptureTowerParentPrefab: {fileID: 0}
+  ActiveCaptureTowerParent: {fileID: 0}
+  CapTarget: {fileID: 0}
+  DungeonParentPrefab: {fileID: 0}
+  ActiveDungeonParent: {fileID: 0}
+  tileInterval: 0
+  EndDungeonTile: {fileID: 0}
+  PushCarParentPrefab: {fileID: 0}
+  ActivePushCarParent: {fileID: 0}
+  PushTarget: {fileID: 0}
+  CheckPointPrefab: {fileID: 0}
+  CarCheckPointGameObjects: []
+  BossFightParentPrefab: {fileID: 0}
+  ActiveBossFightParent: {fileID: 0}
+  DummyEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  restartBattle: 0
   cloneTower: {fileID: 0}
 --- !u!114 &1451593559
 MonoBehaviour:
@@ -4707,6 +4752,9 @@ MonoBehaviour:
   EnemyParentObj: {fileID: 1934517721}
   MaxEnemyCount: 5
   EnemySpawnLocationList: []
+  activeEnemies: []
+  DefenceTarget: {fileID: 0}
+  CaptureTarget: {fileID: 0}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -9231,7 +9279,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -9443,7 +9492,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -9570,7 +9620,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14469,7 +14519,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -14604,7 +14655,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -15145,7 +15197,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20044,7 +20096,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -20179,7 +20232,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -20759,7 +20813,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

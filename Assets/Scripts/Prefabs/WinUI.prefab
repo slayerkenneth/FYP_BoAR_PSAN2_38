@@ -408,7 +408,7 @@ MonoBehaviour:
   playerMovementCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}
   playerOwnCombatHandler: {fileID: 0}
-  DefTarget: {fileID: 0}
+  BattleEndFlag: 0
   DebugText: {fileID: 0}
   AreaText: {fileID: 0}
   AreaLimit: 100
@@ -423,12 +423,58 @@ MonoBehaviour:
   EnemySpawner: {fileID: 0}
   EnemySpawnPositionList: []
   enemyRandomSpawnLocationsCount: 0
-  Tower: {fileID: 0}
+  DTower: {fileID: 0}
+  CTower: {fileID: 0}
+  currentSceneTheme: 0
+  MaxRouteDisplacement: 0
+  MinRouteDisplacement: 0
+  AverageMainPointDistance: 0
+  MainPointDistanceVariance: 0
+  PossibleRouteMainEndPoints: []
+  PossibleRouteMainSecPoints: []
+  ActiveRouteTilesLocations: []
+  ActiveRouteTiles: []
+  TileParent: {fileID: 0}
+  MaxTilesCount: 0
+  CyberpunkTilePrefab: {fileID: 0}
+  PostApocalypseTilePrefab: {fileID: 0}
+  FantasyTilePrefab: {fileID: 0}
+  XianxiaTilePrefab: {fileID: 0}
+  ModernTilePrefab: {fileID: 0}
+  BattleUICanvasParent: {fileID: 0}
   PlayerHealthBarUI: {fileID: 0}
   EnemyHealthBarUI: {fileID: 0}
   WinPopUpWindow: {fileID: 0}
   LossPopUpWindow: {fileID: 0}
+  BackgroundCanvasParent: {fileID: 0}
+  startFightUI: {fileID: 0}
   playerGlobalStatus: {fileID: 0}
+  PlayerSpawner: {fileID: 0}
+  PlayerSpawnLocation: {x: 0, y: 0, z: 0}
+  PlayerSpawnParent: {fileID: 0}
+  ShopUIParent: {fileID: 0}
+  MapParent: {fileID: 0}
+  DefenseTowerParentPrefab: {fileID: 0}
+  ActiveDefenseTowerParent: {fileID: 0}
+  DefTarget: {fileID: 0}
+  CaptureTowerParentPrefab: {fileID: 0}
+  ActiveCaptureTowerParent: {fileID: 0}
+  CapTarget: {fileID: 0}
+  DungeonParentPrefab: {fileID: 0}
+  ActiveDungeonParent: {fileID: 0}
+  tileInterval: 0
+  EndDungeonTile: {fileID: 0}
+  PushCarParentPrefab: {fileID: 0}
+  ActivePushCarParent: {fileID: 0}
+  PushTarget: {fileID: 0}
+  CheckPointPrefab: {fileID: 0}
+  CarCheckPointGameObjects: []
+  BossFightParentPrefab: {fileID: 0}
+  ActiveBossFightParent: {fileID: 0}
+  DummyEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  restartBattle: 0
   cloneTower: {fileID: 0}
 --- !u!1 &1477375552103006044
 GameObject:

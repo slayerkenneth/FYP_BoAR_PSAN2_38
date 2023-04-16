@@ -4453,12 +4453,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 500
+  shield: 0
   skillCoolDown: 0
+  UpgradeDamagePercentage: 100
   AttackingColliders: []
   DamageTakingColliders: []
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 0}
+  extraDamage: 0
   ARCtrl: {fileID: 619056682}
   GameFlowCtrl: {fileID: 1451593558}
   CentralBattleCtrl: {fileID: 1451593561}
@@ -5462,12 +5465,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 500
+  shield: 0
   skillCoolDown: 0
+  UpgradeDamagePercentage: 100
   AttackingColliders: []
   DamageTakingColliders: []
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 0}
+  extraDamage: 0
   ARCtrl: {fileID: 619056682}
   GameFlowCtrl: {fileID: 1451593558}
   CentralBattleCtrl: {fileID: 1451593561}
@@ -9533,6 +9539,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   getHealthSystemGameObject: {fileID: 4098587496766710849}
   image: {fileID: 3450456934112950494}
+  ShieldImage: {fileID: 0}
 --- !u!224 &3450456933082368581
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9587,6 +9594,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   getHealthSystemGameObject: {fileID: 4098587496766710849}
   image: {fileID: 3450456933830606814}
+  ShieldImage: {fileID: 0}
 --- !u!224 &3450456933373103429
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9641,6 +9649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   getHealthSystemGameObject: {fileID: 4098587496766710849}
   image: {fileID: 3450456933806879414}
+  ShieldImage: {fileID: 0}
 --- !u!224 &3450456933397086253
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9827,6 +9836,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   getHealthSystemGameObject: {fileID: 4098587496766710849}
   image: {fileID: 3450456933576585157}
+  ShieldImage: {fileID: 0}
 --- !u!222 &3450456933806879413
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10780,7 +10790,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -16355,7 +16365,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -21991,7 +22001,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

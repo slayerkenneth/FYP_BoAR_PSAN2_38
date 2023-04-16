@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4440221, g: 0.49316514, b: 0.5722316, a: 1}
+  m_IndirectSpecularColor: {r: 0.4439403, g: 0.4931519, b: 0.5722083, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -352,7 +352,8 @@ MonoBehaviour:
   m_fontAsset: {fileID: 11400000, guid: bab87c9289f5d364a852c4ae16fca581, type: 2}
   m_sharedMaterial: {fileID: 4625922269720206472, guid: bab87c9289f5d364a852c4ae16fca581,
     type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 4625922269720206472, guid: bab87c9289f5d364a852c4ae16fca581, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -610,7 +611,8 @@ MonoBehaviour:
   m_fontAsset: {fileID: 11400000, guid: bab87c9289f5d364a852c4ae16fca581, type: 2}
   m_sharedMaterial: {fileID: 4625922269720206472, guid: bab87c9289f5d364a852c4ae16fca581,
     type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 4625922269720206472, guid: bab87c9289f5d364a852c4ae16fca581, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -836,7 +838,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1252,7 +1254,8 @@ MonoBehaviour:
   m_fontAsset: {fileID: 11400000, guid: bab87c9289f5d364a852c4ae16fca581, type: 2}
   m_sharedMaterial: {fileID: 4625922269720206472, guid: bab87c9289f5d364a852c4ae16fca581,
     type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 4625922269720206472, guid: bab87c9289f5d364a852c4ae16fca581, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:

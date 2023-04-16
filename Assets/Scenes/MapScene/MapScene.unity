@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44402242, g: 0.49316543, b: 0.5722324, a: 1}
+  m_IndirectSpecularColor: {r: 0.4439403, g: 0.4931519, b: 0.5722083, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -563,12 +563,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 710e7ba94b3216d4ab16812bf9188396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameFlowCtrl: {fileID: 0}
   graphContainer: {fileID: 1448792734}
   IconPrefab: {fileID: 611048098088729295, guid: 9af04530be647f94196339551ce93aec,
     type: 3}
   EndPrefab: {fileID: 356430686}
-  DefenceImage: {fileID: 21300000, guid: 5fbb18f543ad7cc45bf7aaeb3e81dee8, type: 3}
+  DefenseImage: {fileID: 0}
+  CaptureImage: {fileID: 0}
+  DungeonImage: {fileID: 0}
+  PushCarImage: {fileID: 0}
+  BossImage: {fileID: 0}
   ShopImage: {fileID: 21300000, guid: 258b3e730f00faa4bbff8146594ecccd, type: 3}
+  EventImage: {fileID: 0}
   LinkPrefab: {fileID: 4670098070062989320, guid: c4ba319c21d2cb242990c1b2b84d2f35,
     type: 3}
   CirclePrefab: {fileID: 3698393956567473449, guid: 3d9c29db274ab334dabb69145994e3ad,

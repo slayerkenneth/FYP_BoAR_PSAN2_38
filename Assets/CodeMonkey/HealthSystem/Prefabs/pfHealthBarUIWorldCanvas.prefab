@@ -145,6 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   getHealthSystemGameObject: {fileID: 0}
   image: {fileID: 6848739073536652053}
+  ShieldImage: {fileID: 0}
 --- !u!1 &6848739073536652050
 GameObject:
   m_ObjectHideFlags: 0
