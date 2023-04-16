@@ -27,8 +27,17 @@ EditorBuildSettings:
     path: Assets/Scenes/BattleScene/BattleFlow.unity
     guid: c297c6b10a00cad4184628939805403c
   - enabled: 1
-    path: Assets/Scenes/TitleScene/StartGameMenu.unity
+    path: Assets/Scenes/TitleAndIntroScene/StartGameMenu.unity
     guid: 122aacce5ea9bf440abf54e4e77c5a4a
+  - enabled: 1
+    path: Assets/Scenes/TitleAndIntroScene/IntroScene.unity
+    guid: e1139069424261340aa3cf7388d507da
+  - enabled: 1
+    path: Assets/Scenes/CharAndChapterSelection/ChapterSelect.unity
+    guid: cd56e23261ce36940bea0fa8bf7199c4
+  - enabled: 1
+    path: Assets/Scenes/CharAndChapterSelection/CharacterSelect.unity
+    guid: 470fa8699dbf2e74a9ca92672890b7d9
   - enabled: 1
     path: Assets/Scenes/MapScene/MapScene.unity
     guid: 1e27237ff226c1042af292f41c662a9a
