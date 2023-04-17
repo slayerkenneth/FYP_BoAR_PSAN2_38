@@ -25,6 +25,7 @@ public class CaptureTargetSpawner : MonoBehaviour
     public float captureProgress;
     public float captureRequirement;
 
+    public Tower ActiveTower;
     [Header("UI")] 
     public Canvas CaptureModeUICanvas;
 
@@ -45,6 +46,7 @@ public class CaptureTargetSpawner : MonoBehaviour
             SpawnedTower = Instantiate(TowerPrefab, TowerPosition, new Quaternion(0, 0, 0, 0), transform);
             var ct = SpawnedTower.AddComponent<CaptureTargert>();
             ct.spawner = this;
+            ActiveTower = SpawnedTower.GetComponent<Tower>();
             TowerPointsTransforms = SpawnedTower.GetComponent<Tower>().GetTowerPoints();
             GameFlowCtrl.battleSceneState = GameFlowController.PVEBattleSceneState.CapturePointMode;
             hasTowerSpawned = true;

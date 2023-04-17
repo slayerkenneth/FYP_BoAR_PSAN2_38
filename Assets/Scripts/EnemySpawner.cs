@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using Niantic.ARDK.Extensions.Gameboard;
 using UnityEngine;
 using CodeMonkey.HealthSystemCM;
+using Unity.VisualScripting;
 using UnityEditor;
+using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -22,6 +24,8 @@ public class EnemySpawner : MonoBehaviour
     public List<Vector3> EnemySpawnLocationList;
     private bool EnemySpawnEnable = false;
     public List<GameObject> activeEnemies;
+    public float spawnInterval;
+    public float spawnTimeCounter;
 
     public DefenceTarget DefenceTarget;
     public CaptureTargetSpawner captureTargetSpawner;
@@ -33,16 +37,112 @@ public class EnemySpawner : MonoBehaviour
     public GameObject playerPrefab;
     public static List<EventHandler> OnEnemyDead = new List<EventHandler>();
 
+    public Tower ActiveTower;
     void Start()
     {
-        _activeGameboard = ARCtrl.GetActiveGameboard();
+        
     }
     
     void Update()
     {
+        // location list ready, counter start
+        if (spawnTimeCounter >= 0 && EnemySpawnEnable)
+        {
+            spawnTimeCounter -= Time.deltaTime;
+            return;
+        }
+
+        if (EnemySpawnEnable && spawnTimeCounter <= 0)
+        {
+            if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.DefencePointMode)
+            {
+                if (ActiveTower == null) ActiveTower = DefenceTarget.GetComponentInChildren<Tower>();
+                ActiveTower.TowerPointsTransforms.ForEach(t =>
+                {
+                    var towerpos = t.position;
+                    if (!EnemyAtkTowerPositionList.Contains(towerpos)) EnemyAtkTowerPositionList.Add(towerpos);
+                });
+                // Not Ready for spawning any enemy
+                if (EnemySpawnLocationList.Count == 0) return;
+                
+                for (int i = 1; i < MaxEnemyCount; i++)
+                {
+                    var Enemy = GetRandomEnemyFromPrefabList();
+                    if (Enemy == null) break;
+                    SpawnEnemy(Enemy,
+                        EnemySpawnLocationList[i % EnemySpawnLocationList.Count],
+                        EnemyAtkTowerPositionList[i % EnemyAtkTowerPositionList.Count]);
+                }
+            } 
+            else if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.CapturePointMode)
+            {
+                if (ActiveTower == null) ActiveTower = captureTargetSpawner.ActiveTower;
+                ActiveTower.TowerPointsTransforms.ForEach(t =>
+                {
+                    var pos = new Vector3(t.position.x, -1.1f, t.position.z);
+                    if (!EnemySpawnLocationList.Contains(pos)) EnemySpawnLocationList.Add(pos);
+                });
+                
+                // Not Ready for spawning any enemy
+                if (EnemySpawnLocationList.Count == 0) return;
+                for (int i = 1; i < MaxEnemyCount; i++)
+                {
+                    var Enemy = GetRandomEnemyFromPrefabList();
+                    if (Enemy == null) break;
+                    SpawnEnemy(Enemy,
+                        EnemySpawnLocationList[i % EnemySpawnLocationList.Count],
+                        Vector3.zero);
+                }
+            }
+            else if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.PushCarBattleMode)
+            {
+                // Not Ready for spawning any enemy
+                if (EnemySpawnLocationList.Count == 0) return;
+                // spawn according to the list 
+                for (int i = 1; i < MaxEnemyCount; i++)
+                {
+                    var Enemy = GetRandomEnemyFromPrefabList();
+                    if (Enemy == null) break;
+                    SpawnEnemy(Enemy,
+                        EnemySpawnLocationList[i % EnemySpawnLocationList.Count],
+                        Vector3.zero);
+                }
+                // spawn more when the main point is nearer to player
+                Vector3 NearestTile = GameFlowCtrl.ActiveRouteTilesLocations.Find(vec3 =>
+                {
+                    return Vector3.Distance(vec3, GameFlowCtrl.GetPlayerLocation()) <=
+                        2 * GameFlowCtrl.MainPointDistanceVariance;
+                });
+                var EnemyExtra = GetRandomEnemyFromPrefabList();
+                if (EnemyExtra == null) return;
+                SpawnEnemy(EnemyExtra,NearestTile, Vector3.zero);
+            }
+            else if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.DungeonMode)
+            {
+                // Not Ready for spawning any enemy
+                if (EnemySpawnLocationList.Count == 0) return;
+                // spawn according to the list 
+                for (int i = 1; i < MaxEnemyCount; i++)
+                {
+                    SpawnEnemy(GetRandomEnemyFromPrefabList(),
+                        EnemySpawnLocationList[i % EnemySpawnLocationList.Count],
+                        Vector3.zero);
+                }
+                // spawn more when the main point is nearer to player
+                Vector3 NearestTile = GameFlowCtrl.ActiveRouteTilesLocations.Find(vec3 =>
+                {
+                    return Vector3.Distance(vec3, GameFlowCtrl.GetPlayerLocation()) <=
+                           2 * GameFlowCtrl.MainPointDistanceVariance;
+                });
+                SpawnEnemy(GetRandomEnemyFromPrefabList(),NearestTile, Vector3.zero);
+            }
+            
+            // reset spawn count down timer
+            spawnTimeCounter = spawnInterval;
+        }
         // for (int i=0; i < EnemySpawnLocationList.Count; i++)
         // {
-        //     if (!EnemySpawnEnable || EnemySpawnPrefabList.Count == 0 || EnemySpawnLocationList.Count == 0 || activeEnemies.Count >= MaxEnemyCount) return;
+        //     if (!EnemySpawnEnable || EnemySpawnPrefabList.Count == 0 (not possible) || EnemySpawnLocationList.Count == 0|| activeEnemies.Count >= MaxEnemyCount) return;
         //     
         //     if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.DefencePointMode)
         //     {
@@ -73,12 +173,12 @@ public class EnemySpawner : MonoBehaviour
         //
     }
 
-    public GameObject SpawnEnemy(GameObject enemyPrefab, Vector3 SpawnLocationVec)
-    {
-        return Instantiate(enemyPrefab, SpawnLocationVec, new Quaternion(), EnemyParentObj.transform);
-    }
+    // public GameObject SpawnEnemy(GameObject enemyPrefab, Vector3 SpawnLocationVec)
+    // {
+    //     return Instantiate(enemyPrefab, SpawnLocationVec, new Quaternion(), EnemyParentObj.transform);
+    // }
     
-    public IEnumerator SpawnEnemyAfterWaiting(float time, GameObject enemyPrefab, Vector3 SpawnLocationVec, Vector3 AtkTowerPos)
+    public void SpawnEnemy(GameObject enemyPrefab, Vector3 SpawnLocationVec, Vector3 AtkTowerPos)
     {
         var e = Instantiate(enemyPrefab, SpawnLocationVec, new Quaternion(0,0,0,0), EnemyParentObj.transform);
         e.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
@@ -96,35 +196,87 @@ public class EnemySpawner : MonoBehaviour
         {
             healthSystem.OnDead += eventHandler;
         }
-        yield return new WaitForSeconds(time);
+        activeEnemies.Add(e);
     }
 
-    public void SetSpawner(bool sw)
+    public void SetEnemySpawner(bool sw)
     {
+        _activeGameboard = ARCtrl.GetActiveGameboard();
         EnemySpawnEnable = sw;
         if (!sw)
         {
-            GameFlowCtrl.ResetEnemySpawnLocationList();
+            ActiveTower = null;
             ResetEnemySpawnLocationList();
             return;
         }
-        GameFlowCtrl.SetRandomEnemySpawnLocationVectors(MaxEnemyCount);
-        EnemySpawnLocationList = GameFlowCtrl.GetEnemySpawnLocationVectorList();
+        // SetRandomEnemySpawnLocationVectors(MaxEnemyCount);
+        switch (GameFlowCtrl.BattleMode)
+        {
+            case GameFlowController.PVEBattleSceneState.DefencePointMode:
+                MaxEnemyCount = 5;
+                spawnInterval = MaxEnemyCount * 3;
+                GameFlowCtrl.ActiveDefenseTowerParent.SetActive(true);
+                DefenceTarget = GameFlowCtrl.ActiveDefenseTowerParent.GetComponentInChildren<DefenceTarget>();
+                EnemyAtkTowerPositionList.Clear();
+
+                SetRandomEnemySpawnLocation(MaxEnemyCount);
+                break;
+            
+            case GameFlowController.PVEBattleSceneState.CapturePointMode:
+                MaxEnemyCount = 5;
+                spawnInterval = MaxEnemyCount * 5;
+                GameFlowCtrl.ActiveCaptureTowerParent.SetActive(true);
+                captureTargetSpawner =
+                    GameFlowCtrl.ActiveCaptureTowerParent.GetComponentInChildren<CaptureTargetSpawner>();
+                
+                EnemyAtkTowerPositionList.Clear();
+                break;
+            
+            case GameFlowController.PVEBattleSceneState.DungeonMode:
+                MaxEnemyCount = 5;
+                spawnInterval = MaxEnemyCount * 2;
+                break;
+            
+            case GameFlowController.PVEBattleSceneState.PushCarBattleMode:
+                MaxEnemyCount = 5;
+                spawnInterval = MaxEnemyCount * 2;
+                break;
+        }
     }
 
-    public Vector3 getTowerPosition()
+    private GameObject GetRandomEnemyFromPrefabList()
     {
-        return towerPosition;
+        if (EnemySpawnPrefabList.Count == 0) return null;
+        int seed = Random.Range(0, EnemySpawnPrefabList.Count);
+        return EnemySpawnPrefabList[seed];
+    }
+    
+    public void SetRandomEnemySpawnLocation(int MaxRandomSpawnPositionCount)
+    {
+        int count = 0;
+        Vector3 pos = new Vector3();
+        while (_activeGameboard.FindRandomPosition(out pos) && count != MaxRandomSpawnPositionCount)
+        {
+            var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
+            if (!GameFlowCtrl.WallCoordinates.Contains(v) 
+                && GameFlowCtrl.AllGridNodeCoordinates.Contains(v)) 
+            {
+                EnemySpawnLocationList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1.1f, v.y * _activeGameboard.Settings.TileSize));
+                count++;
+            }
+        }
     }
 
     private void ResetEnemySpawnLocationList()
     {
         EnemySpawnLocationList.Clear();
+        spawnTimeCounter = 0;
     }
 
     public void ClearEnemyOnScene()
     {
         activeEnemies.ForEach(Destroy);
+        var wait = new WaitUntil( () => activeEnemies.Count == 0);
         activeEnemies.Clear();
     }
 

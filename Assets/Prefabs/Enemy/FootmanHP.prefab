@@ -919,7 +919,7 @@ MonoBehaviour:
   attackRange: 0.165
   sightRange: 0.4
   colliderRange: 0.025
-  DamageAmount: 2
+  DamageAmount: 1
   attackTime: 2
   attackPoint: {fileID: 1020735913524162691}
   type: 0
@@ -946,7 +946,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  shield: 0
   skillCoolDown: 0
+  UpgradeDamagePercentage: 100
   AttackingColliders:
   - {fileID: 2002268339065775555}
   DamageTakingColliders:
@@ -954,6 +956,7 @@ MonoBehaviour:
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 4994458117732575418}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}

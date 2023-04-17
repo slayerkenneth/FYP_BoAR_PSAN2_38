@@ -82,8 +82,6 @@ public class GameFlowController : MonoBehaviour
 
     [Header("Enemy Related")] 
     public EnemySpawner EnemySpawner;
-    public List<Vector3> EnemySpawnPositionList;
-    public int enemyRandomSpawnLocationsCount;
 
     [Header("Defense Point reference")] 
     public DefenceTarget DTower;
@@ -186,8 +184,6 @@ public class GameFlowController : MonoBehaviour
         CoordinatesAdjacencyList = new Dictionary<Vector2Int, List<Vector2Int>>();
         AllGridNodeCoordinates = new List<Vector2Int>();
         WallCoordinates = new List<Vector2Int>();
-
-        EnemySpawnPositionList = new List<Vector3>();
         
         BattleUICanvasParent.SetActive(false);
         startFightUI.SetActive(false);
@@ -581,6 +577,10 @@ public class GameFlowController : MonoBehaviour
         IntermediateMains.ForEach(vec3 => ActiveRouteTilesLocations.Add(vec3));
         ActiveRouteTilesLocations.Add(endMainPoint);
 
+        // Set the enemy spawn location for enemy spawner (on click trigger but should be called slower than switching on the spawner)
+        EnemySpawner.ClearEnemyOnScene();
+        ActiveRouteTilesLocations.ForEach(vec => EnemySpawner.EnemySpawnLocationList.Add(vec));
+        
         if (BattleMode == PVEBattleSceneState.DungeonMode)
         {
             var final = GenerateConnectingTileLocations(ActiveRouteTilesLocations, tileInterval);
@@ -787,6 +787,7 @@ public class GameFlowController : MonoBehaviour
     public void ClearActiveRouteTiles()
     {
         ActiveRouteTiles.ForEach(Destroy);
+        var wait = new WaitUntil( () => ActiveRouteTiles.Count == 0);
         ActiveRouteTiles.Clear();
     }
 
@@ -813,47 +814,6 @@ public class GameFlowController : MonoBehaviour
     }
     #endregion
 
-    #region Enemy Spawning
-    
-    /*
-     * Set battleSceneState = PVEBattleSceneState.SpawningEnemy
-     * return EnemySpawnPositionList
-     */
-    public List<Vector3> GetEnemySpawnLocationVectorList()
-    {
-        return EnemySpawnPositionList;
-    }
-
-    /*
-     * Select and add random non wall coordinates as enemy spawn point
-     * Param max position count
-     * Set Position List
-     * with y-axis coordinate of 2f
-     * 
-     * Set battleSceneState = BattleMode;
-     */
-    public void SetRandomEnemySpawnLocationVectors(int MaxRandomSpawnPositionCount)
-    {
-        int count = 0;
-
-        var pos = new Vector3();
-        while (_activeGameboard.FindRandomPosition(out pos) && count != MaxRandomSpawnPositionCount)
-        {
-            var v = Utils.PositionToTile(pos, _activeGameboard.Settings.TileSize);
-            if (!WallCoordinates.Contains(v) && AllGridNodeCoordinates.Contains(v))
-            {
-                EnemySpawnPositionList.Add(new Vector3(v.x * _activeGameboard.Settings.TileSize, -1f, v.y * _activeGameboard.Settings.TileSize));
-                count++;
-            }
-        }
-    }
-
-    public void ResetEnemySpawnLocationList()
-    {
-        EnemySpawnPositionList.Clear();
-    }
-    #endregion
-    
     #region Map Route Node Generation and Selection
 
     public void EnterMapNode(LevelType levelType)
@@ -929,7 +889,6 @@ public class GameFlowController : MonoBehaviour
             MapParent.SetActive(false);
             BackgroundCanvasParent.SetActive(false);
             ShopUIParentPrefab.SetActive(false);
-            ActiveShopUI.SetActive(false);
             BattleEndFlag = false;
         }
         
@@ -966,7 +925,7 @@ public class GameFlowController : MonoBehaviour
     {
         MapParent.SetActive(true);
         // ShopUIParentPrefab.SetActive(false);
-        DestroyImmediate(ActiveShopUI);
+        Destroy(ActiveShopUI);
         battleSceneState = PVEBattleSceneState.MapActive;
         BattleEndFlag = false;
     }
@@ -974,9 +933,6 @@ public class GameFlowController : MonoBehaviour
     public void EnterNewBattle()
     {
         if (!restartBattle) return;
-        // Reset Spawner then Set again
-        EnemySpawner.SetSpawner(false);
-        EnemySpawner.SetSpawner(true);
         switch (BattleMode)
         {
             case PVEBattleSceneState.DefencePointMode:
@@ -1003,6 +959,9 @@ public class GameFlowController : MonoBehaviour
                 restartBattle = false;
                 break;
         }
+        
+        // Reset Spawner then Set again, spawn tower first then spawn enemy
+        EnemySpawner.SetEnemySpawner(true);
     }
     #endregion
 
@@ -1257,6 +1216,7 @@ public class GameFlowController : MonoBehaviour
         ActiveDungeonParent = null;
         ActivePushCarParent = null;
         ActiveBossFightParent = null;
+        EnemySpawner.SetEnemySpawner(false);
         EnemySpawner.ResetTowerTargetReference();
     }
 
@@ -1264,6 +1224,7 @@ public class GameFlowController : MonoBehaviour
     {
         LossPopUpWindow.SetActive(true);
         EnemySpawner.ResetTowerTargetReference();
+        EnemySpawner.SetEnemySpawner(false);
         EnemySpawner.ClearEnemyOnScene();
         switch (BattleMode)
         {
