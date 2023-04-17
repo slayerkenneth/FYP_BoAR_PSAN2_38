@@ -8,7 +8,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
+/**
+ * Deprecated, should be removed
+ */
 public class ObjectRecognitionController : MonoBehaviour
 {
     [Header("Controller Reference")] 

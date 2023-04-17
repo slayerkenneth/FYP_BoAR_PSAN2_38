@@ -40,37 +40,37 @@ public class EnemySpawner : MonoBehaviour
     
     void Update()
     {
-        for (int i=0; i < EnemySpawnLocationList.Count; i++)
-        {
-            if (!EnemySpawnEnable || EnemySpawnPrefabList.Count == 0 || EnemySpawnLocationList.Count == 0 || activeEnemies.Count >= MaxEnemyCount) return;
-            
-            if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.DefencePointMode)
-            {
-                if (DefenceTarget == null) return; // Optimize later
-                DefenceTarget.GetTowerPointsTransforms().ForEach(t =>
-                {
-                    EnemyAtkTowerPositionList.Add(t.position);
-                });
-                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], EnemyAtkTowerPositionList[i]));
-            }
-            else if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.CapturePointMode)
-            {
-                if (captureTargetSpawner == null) return; // Optimize later
-                captureTargetSpawner.GetTowerPointsTransforms().ForEach(t =>
-                {
-                    EnemySpawnLocationList.Add(t.position);        
-                });
-                // Need to review enemyPathfinding logic
-                // Some Bug here!
-                // StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
-            }
-            else
-            {
-                // Need to review enemyPathfinding logic
-                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
-            }
-        }
-        
+        // for (int i=0; i < EnemySpawnLocationList.Count; i++)
+        // {
+        //     if (!EnemySpawnEnable || EnemySpawnPrefabList.Count == 0 || EnemySpawnLocationList.Count == 0 || activeEnemies.Count >= MaxEnemyCount) return;
+        //     
+        //     if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.DefencePointMode)
+        //     {
+        //         if (DefenceTarget == null) return; // Optimize later
+        //         DefenceTarget.GetTowerPointsTransforms().ForEach(t =>
+        //         {
+        //             EnemyAtkTowerPositionList.Add(t.position);
+        //         });
+        //         StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], EnemyAtkTowerPositionList[i]));
+        //     }
+        //     else if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.CapturePointMode)
+        //     {
+        //         if (captureTargetSpawner == null) return; // Optimize later
+        //         captureTargetSpawner.GetTowerPointsTransforms().ForEach(t =>
+        //         {
+        //             EnemySpawnLocationList.Add(t.position);        
+        //         });
+        //         // Need to review enemyPathfinding logic
+        //         // Some Bug here!
+        //         StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
+        //     }
+        //     else
+        //     {
+        //         // Need to review enemyPathfinding logic
+        //         StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
+        //     }
+        // }
+        //
     }
 
     public GameObject SpawnEnemy(GameObject enemyPrefab, Vector3 SpawnLocationVec)

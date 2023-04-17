@@ -48,7 +48,7 @@ public class ObjectSpawningController : MonoBehaviour
         
     }
 
-    public void spawnSceneItems() {
+    public void SpawnSceneItems() {
         /*
         var num = new List<int>();
         num.Add(0);

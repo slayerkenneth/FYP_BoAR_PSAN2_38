@@ -283,7 +283,7 @@ public class UIController : MonoBehaviour
         totalHealth = PlayerStatus.maxHPStat[PlayerStatus.maxHPLv];
         recentMoney = PlayerStatus.money;
         recentWeaponLV = PlayerStatus.weaponStat.lv;
-        recentClass1LV = PlayerStatus.activeClass.lv;
+        // recentClass1LV = PlayerStatus.activeClass.lv;
         recentClass2LV = PlayerStatus.passiveClass.lv;
 
         MoneyText.text = recentMoney.ToString();

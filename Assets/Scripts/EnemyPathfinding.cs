@@ -139,50 +139,50 @@ public class EnemyPathfinding : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
-        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-        calmDownTime = calmDownTime - Time.deltaTime;
-        if (calmDownTime <= 0)
-        {
-            calmDown = false;
-        }
-        
-        //using check capsules
-        hitColliders = Physics.OverlapSphere(this.transform.position, colliderRange, whatIsEnemy); 
-        if(hitColliders.Length == 1 && hitColliders[0].gameObject == this.gameObject)
-        {
-            dealWithOverlap = false;
-        }
-        else
-        {
-            dealWithOverlap = true;
-            for (int i = 0; i < hitColliders.Length; ++i)
-            { 
-                if (hitColliders[i].gameObject != this.gameObject)
-                {
-                    //Debug.Log(this.name + " " + hitColliders[i].gameObject.name);
-                    DealWithOverlap(hitColliders[i]);
-                }
-            } 
-        }     
-
-        if(!dealWithOverlap)
-        {
-            if (calmDown || (!playerInSightRange && !playerInAttackRange))
-            {
-                if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer)
-                    GoToTower();
-            }
-                
-            if (!calmDown && playerInSightRange && !playerInAttackRange) 
-            {
-                ChasePlayer();
-            }
-            if (!calmDown && playerInAttackRange && playerInSightRange) 
-            {
-                AttackPlayer();
-            }
-        }       
+        // playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
+        // playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+        // calmDownTime = calmDownTime - Time.deltaTime;
+        // if (calmDownTime <= 0)
+        // {
+        //     calmDown = false;
+        // }
+        //
+        // //using check capsules
+        // hitColliders = Physics.OverlapSphere(this.transform.position, colliderRange, whatIsEnemy); 
+        // if(hitColliders.Length == 1 && hitColliders[0].gameObject == this.gameObject)
+        // {
+        //     dealWithOverlap = false;
+        // }
+        // else
+        // {
+        //     dealWithOverlap = true;
+        //     for (int i = 0; i < hitColliders.Length; ++i)
+        //     { 
+        //         if (hitColliders[i].gameObject != this.gameObject)
+        //         {
+        //             //Debug.Log(this.name + " " + hitColliders[i].gameObject.name);
+        //             DealWithOverlap(hitColliders[i]);
+        //         }
+        //     } 
+        // }     
+        //
+        // if(!dealWithOverlap)
+        // {
+        //     if (calmDown || (!playerInSightRange && !playerInAttackRange))
+        //     {
+        //         if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer)
+        //             GoToTower();
+        //     }
+        //         
+        //     if (!calmDown && playerInSightRange && !playerInAttackRange) 
+        //     {
+        //         ChasePlayer();
+        //     }
+        //     if (!calmDown && playerInAttackRange && playerInSightRange) 
+        //     {
+        //         AttackPlayer();
+        //     }
+        // }       
     }
 
     public void DealWithOverlap(Collider hitCollider)

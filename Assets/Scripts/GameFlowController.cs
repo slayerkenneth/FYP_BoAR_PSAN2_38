@@ -126,7 +126,8 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] public GameObject PlayerSpawnParent;
 
     [Header("Shop")] 
-    [SerializeField] public GameObject ShopUIParent;
+    [SerializeField] public GameObject ShopUIParentPrefab;
+    [SerializeField] public GameObject ActiveShopUI;
     
     [Header("Map")]
     [SerializeField] public GameObject MapParent;
@@ -162,6 +163,10 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] UnityEvent DummyEvent;
     [SerializeField] Action DummyAction;
 
+    [Header("Object Recognition and Item spawning")]
+    public ObjectSpawningController SceneItemSpanwer;
+
+    [Header("Game Cycle, and other stuff")]
     public bool restartBattle = false;
     public GameObject cloneTower;
     
@@ -416,7 +421,6 @@ public class GameFlowController : MonoBehaviour
         else if (battleSceneState is PVEBattleSceneState.MapActive)
         {
             // BattleUICanvasParent.SetActive(false);
-            ShopUIParent.SetActive(false);
             BackgroundCanvasParent.SetActive(true);
             MapParent.SetActive(true);
         }
@@ -426,14 +430,12 @@ public class GameFlowController : MonoBehaviour
         {
             // BattleUICanvasParent.SetActive(false);
             MapParent.SetActive(false);
-            ShopUIParent.SetActive(true);
-            ShopUIParent.SetActive(true);
+            ActiveShopUI.SetActive(true);
         }
         
         else if (battleSceneState is PVEBattleSceneState.EventActive)
         {
             // BattleUICanvasParent.SetActive(false);
-            ShopUIParent.SetActive(false);
             MapParent.SetActive(false);
             BackgroundCanvasParent.SetActive(true);
         }
@@ -903,7 +905,8 @@ public class GameFlowController : MonoBehaviour
                 
                 BattleUICanvasParent.SetActive(false);
                 MapParent.SetActive(false);
-                ShopUIParent.SetActive(true);
+                //ShopUIParentPrefab.SetActive(true);
+                ActiveShopUI = Instantiate(ShopUIParentPrefab, transform);
                 BattleEndFlag = false;
                 break;
             
@@ -925,7 +928,8 @@ public class GameFlowController : MonoBehaviour
             BattleUICanvasParent.SetActive(true);
             MapParent.SetActive(false);
             BackgroundCanvasParent.SetActive(false);
-            ShopUIParent.SetActive(false);
+            ShopUIParentPrefab.SetActive(false);
+            ActiveShopUI.SetActive(false);
             BattleEndFlag = false;
         }
         
@@ -940,7 +944,6 @@ public class GameFlowController : MonoBehaviour
             
             MapParent.SetActive(false);
             BackgroundCanvasParent.SetActive(false);
-            ShopUIParent.SetActive(false);
         }
     }
 
@@ -962,7 +965,8 @@ public class GameFlowController : MonoBehaviour
     public void ExitShopReEnterMap()
     {
         MapParent.SetActive(true);
-        ShopUIParent.SetActive(false);
+        // ShopUIParentPrefab.SetActive(false);
+        DestroyImmediate(ActiveShopUI);
         battleSceneState = PVEBattleSceneState.MapActive;
         BattleEndFlag = false;
     }

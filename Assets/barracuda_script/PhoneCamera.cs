@@ -72,6 +72,7 @@ public class PhoneCamera : MonoBehaviour
     }
 
     public void StartInference() {
+        Debug.Log("Start Inference called");
         dirPath = Application.dataPath + "/../SaveImages/";
 
         if (!IsArCamera)
