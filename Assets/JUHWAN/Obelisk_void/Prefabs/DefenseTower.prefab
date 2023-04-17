@@ -126,6 +126,8 @@ GameObject:
   - component: {fileID: 593859230819194797}
   - component: {fileID: 4524895006623363282}
   - component: {fileID: -8776044527440235146}
+  - component: {fileID: 3171163906160355030}
+  - component: {fileID: 1359537004661851372}
   m_Layer: 11
   m_Name: DefenseTower
   m_TagString: Tower(D)
@@ -209,6 +211,43 @@ MonoBehaviour:
   - {fileID: 283641726316442407}
   - {fileID: 7456713851602820783}
   - {fileID: 1611996858782177649}
+--- !u!114 &3171163906160355030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514838442195789469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ce00f2d7f4aff41a0ff3ce5b839e92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 100
+  skillCoolDown: 0
+  AttackingColliders: []
+  DamageTakingColliders:
+  - {fileID: 4524895006623363282}
+  AttackTarget: {fileID: 0}
+  DamageSource: {fileID: 0}
+  healthSystemComponent: {fileID: 1359537004661851372}
+  ARCtrl: {fileID: 0}
+  GameFlowCtrl: {fileID: 0}
+  CentralBattleCtrl: {fileID: 0}
+--- !u!114 &1359537004661851372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514838442195789469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb9aa7183709da429076edc5294507b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthAmountMax: 100
+  startingHealthAmount: 100
 --- !u!1 &2072005146838210861
 GameObject:
   m_ObjectHideFlags: 0

@@ -44,6 +44,7 @@ public class RangeAttack : MonoBehaviour
                 if (Vector3.Distance(transform.position, target.position) < 0.05f)
                 {
                     CombatHandler.DoDamage(target.GetComponent<CombatHandler>(), DamageAmount);
+                    Debug.Log(target.name + " " + target.GetComponent<CombatHandler>().GetCurrentHP());
                     stopRangeAttack = true;
                     Destroy(gameObject);
                 }

@@ -48,7 +48,7 @@ public class EnemySpawner : MonoBehaviour
                 {
                     EnemyAtkTowerPositionList.Add(t.position);
                 });
-                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], EnemyAtkTowerPositionList[i]));
+                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], i));
             }
             else if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.CapturePointMode)
             {
@@ -58,12 +58,12 @@ public class EnemySpawner : MonoBehaviour
                     EnemySpawnLocationList.Add(t.position);        
                 });
                 // Need to review enemyPathfinding logic
-                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
+                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], i));
             }
             else
             {
                 // Need to review enemyPathfinding logic
-                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], Vector3.zero));
+                StartCoroutine(SpawnEnemyAfterWaiting(1000, EnemySpawnPrefabList[i], EnemySpawnLocationList[i], i));
             }
         }
         
@@ -74,14 +74,14 @@ public class EnemySpawner : MonoBehaviour
         return Instantiate(enemyPrefab, SpawnLocationVec, new Quaternion(), EnemyParentObj.transform);
     }
     
-    public IEnumerator SpawnEnemyAfterWaiting(float time, GameObject enemyPrefab, Vector3 SpawnLocationVec, Vector3 AtkTowerPos)
+    public IEnumerator SpawnEnemyAfterWaiting(float time, GameObject enemyPrefab, Vector3 SpawnLocationVec, int ID)
     {
         var e = Instantiate(enemyPrefab, SpawnLocationVec, new Quaternion(0,0,0,0), EnemyParentObj.transform);
         e.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
         e.AddComponent<EnemyPathfinding>();
         e.GetComponent<EnemyBehavior>().GameFlowCtrl = GameFlowCtrl;
         e.GetComponent<EnemyPathfinding>().GameFlowCtrl = GameFlowCtrl;
-        e.GetComponent<EnemyPathfinding>().AtkTowerPosition = AtkTowerPos;
+        e.GetComponent<EnemyPathfinding>().enemyID = ID;
         e.GetComponent<EnemyPathfinding>().whatIsGround = whatIsGround;
         e.GetComponent<EnemyPathfinding>().whatIsPlayer = whatIsPlayer;
         e.GetComponent<CombatHandler>().SetCentralCombatHandler(centralBattleCtrl);

@@ -884,8 +884,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameFlowCtrl: {fileID: 0}
   CombatHandler: {fileID: 6750892124478517533}
+  speed: 0.3
   attackRange: 0.4
   sightRange: 0.7
+  playerInAttackRange: 0
   colliderRange: 0.025
   DamageAmount: 2
   attackTime: 2

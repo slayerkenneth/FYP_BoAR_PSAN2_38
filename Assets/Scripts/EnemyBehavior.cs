@@ -14,8 +14,10 @@ public class EnemyBehavior : MonoBehaviour
     // public List<Collider> DamageTakingColliders;
 
     [Header("Data Related")]
+    public float speed;
     public float attackRange;
     public float sightRange;
+    public bool playerInAttackRange;
     public float colliderRange;
     public float DamageAmount;
     public float attackTime;
@@ -85,6 +87,8 @@ public class EnemyBehavior : MonoBehaviour
             RangePrefab.GetComponent<RangeAttack>().GameFlowCtrl = GameFlowCtrl;
             RangePrefab.GetComponent<RangeAttack>().enemy = this.transform;
             RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
+            if (!playerInAttackRange && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.DefencePointMode)
+                RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.GetActiveDefenseTowerPrefab().GetComponentInChildren<DefenceTarget>().GetSpawnedTower().transform;
 
         }
         
