@@ -214,7 +214,7 @@ public class EnemySpawner : MonoBehaviour
         {
             case GameFlowController.PVEBattleSceneState.DefencePointMode:
                 MaxEnemyCount = 5;
-                spawnInterval = MaxEnemyCount * 3;
+                spawnInterval = MaxEnemyCount * 5;
                 GameFlowCtrl.ActiveDefenseTowerParent.SetActive(true);
                 DefenceTarget = GameFlowCtrl.ActiveDefenseTowerParent.GetComponentInChildren<DefenceTarget>();
                 EnemyAtkTowerPositionList.Clear();
@@ -224,7 +224,7 @@ public class EnemySpawner : MonoBehaviour
             
             case GameFlowController.PVEBattleSceneState.CapturePointMode:
                 MaxEnemyCount = 5;
-                spawnInterval = MaxEnemyCount * 5;
+                spawnInterval = MaxEnemyCount * 8;
                 GameFlowCtrl.ActiveCaptureTowerParent.SetActive(true);
                 captureTargetSpawner =
                     GameFlowCtrl.ActiveCaptureTowerParent.GetComponentInChildren<CaptureTargetSpawner>();
@@ -234,12 +234,12 @@ public class EnemySpawner : MonoBehaviour
             
             case GameFlowController.PVEBattleSceneState.DungeonMode:
                 MaxEnemyCount = 5;
-                spawnInterval = MaxEnemyCount * 2;
+                spawnInterval = MaxEnemyCount * 5;
                 break;
             
             case GameFlowController.PVEBattleSceneState.PushCarBattleMode:
                 MaxEnemyCount = 5;
-                spawnInterval = MaxEnemyCount * 2;
+                spawnInterval = MaxEnemyCount * 5;
                 break;
         }
     }
