@@ -1,0 +1,35 @@
+﻿title: BeforeChapter2
+tags:
+---
+Tom: That was a weird dream... I feel terrible. Oh, it's time for another boring class...
+Boarlord: Last time we were rudely interrupted by an intruder.
+Tom: Oh, so it wasn't a dream... let me try to get more information this time.
+Boarlord: YOU AGAIN! YOU WON'T GET AWAY SO EASILY THIS TIME!
+Tom: (panting) Jeez...I have... got to get better... at not getting noticed.
+Unknown figure: Pssh...Over here.
+-> Talk to them
+    <<jump TalkToThem>>
+-> Continue running
+    <<jump ContinueRunning>>
+===
+title: TalkToThem
+---
+Tom: Who are you? I'm being chased by a crazy group of boars!
+Unknown figure: We know, We can help. The experiment must be stopped.
+Tom: You mean the one in the locker?
+Unknown figure: Yes. Yesterday's blast left you with the power to synchronise with versions of yourself across the multiverse.
+Boarlord: YOU! YOU'RE NOT GETTING AWAY TODAY.
+Unknown figure: I've gotta go, find me in the next time loop!
+Tom: Wait!
+Boarlord: Haha, you have no choice but to battle me again.
+===
+title: ContinueRunning
+---
+Tom: I don't have time for this!
+(TOM KNOCKS DOWN THE LOCKER CONTAINING THE EXPERIMENT BUT TRIPS)
+Unknown figure: (holds out hand to help Tom up) Come with us. Yesterday's blast left you with the power to synchronise with versions of yourself across the multiverse.
+Boarlord: YOU THERE!
+Unknown figure: Crap! Find me in the next time loop!
+Tom: Wait!
+Boarlord: Haha, you have no choice but to battle me again.
+===
