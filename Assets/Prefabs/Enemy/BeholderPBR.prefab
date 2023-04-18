@@ -691,6 +691,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameFlowCtrl: {fileID: 0}
   CombatHandler: {fileID: 7744360170719625079}
+  speed: 0.4
   attackRange: 0.3
   sightRange: 0.6
   colliderRange: 0.025
@@ -743,10 +744,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.7
-  m_Height: 3
+  m_Radius: 0.47030246
+  m_Height: 0.9406049
   m_Direction: 1
-  m_Center: {x: 0, y: 1.5, z: 0}
+  m_Center: {x: -0.0051538274, y: 1.4659262, z: 0.059620477}
 --- !u!114 &6087071987150614418
 MonoBehaviour:
   m_ObjectHideFlags: 0

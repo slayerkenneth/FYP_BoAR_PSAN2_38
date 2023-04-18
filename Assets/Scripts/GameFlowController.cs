@@ -975,7 +975,7 @@ public class GameFlowController : MonoBehaviour
     public bool GetTowerSpawnLocationVector(out Vector3 towerLocation)
     {
         towerLocation = new Vector3();
-        if (BattleMode is PVEBattleSceneState.CapturePointMode or PVEBattleSceneState.DefencePointMode)
+        if (BattleMode == PVEBattleSceneState.CapturePointMode || BattleMode == PVEBattleSceneState.DefencePointMode)
         {
             // towerLocation = CalculateTowerLocation();
             _activeGameboard.FindRandomPosition(out towerLocation);
@@ -1197,6 +1197,27 @@ public class GameFlowController : MonoBehaviour
     {       
         return playerOwnCombatHandler;
     }
+
+    public PVEBattleSceneState GetBattleSceneState()
+    {       
+        return battleSceneState;
+    }
+
+    public GameObject GetActivePushCarParent()
+    {
+        return ActivePushCarParent;
+    }
+
+    public GameObject GetActiveDefenseTowerPrefab()
+    {
+        return ActiveDefenseTowerParent;
+    }
+
+    public GameObject GetActiveCaptureTowerPrefab()
+    {
+        return ActiveCaptureTowerParent;
+    }
+
     #endregion
 
     #region End Battle Sequence Conclusion(Reward or Die to return start)

@@ -14,8 +14,10 @@ public class EnemyBehavior : MonoBehaviour
     // public List<Collider> DamageTakingColliders;
 
     [Header("Data Related")]
+    public float speed;
     public float attackRange;
     public float sightRange;
+    public bool playerInAttackRange;
     public float colliderRange;
     public float DamageAmount;
     public float attackTime;
@@ -79,27 +81,22 @@ public class EnemyBehavior : MonoBehaviour
 
         if (type == AttackType.Range)
         {        
-            if (Vector3.Distance(transform.position, GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition()) < attackRange)
-            {
-                Instantiate(RangePrefab, RangeSpawnPoint.transform.position, Quaternion.identity);
-                RangePrefab.GetComponent<RangeAttack>().CombatHandler = CombatHandler;
-                RangePrefab.GetComponent<RangeAttack>().GameFlowCtrl = GameFlowCtrl;
-                RangePrefab.GetComponent<RangeAttack>().enemy = this.transform;
-                RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
-            }
-            else
-            {
-                //attack tower
-                Debug.Log(gameObject.name + "attacking tower.");
-            }
-            
+ 
+            Instantiate(RangePrefab, RangeSpawnPoint.transform.position, Quaternion.identity);
+            RangePrefab.GetComponent<RangeAttack>().CombatHandler = CombatHandler;
+            RangePrefab.GetComponent<RangeAttack>().GameFlowCtrl = GameFlowCtrl;
+            RangePrefab.GetComponent<RangeAttack>().enemy = this.transform;
+            RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
+            if (!playerInAttackRange && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.DefencePointMode)
+                RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.GetActiveDefenseTowerPrefab().GetComponentInChildren<DefenceTarget>().GetSpawnedTower().transform;
+
         }
         
     
         
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -112,7 +109,11 @@ public class EnemyBehavior : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        ValidHit = false;
+        if (other.CompareTag("Player"))
+        {
+            ValidHit = false;
+            currentAttackingTarget = null;
+        }
         // shd be after animation end and depends on collider of the weapon
     }
 

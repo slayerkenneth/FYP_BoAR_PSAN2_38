@@ -185,7 +185,7 @@ public class EnemySpawner : MonoBehaviour
         e.AddComponent<EnemyPathfinding>();
         e.GetComponent<EnemyBehavior>().GameFlowCtrl = GameFlowCtrl;
         e.GetComponent<EnemyPathfinding>().GameFlowCtrl = GameFlowCtrl;
-        e.GetComponent<EnemyPathfinding>().AtkTowerPosition = AtkTowerPos;
+        // e.GetComponent<EnemyPathfinding>().enemyID = ID;
         e.GetComponent<EnemyPathfinding>().whatIsGround = whatIsGround;
         e.GetComponent<EnemyPathfinding>().whatIsPlayer = whatIsPlayer;
         e.GetComponent<CombatHandler>().SetCentralCombatHandler(centralBattleCtrl);
