@@ -21,6 +21,8 @@ public class EnemyBehavior : MonoBehaviour
     public float colliderRange;
     public float DamageAmount;
     public float attackTime;
+    public float attackInterval;
+    public float attackCountDown;
     public Transform attackPoint;
     public enum AttackType {Melee, Range};
     public AttackType type;
@@ -53,6 +55,12 @@ public class EnemyBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        attackCountDown -= Time.deltaTime;
+        if (attackCountDown <= 0)
+        {
+            attackCountDown = 0;
+        }
+        
         if (CombatHandler.GetCurrentHP() <= 0)
         {
             //GameFlowController.EnemyKillCount++;
@@ -98,11 +106,12 @@ public class EnemyBehavior : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && attackCountDown <= 0)
         {
             if (other.transform.CompareTag("Player") || other.transform.CompareTag("PlayerMinion"))
             {
                 CombatHandler.DoDamage(other.transform.GetComponent<CombatHandler>(), 10f);
+                attackCountDown = attackInterval;
             }
         }
     }

@@ -920,9 +920,11 @@ MonoBehaviour:
   attackRange: 0.15
   sightRange: 0.5
   playerInAttackRange: 0
-  colliderRange: 0.025
+  colliderRange: 0.02
   DamageAmount: 1
-  attackTime: 2
+  attackTime: 1
+  attackInterval: 6
+  attackCountDown: 0
   attackPoint: {fileID: 1020735913524162691}
   type: 0
   RangePrefab: {fileID: 0}

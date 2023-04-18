@@ -2456,13 +2456,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  shield: 0
   skillCoolDown: 5
+  UpgradeDamagePercentage: 100
   AttackingColliders: []
   DamageTakingColliders:
   - {fileID: -1727449749190540293}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 748061111693293710}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}
@@ -3814,7 +3817,7 @@ PrefabInstance:
     - target: {fileID: 7710086954383210093, guid: acdb90624a404aa438447006f1026065,
         type: 3}
       propertyPath: m_Intensity
-      value: 2.7452343
+      value: 3.2255893
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: acdb90624a404aa438447006f1026065, type: 3}

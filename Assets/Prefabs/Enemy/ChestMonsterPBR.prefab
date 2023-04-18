@@ -789,9 +789,11 @@ MonoBehaviour:
   attackRange: 0.125
   sightRange: 0.5
   playerInAttackRange: 0
-  colliderRange: 0.025
+  colliderRange: 0.02
   DamageAmount: 1
   attackTime: 1
+  attackInterval: 6
+  attackCountDown: 0
   attackPoint: {fileID: 422391515454958429}
   type: 0
   RangePrefab: {fileID: 0}
@@ -817,8 +819,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  shield: 0
   skillCoolDown: 0
-  UpgradeDamagePercentage: 100
+  UpgradeDamagePercentage: 60
   AttackingColliders:
   - {fileID: 5893417353482831913}
   DamageTakingColliders:
@@ -826,6 +829,7 @@ MonoBehaviour:
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 230690333636417260}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}

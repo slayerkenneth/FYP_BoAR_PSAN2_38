@@ -3783,6 +3783,7 @@ MonoBehaviour:
   _arCamera: {fileID: 619056670}
   HitTestType: 16
   _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
+  _semanticTexture: {fileID: 2800000, guid: db2b915d987da4ff98e8a7199e35b699, type: 3}
   _semanticManager: {fileID: 619056672}
   GameFlowController: {fileID: 1451593558}
   DebugText: {fileID: 1486486168}
@@ -6462,6 +6463,10 @@ MonoBehaviour:
   activeEnemies: []
   spawnInterval: 0
   spawnTimeCounter: 0
+  DefenseModeEnemyMax: 3
+  CaptureModeEnemyMax: 3
+  DungeonModeEnemyMax: 3
+  PushModeEnemyMax: 3
   DefenceTarget: {fileID: 0}
   captureTargetSpawner: {fileID: 0}
   whatIsGround:

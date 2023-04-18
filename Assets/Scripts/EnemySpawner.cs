@@ -27,6 +27,11 @@ public class EnemySpawner : MonoBehaviour
     public float spawnInterval;
     public float spawnTimeCounter;
 
+    public int DefenseModeEnemyMax;
+    public int CaptureModeEnemyMax;
+    public int DungeonModeEnemyMax;
+    public int PushModeEnemyMax;
+
     public DefenceTarget DefenceTarget;
     public CaptureTargetSpawner captureTargetSpawner;
     private Vector3 towerPosition;
@@ -213,7 +218,7 @@ public class EnemySpawner : MonoBehaviour
         switch (GameFlowCtrl.BattleMode)
         {
             case GameFlowController.PVEBattleSceneState.DefencePointMode:
-                MaxEnemyCount = 5;
+                MaxEnemyCount = DefenseModeEnemyMax;
                 spawnInterval = MaxEnemyCount * 5;
                 GameFlowCtrl.ActiveDefenseTowerParent.SetActive(true);
                 DefenceTarget = GameFlowCtrl.ActiveDefenseTowerParent.GetComponentInChildren<DefenceTarget>();
@@ -223,7 +228,7 @@ public class EnemySpawner : MonoBehaviour
                 break;
             
             case GameFlowController.PVEBattleSceneState.CapturePointMode:
-                MaxEnemyCount = 5;
+                MaxEnemyCount = CaptureModeEnemyMax;
                 spawnInterval = MaxEnemyCount * 8;
                 GameFlowCtrl.ActiveCaptureTowerParent.SetActive(true);
                 captureTargetSpawner =
@@ -233,12 +238,12 @@ public class EnemySpawner : MonoBehaviour
                 break;
             
             case GameFlowController.PVEBattleSceneState.DungeonMode:
-                MaxEnemyCount = 5;
+                MaxEnemyCount = DungeonModeEnemyMax;
                 spawnInterval = MaxEnemyCount * 5;
                 break;
             
             case GameFlowController.PVEBattleSceneState.PushCarBattleMode:
-                MaxEnemyCount = 5;
+                MaxEnemyCount = PushModeEnemyMax;
                 spawnInterval = MaxEnemyCount * 5;
                 break;
         }
