@@ -185,7 +185,8 @@ public class ARController : MonoBehaviour
         }
         else if (_gameboard.Area / _gameboard.Settings.TileSize >= GameFlowController.AreaLimit && 
                  GameFlowController.battleSceneState ==
-                 GameFlowController.PVEBattleSceneState.Scanning)
+                 GameFlowController.PVEBattleSceneState.Scanning &&
+                 PhoneCamera.inferenceCount > 5)
         {
             GameFlowController.battleSceneState =
                 GameFlowController.PVEBattleSceneState.ScanCompleted;

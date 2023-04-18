@@ -52,6 +52,7 @@ public class PhoneCamera : MonoBehaviour
     private float refreshTime = 1.0f;
     private Detector detector;
     public float fps = 0.0f;
+    public static int inferenceCount;
     struct Label
     {
         public string text;
@@ -153,6 +154,7 @@ public class PhoneCamera : MonoBehaviour
                 CaptureCurrentReality();
                 DebugText.text = "Finish model inference, Blue box detection";
                 interval -= DetectInterval;
+                inferenceCount++;
             }
         }
     }

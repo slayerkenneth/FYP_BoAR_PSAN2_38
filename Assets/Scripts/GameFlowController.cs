@@ -162,7 +162,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] Action DummyAction;
 
     [Header("Object Recognition and Item spawning")]
-    public ObjectSpawningController SceneItemSpanwer;
+    public PhoneCamera phoneCameraEnvDetector;
 
     [Header("Game Cycle, and other stuff")]
     public bool restartBattle = false;
@@ -825,6 +825,7 @@ public class GameFlowController : MonoBehaviour
             StartCoroutine(IsGameboardReady()); 
             // Then Start Scanning
             battleSceneState = PVEBattleSceneState.Scanning;
+            // phoneCameraEnvDetector.IsInference = true;
         }
         // Set battle mode (not the current state)
         switch (levelType)
@@ -932,6 +933,7 @@ public class GameFlowController : MonoBehaviour
 
     public void EnterNewBattle()
     {
+        phoneCameraEnvDetector.IsInference = false;
         if (!restartBattle) return;
         switch (BattleMode)
         {
