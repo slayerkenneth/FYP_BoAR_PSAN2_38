@@ -3783,7 +3783,6 @@ MonoBehaviour:
   _arCamera: {fileID: 619056670}
   HitTestType: 16
   _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
-  _semanticTexture: {fileID: 2800000, guid: db2b915d987da4ff98e8a7199e35b699, type: 3}
   _semanticManager: {fileID: 619056672}
   GameFlowController: {fileID: 1451593558}
   DebugText: {fileID: 1486486168}
@@ -6364,7 +6363,7 @@ MonoBehaviour:
   DebugText: {fileID: 4098587495805698984}
   AreaText: {fileID: 4098587496407768986}
   AreaLimit: 500
-  testScanArea: 100
+  testScanArea: 50
   AllGridNodeCoordinates: []
   WallCoordinates: []
   maxX: 0
@@ -8468,6 +8467,11 @@ PrefabInstance:
       propertyPath: Channel
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1789296806548534136, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2313747118224306735, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
       propertyPath: m_RootOrder
@@ -8523,6 +8527,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3110042984478421647, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3110042984478421647, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: de0802e2ba87046f489e16ae2790ee46, type: 2}
     - target: {fileID: 3298992325091424595, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
       propertyPath: m_Name
@@ -8533,10 +8547,20 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3502882922897994264, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3830538428042062264, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
       propertyPath: Channel
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3945403246160224757, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3945403246160224757, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
@@ -8583,6 +8607,11 @@ PrefabInstance:
       propertyPath: Channel
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5757248641578042376, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5760349965259531221, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
       propertyPath: m_IsActive
@@ -8597,6 +8626,31 @@ PrefabInstance:
         type: 3}
       propertyPath: Channel
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522200175040851075, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522200175040851075, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522200175040851075, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522200175040851075, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8284110176839137196, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8497508238806725345, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}

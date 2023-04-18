@@ -70,6 +70,13 @@ public class PlayerStatus : ScriptableObject
                 // _currentPlayer.weaponStat = (BookStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Book/BookStat.asset", typeof(BookStat));
                 _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
             
+                // _currentPlayer.activeClass = (HallGuardActive)Resources.Load("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
+                // // _currentPlayer.activeClass = (ProfessorActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
+                // _currentPlayer.weaponStat = (CableStat)Resources.Load("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
+                // // _currentPlayer.weaponStat = (BackpackStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Backpack/BackpackStat.asset", typeof(BackpackStat));
+                // // _currentPlayer.weaponStat = (BookStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Book/BookStat.asset", typeof(BookStat));
+                // _currentPlayer.passiveClass = (ProfessorPassive)Resources.Load("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
+                
                 _currentPlayer.hideFlags = HideFlags.HideAndDontSave;
             }
             return _currentPlayer;
