@@ -307,49 +307,49 @@ public class ARController : MonoBehaviour
     //     return GameFlowController.PlayerSpawner.activeCharacter.GetComponent<CharacterMovementController>();
     // }
 
-    public void SpawnLandscape(Vector2 position) {
-        var ray = _arCamera.ScreenPointToRay(position); ;
-
-        // Intersect the Gameboard with the ray
-        if (_gameboard.RayCast(ray, out Vector3 hitPoint))
-        {
-            // Check whether the object can be fit in the resulting position
-            if (_gameboard.CheckFit(center: hitPoint, 0.1f))
-            {
-                var landscape = Instantiate(PlacementObjectPf, hitPoint, Quaternion.identity);
-                landscape.transform.localScale = new Vector3(3, 3, 3);
-                _placedObjects.Add(landscape);
-            }
-        }
-    }
-
-    void _gpu_scale(Texture2D src, int width, int height, FilterMode fmode)
-    {
-        //We need the source texture in VRAM because we render with it
-        src.filterMode = fmode;
-        src.Apply(true);
-
-        //Using RTT for best quality and performance. Thanks, Unity 5
-        RenderTexture rtt = new RenderTexture(width, height, 32);
-
-        //Set the RTT in order to render to it
-        Graphics.SetRenderTarget(rtt);
-
-        //Setup 2D matrix in range 0..1, so nobody needs to care about sized
-        GL.LoadPixelMatrix(0, 1, 1, 0);
-
-        //Then clear & draw the texture to fill the entire RTT.
-        GL.Clear(true, true, new Color(0, 0, 0, 0));
-        Graphics.DrawTexture(new Rect(0, 0, 1, 1), src);
-    }
-
-    public IGameboard GetGameboard()
-    {
-        return _gameboard;
-    }
-
-    public GameObject getClonePlayer()
-    {
-        return GameFlowController.PlayerSpawner.activeCharacter;
-    }
+    // public void SpawnLandscape(Vector2 position) {
+    //     var ray = _arCamera.ScreenPointToRay(position); ;
+    //
+    //     // Intersect the Gameboard with the ray
+    //     if (_gameboard.RayCast(ray, out Vector3 hitPoint))
+    //     {
+    //         // Check whether the object can be fit in the resulting position
+    //         if (_gameboard.CheckFit(center: hitPoint, 0.1f))
+    //         {
+    //             var landscape = Instantiate(PlacementObjectPf, hitPoint, Quaternion.identity);
+    //             landscape.transform.localScale = new Vector3(3, 3, 3);
+    //             _placedObjects.Add(landscape);
+    //         }
+    //     }
+    // }
+    //
+    // void _gpu_scale(Texture2D src, int width, int height, FilterMode fmode)
+    // {
+    //     //We need the source texture in VRAM because we render with it
+    //     src.filterMode = fmode;
+    //     src.Apply(true);
+    //
+    //     //Using RTT for best quality and performance. Thanks, Unity 5
+    //     RenderTexture rtt = new RenderTexture(width, height, 32);
+    //
+    //     //Set the RTT in order to render to it
+    //     Graphics.SetRenderTarget(rtt);
+    //
+    //     //Setup 2D matrix in range 0..1, so nobody needs to care about sized
+    //     GL.LoadPixelMatrix(0, 1, 1, 0);
+    //
+    //     //Then clear & draw the texture to fill the entire RTT.
+    //     GL.Clear(true, true, new Color(0, 0, 0, 0));
+    //     Graphics.DrawTexture(new Rect(0, 0, 1, 1), src);
+    // }
+    //
+    // public IGameboard GetGameboard()
+    // {
+    //     return _gameboard;
+    // }
+    //
+    // public GameObject getClonePlayer()
+    // {
+    //     return GameFlowController.PlayerSpawner.activeCharacter;
+    // }
 }

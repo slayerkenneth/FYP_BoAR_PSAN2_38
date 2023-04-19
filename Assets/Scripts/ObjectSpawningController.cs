@@ -45,7 +45,11 @@ public class ObjectSpawningController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (phoneCamera.RecognitionBoxes.Count > 0 && PhoneCamera.inferenceCount <= 5)
+        {
+            SpawnSceneItems();
+            phoneCamera.IsInference = true;
+        }
     }
 
     public void SpawnSceneItems() {
