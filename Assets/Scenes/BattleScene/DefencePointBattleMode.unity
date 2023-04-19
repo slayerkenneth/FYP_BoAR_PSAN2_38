@@ -2476,7 +2476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _arCamera: {fileID: 619056670}
-  _agentPrefab: {fileID: 8189980434977739222, guid: eb64b54ddc44347478d7c6d3d45f821c,
+  _agentPrefab: {fileID: 1953271650171834, guid: c6fdf075ec0388d4098d80e06747a0af,
     type: 3}
   playerSpawnParent: {fileID: 1049136496}
   HitTestType: 16
@@ -4347,7 +4347,7 @@ MonoBehaviour:
   boxPrefab: {fileID: 5347304568407062166, guid: efb33e49a6005c544b4a82223b9e2a13,
     type: 3}
   testImage: {fileID: 0}
-  IsInference: 1
+  IsInference: 0
   IsTestImage: 0
   IsYoloV8: 1
   IsArCamera: 1
@@ -4487,7 +4487,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1451593556}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

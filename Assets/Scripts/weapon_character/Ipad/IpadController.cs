@@ -2,108 +2,93 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ipadController : MonoBehaviour
+public class IpadController : MonoBehaviour
+{
+
     public float Damage;
-public float EjectTime;
-public float MaximumLifeTime;
-public float EnableTime;
-public GameObject OriginWeanpon;
-public float Speed;
-public float Rotation;      //regular rotation around y axix. Num of rotation per second
-public int MaxHitCount;
-public CombatHandler combatHandler;
-public Collider Collider;
-public bool DespawnByBuilding;
+    public float EjectTime;
+    public float MaximumLifeTime;
+    public float EnableTime;
+    public GameObject OriginWeanpon;
+    public float Speed;
+    public CombatHandler combatHandler;
+    public Collider Collider;
+    public bool DespawnByBuilding;
+    public Vector3 direction;
 
-private int HitCount;
-private bool Activated;
-private float TimeElapsed;
-private string LastEnemy;
+    private bool Activated;
+    private float TimeElapsed;
+    private string LastEnemy;
 
-// Start is called before the first frame update
-void Start()
-{
-    HitCount = 0;
-    Activated = false;
-    TimeElapsed = 0.0F;
-    LastEnemy = "";
-}
-
-// Update is called once per frame
-void Update()
-{
-
-    TimeElapsed += Time.deltaTime;
-
-    if (!Activated)
+    // Start is called before the first frame update
+    void Start()
     {
-        if (TimeElapsed >= EjectTime)
-        {
-            transform.position = OriginWeanpon.transform.position;
-            transform.rotation = Quaternion.Euler(0.0F, OriginWeanpon.transform.rotation.eulerAngles.y, -90.0F);
-            Activated = true;
-            TimeElapsed -= EjectTime;
-        }
+        Activated = false;
+        TimeElapsed = 0.0F;
+        LastEnemy = "";
+        Collider.enabled = false;
     }
-    if (Activated)
+
+    // Update is called once per frame
+    void Update()
     {
-        if (TimeElapsed > EnableTime && !Collider.enabled)
-        {
-            Collider.enabled = true;
-        }
 
-        var enemyList = GameObject.FindGameObjectsWithTag("Enemy");
+        TimeElapsed += Time.deltaTime;
 
-        if (TimeElapsed < MaximumLifeTime && enemyList.Length != 0)
+        if (!Activated)
         {
-            var minDir = Vector3.zero;
-            var minDistance = float.PositiveInfinity;
-            foreach (GameObject enemy in enemyList)
+            if (TimeElapsed >= EjectTime)
             {
-                var dir = enemy.transform.position - transform.position;
-                if (dir.magnitude < minDistance && LastEnemy != enemy.name)
-                {
-                    minDistance = dir.magnitude;
-                    minDir = dir.normalized;
-                }
+                transform.position = OriginWeanpon.transform.position;
+                transform.rotation = Quaternion.LookRotation(direction);
+                Activated = true;
+                TimeElapsed -= EjectTime;
             }
-            transform.position += Speed * Time.deltaTime * minDir;
-            transform.rotation *= Quaternion.Euler(Rotation * Time.deltaTime * 360, 0, 0);
         }
-        else
+        if (Activated)
         {
-            Despawn();
-        }
-    }
-}
+            if (TimeElapsed > EnableTime && !Collider.enabled)
+            {
+                Collider.enabled = true;
+            }
 
-void Despawn()
-{
-    Destroy(gameObject);
-}
 
-private void OnTriggerEnter(Collider other)
-{
-
-    if (Activated)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-
-            Debug.Log("ipad: " + HitCount);
-            HitCount++;
-            if (HitCount == MaxHitCount)
+            if (TimeElapsed < MaximumLifeTime)
+            {
+                transform.position += Speed * Time.deltaTime * direction;
+            }
+            else
             {
                 Despawn();
-                return;
             }
-            LastEnemy = other.gameObject.name;
-            combatHandler.DoDamage(other.gameObject.GetComponent<CombatHandler>(), Damage);
-        }
-        else if (TimeElapsed > 2.0F && !other.CompareTag("Player") && DespawnByBuilding)
-        {
-            Despawn();
         }
     }
-}
+
+    void Despawn()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (Activated)
+        {
+
+            Debug.Log("IPAD: collide" + other.name);
+            if (other.CompareTag("Enemy"))
+            {
+                combatHandler.DoDamage(other.gameObject.GetComponent<CombatHandler>(), Damage);
+                Debug.Log("IPAD: damage");
+                Despawn();
+
+                return;
+            }
+            if (TimeElapsed > 2.0F && !other.CompareTag("Player") && DespawnByBuilding)
+            {
+                Despawn();
+            }
+        }
+
+    }
 }

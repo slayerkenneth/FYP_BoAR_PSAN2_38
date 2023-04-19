@@ -1,3 +1,4 @@
+using DigitalRuby.LightningBolt;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,27 +7,38 @@ using UnityEngine;
 public class PlayerWeaponSkillController_Ipad : PlayerWeaponSkillController
 {
     public GameObject ipadPrefab;
-    public float revertDistance;
-    public float revertDamage;
-    public float NormalAttackDamage;
-    public int MaxHitCount;
+    public float NormalAttackDamage = 10;
+    public int MaxHitCount = 3;
+    public float HoldAttackperSec = 10;
+    public GameObject lightningPrefab;
+    public float MaxLightningRange;             //the max range for one lightning, the length of whole chain can be larger.
 
-    private bool WithinShield = false;
     private float SkillCDRemain = 0.0F;
-
-
+    private List<LightningBoltScript> lightnings = new List<LightningBoltScript>();
+    private List<CombatHandler> enemies = new List<CombatHandler>();
+    private bool Hold = false;
 
     // Start is called before the first frame update
     void Start()
     {
         PlayerStatus.CurrentPlayer.weaponStat.UpdateStat(gameObject);
-
+        for (int i = 0; i < MaxHitCount; i++) {
+            var lightning = Instantiate(lightningPrefab);
+            lightning.SetActive(false);
+            var script = lightning.GetComponent<LightningBoltScript>();
+            script.enable = false;
+            lightnings.Add(script);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         if (SkillCDRemain > 0.0F) SkillCDRemain -= Time.deltaTime;
+        //foreach (var enemy in enemies) {
+        //    combatHandler.DoDamage(enemy, HoldAttackperSec * Time.deltaTime);
+        //}
+        if(Hold) recursiveHoldAttack(gameObject, null, MaxHitCount);
     }
 
 
@@ -40,10 +52,10 @@ public class PlayerWeaponSkillController_Ipad : PlayerWeaponSkillController
             ipad.transform.position = new Vector3(20, 20, 20);
             var controller = ipad.GetComponent<IpadController>();
             controller.Damage = NormalAttackDamage;
-            //controller.OriginWeanpon = Weapon;
-            //controller.MaxHitCount = MaxHitCount;
-            //controller.combatHandler = combatHandler;
-            //combatHandler.AddAttackingColliders(shield.GetComponent<Collider>());
+            controller.direction = transform.forward;
+            controller.OriginWeanpon = Weapon;
+            controller.combatHandler = combatHandler;
+            combatHandler.AddAttackingColliders(ipad.GetComponent<Collider>());
         }
     }
 
@@ -63,39 +75,39 @@ public class PlayerWeaponSkillController_Ipad : PlayerWeaponSkillController
     public override void StartHoldAttack()
     {
         Animator.Play("IpadHoldAttack");
+        if (lightnings.Count != MaxHitCount) {
+            lightnings.Clear();
+            for (int i = 0; i < MaxHitCount; i++)
+            {
+                var lightning = Instantiate(lightningPrefab);
+                var script = lightning.GetComponent<LightningBoltScript>();
+                script.enable = false;
+                lightnings.Add(script);
+            }
+        }
+        for (int i = 0; i < MaxHitCount; i++)
+        {
+            lightnings[i].gameObject.SetActive(true);
+        }
+        Hold = true;
     }
     public override void EndHoldAttack()
     {
-        var centerAngle = this.transform.rotation.eulerAngles.y;
-        var enemyList = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (GameObject enemy in enemyList)
+        for (int i = 0; i < MaxHitCount; i++)
         {
-            var dir = enemy.transform.position - transform.position;
-            var angle = Math.Atan2(dir.x, dir.z);
-            if (dir.magnitude < revertDistance && InBetween(centerAngle, shieldAngle, angle))
-            {
-                combatHandler.DoDamage(enemy.GetComponent<CombatHandler>(), revertDamage);
-            }
+            lightnings[i].enable = false;
         }
-
+        //enemies.Clear();
+        for (int i = 0; i < MaxHitCount; i++)
+        {
+            lightnings[i].gameObject.SetActive(false);
+        }
+        Hold = false;
     }
 
     public override float OnrecieveDamage(float damageAmount, CombatHandler attacker) 
     {
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("rolling")) return 0;
-        
-
-        //if (WithinShield)
-        //    {
-
-
-        //        var attackDir = (attacker.transform.position - this.transform.position).normalized;
-        //        var attackAngle = Math.Atan2(attackDir.x, attackDir.z);
-        //        var centerAngle = this.transform.rotation.eulerAngles.y;
-
-
-        //        if (InBetween(centerAngle, shieldAngle, attackAngle)) return 0;
-        //}
         Animator.Play("ReceiveDamage");
         return damageAmount;
     }
@@ -115,22 +127,34 @@ public class PlayerWeaponSkillController_Ipad : PlayerWeaponSkillController
         // shd be after animation end and depends on collider of the weapon
     }
 
-    private bool InBetween(double center, float range, double dir)
-    {
+    private void recursiveHoldAttack(GameObject current, GameObject previous, int depth) {
+        if (depth == 0) return;
 
-        var upperBound1 = center + range / 2 - 360;
-        var lowerBound1 = center - range / 2 - 360;
-        var InBetween1 = upperBound1 > dir && dir > lowerBound1;
+        var enemyList = GameObject.FindGameObjectsWithTag("Enemy");
 
-        var upperBound2 = center + range / 2;
-        var lowerBound2 = center - range / 2;
-        var InBetween2 = upperBound2 > dir && dir > lowerBound2;
+        GameObject minTarget = null;
+        var minDistance = float.PositiveInfinity;
+        foreach (GameObject enemy in enemyList)
+        {
+            if (enemy == previous || enemy == current) continue;
+            var dir = enemy.transform.position - current.transform.position;
+            if (dir.magnitude < minDistance)
+            {
+                minDistance = dir.magnitude;
+                minTarget = enemy;
+            }
+        }
 
-        var upperBound3 = center + range / 2;
-        var lowerBound3 = center - range / 2;
-        var InBetween3 = upperBound3 > dir && dir > lowerBound3;
 
-        return InBetween1 || InBetween2 || InBetween3;
+        if (minTarget != null && MaxLightningRange > minDistance)
+        {
+            lightnings[MaxHitCount - depth].enable = true;
+            lightnings[MaxHitCount - depth].StartObject = current;
+            lightnings[MaxHitCount - depth].EndObject = minTarget;
+            //enemies.Add(minTarget.GetComponent<CombatHandler>());
+
+            combatHandler.DoDamage(minTarget.GetComponent<CombatHandler>(), HoldAttackperSec * Time.deltaTime);
+            recursiveHoldAttack(minTarget, current, depth - 1);
+        }
     }
-
 }
