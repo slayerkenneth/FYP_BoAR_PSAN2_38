@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: New Character List
   m_EditorClassIdentifier: 
   character:
-  - charName: KENDO CLUB MEMBER
+  - charName: HALL SECURITY GUARD
     charSprite: {fileID: 21300000, guid: fd00f5fd8a34b76499e1ea72718b8fbd, type: 3}
   - charName: TRACK AND FIELD MEMBER
     charSprite: {fileID: 21300000, guid: a257ede00af404a4cb854e55102fc235, type: 3}
   - charName: PROFESSOR
     charSprite: {fileID: 21300000, guid: 5a79d41fc3ddb4e47bfafbc8fd5a7a89, type: 3}
-  - charName: HALL SECURITY GUARD
+  - charName: KENDO CLUB MEMBER
     charSprite: {fileID: 21300000, guid: be3f7b75bc5da5a42b00131214373a53, type: 3}
   - charName: ROBOTICS TEAM MASCOT
     charSprite: {fileID: 21300000, guid: 3505a33315d62f340b2154d78b91f413, type: 3}

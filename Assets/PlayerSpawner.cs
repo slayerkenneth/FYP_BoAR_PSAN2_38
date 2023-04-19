@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeMonkey.HealthSystemCM;
@@ -20,7 +21,22 @@ public class PlayerSpawner : MonoBehaviour
     public void SpawnPlayer(PlayerStatus globalStatus, Transform parentTransform, Vector3 spawnLocation)
     {
         PlayerStatusRef = PlayerStatus.CurrentPlayer;
-        activeCharacter = Instantiate(RoboticsTeamPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
+        // Type PlayerType = PlayerStatusRef.activeClass.GetType();
+        
+        // // Hall Guard not work
+        // if (PlayerType == typeof(HallGuardActive))
+        // {
+        activeCharacter = Instantiate(RoboticsTeamPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);    
+        // }
+        // else if (PlayerType == typeof(ProfessorActive))
+        // {
+        //     activeCharacter = Instantiate(ProfessorPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);    
+        // }
+        // else if (PlayerType == typeof(TrackNFieldActive))
+        // {
+        //     activeCharacter = Instantiate(trackNFieldPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
+        // }
+        
         var CharMoveCtrl = activeCharacter.GetComponent<CharacterMovementController>();
         CharMoveCtrl.ARController = GameFlowController.getARCtrl();
         CharMoveCtrl.GameFlowController = GameFlowController;
