@@ -826,6 +826,7 @@ public class GameFlowController : MonoBehaviour
             // Then Start Scanning
             battleSceneState = PVEBattleSceneState.Scanning;
             // phoneCameraEnvDetector.IsInference = true;
+            StartCoroutine(ReachedScanArea());
         }
         // Set battle mode (not the current state)
         switch (levelType)
@@ -911,6 +912,11 @@ public class GameFlowController : MonoBehaviour
     IEnumerator IsGameboardReady()
     {
         yield return new WaitUntil(() => _activeGameboard != null);
+    }
+
+    IEnumerator ReachedScanArea()
+    {
+        yield return new WaitUntil(() => _activeGameboard.Area / _activeGameboard.Settings.TileSize >= AreaLimit);
     }
 
     // IEnumerator WaitForScanComplete()
@@ -1011,6 +1017,7 @@ public class GameFlowController : MonoBehaviour
         PlayerSpawner.SpawnPlayer(playerGlobalStatus, PlayerSpawnParent.transform, PlayerSpawnLocation);
         startFightUI.SetActive(false);
         battleSceneState = BattleMode;
+        arCamera.transform.position = new Vector3(0, 0, 0);
     }
 
     private IEnumerator CalculatePlayerSpawnPoint()
