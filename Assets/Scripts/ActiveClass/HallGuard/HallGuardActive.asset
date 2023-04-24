@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d338b8fd05e583648bf013750f1249cc, type: 3}
   m_Name: HallGuardActive
   m_EditorClassIdentifier: 
-  lv: 0
+  lv: 1
   skillCD: 10
   upgradeHint:
   - Extend freeze time

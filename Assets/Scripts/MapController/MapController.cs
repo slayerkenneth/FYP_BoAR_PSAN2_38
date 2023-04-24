@@ -48,9 +48,10 @@ public class MapController : MonoBehaviour
     public Sprite EventImage;
     public GameObject LinkPrefab;
     public GameObject CirclePrefab;
-    public static Map currentMap;
+    public Map currentMap;
     public bool endSceen = false;
 
+    private GameObject circle = null;
 
     public void Start()
     {
@@ -62,7 +63,15 @@ public class MapController : MonoBehaviour
             endSceen = true;
         }
     }
-
+    public void UpdateCurrentLevel() {
+        foreach (KeyValuePair<int, level> entry in currentMap.levels)
+        {
+            if (PlayerStatus.CurrentPlayer.currentLevel == entry.Key) {
+                RectTransform rectTransform = circle.GetComponent<RectTransform>();
+                rectTransform.anchoredPosition = entry.Value.pos;
+            }
+        }
+    }
     public void GenerateMap() {
         currentMap.levels = new Dictionary<int, level>();
         currentMap.edges = new Dictionary<int, List<int>>();
@@ -160,6 +169,7 @@ public class MapController : MonoBehaviour
         newIcon.transform.parent = graphContainer;
         RectTransform rectTransform = newIcon.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = from;
+        circle = newIcon;
     }
 
     public void onIconClick(int id) {

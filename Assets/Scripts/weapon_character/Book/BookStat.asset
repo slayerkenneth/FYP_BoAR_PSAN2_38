@@ -13,7 +13,17 @@ MonoBehaviour:
   m_Name: BookStat
   m_EditorClassIdentifier: 
   lv: 9
-  upgradeHint: []
+  upgradeHint:
+  - Increase normal damage & hold damage!
+  - Increase normal damage & maximum scale!
+  - Increase normal damage & hold damage!
+  - Increase normal damage & maximum scale!
+  - Increase normal damage & hold damage!
+  - Increase normal damage & maximum scale!
+  - Increase normal damage & hold damage!
+  - Increase normal damage & maximum scale!
+  - Increase normal damage & hold damage!
+  - Increase normal damage & maximum scale!
   NormalAttackDamageLv:
   - 5
   - 10
@@ -46,4 +56,4 @@ MonoBehaviour:
   - 50
   - 70
   - 70
-  - 70
+  - 75

@@ -14,37 +14,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lv: 0
   upgradeHint:
-  - 
+  - Increase normal attack damage!
+  - Increase normal attack range!
+  - Increase hold damage pre second!
+  - Increase normal attack damage!
+  - Increase normal attack range!
+  - Increase hold damage pre second!
+  - Increase normal attack damage!
+  - Increase normal attack range!
+  - Increase hold damage pre second!
+  - Increase normal attack damage!
   NormalAttackDamageLv:
   - 10
-  - 10
-  - 10
-  - 10
-  - 10
-  - 10
-  - 10
-  - 10
-  - 10
-  - 10
+  - 11
+  - 11
+  - 11
+  - 12
+  - 12
+  - 12
+  - 14
+  - 14
+  - 14
   NormalAttackRangeLv:
   - 20
   - 20
-  - 20
-  - 20
-  - 20
-  - 20
-  - 20
-  - 20
-  - 20
-  - 20
+  - 22
+  - 22
+  - 22
+  - 24
+  - 24
+  - 24
+  - 28
+  - 28
   HoldDamagePreSecLv:
   - 35
   - 35
   - 35
-  - 35
-  - 35
-  - 35
-  - 35
-  - 35
-  - 35
-  - 35
+  - 40
+  - 40
+  - 40
+  - 45
+  - 45
+  - 45
+  - 50

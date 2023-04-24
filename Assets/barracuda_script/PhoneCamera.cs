@@ -26,7 +26,6 @@ public class PhoneCamera : MonoBehaviour
 
     public Camera arCamera;
     public string dirPath;
-    public Yolov4Detector yolov4Detector;
     public Yolov8Detector yolov8Detector;
     public GameObject boxContainer;
     public GameObject boxPrefab;
@@ -107,7 +106,7 @@ public class PhoneCamera : MonoBehaviour
             cameraTexture.Play();
         }
         //Time.fixedDeltaTime = 0.02F;
-        detector = IsYoloV8 ? yolov8Detector : yolov4Detector;
+        detector = yolov8Detector;
         width = detector.RequiredWidth;
 
         SceneItemsLocations = new List<Tuple<Ray, string, float>>();

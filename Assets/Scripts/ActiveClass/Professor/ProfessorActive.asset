@@ -14,7 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lv: 9
   skillCD: 10
-  upgradeHint: []
+  upgradeHint:
+  - Increase solder damage!
+  - Increase number of solder!
+  - Increase solder damage!
+  - Increase solder damage!
+  - Increase number of solder!
+  - Increase solder damage!
+  - Increase solder damage!
+  - Increase number of solder!
+  - Increase solder damage!
+  - Increase solder damage!
   soilderPrefab: {fileID: 1997953001238138, guid: 360a35ec120066a448171bdfb5572655,
     type: 3}
   NoOfSoilderLv: 01000000010000000200000002000000020000000300000003000000030000000400000004000000
