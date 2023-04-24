@@ -1562,7 +1562,6 @@ GameObject:
   - component: {fileID: -3798238779284867034}
   - component: {fileID: -2058255866417811186}
   - component: {fileID: -3881848197012541022}
-  - component: {fileID: 3736411471065533042}
   - component: {fileID: 288270149995101429}
   m_Layer: 8
   m_Name: KendoGuy
@@ -1622,6 +1621,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerVelocity: {x: 0, y: 0, z: 0}
   playerSpeed: 1
+  rollingSpeed: 4
+  rollingDir: {x: 0, y: 0, z: 0}
   jumpHeight: 0.01
   gravityValue: -9.81
   groundedPlayer: 0
@@ -1630,12 +1631,14 @@ MonoBehaviour:
   animator: {fileID: 95922273507661854}
   cameraTransform: {fileID: 0}
   nearestBoardPosition: {x: 0, y: 0, z: 0}
+  fallDetectionHeight: -3
+  resetLocation: {x: 0, y: -1, z: 0}
   ARController: {fileID: 0}
   GameFlowController: {fileID: 0}
   playerOwnCombatHandler: {fileID: -2058255866417811186}
   playerOwnHealthSystem: {fileID: -3798238779284867034}
   maxHP: 100
-  PlayerWeaponSkillCtrl: {fileID: 3736411471065533042}
+  PlayerWeaponSkillCtrl: {fileID: 0}
   debugLog: {fileID: 0}
 --- !u!143 &8893153715369008413
 CharacterController:
@@ -1682,7 +1685,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  shield: 0
   skillCoolDown: 5
+  UpgradeDamagePercentage: 100
   AttackingColliders:
   - {fileID: 1617286096694393844}
   DamageTakingColliders:
@@ -1690,6 +1695,7 @@ MonoBehaviour:
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: -3798238779284867034}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}
@@ -1707,27 +1713,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &3736411471065533042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1556040939566342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 094894578fe03314b83712c7b61faa8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Animator: {fileID: 95922273507661854}
-  combatHandler: {fileID: -2058255866417811186}
-  GameFlowCtrl: {fileID: 0}
-  Weapon: {fileID: 1076420036850812}
-  NormalAttackDamage: 20
-  SkillDamage: 200
-  normalAttackCount: 0
-  ValidHit: 0
-  currentAttackingTarget: {fileID: 0}
 --- !u!54 &288270149995101429
 Rigidbody:
   m_ObjectHideFlags: 0

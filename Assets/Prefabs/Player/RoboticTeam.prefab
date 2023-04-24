@@ -2404,6 +2404,8 @@ MonoBehaviour:
   animator: {fileID: 6084510271963804552}
   cameraTransform: {fileID: 0}
   nearestBoardPosition: {x: 0, y: 0, z: 0}
+  fallDetectionHeight: -3
+  resetLocation: {x: 0, y: -1, z: 0}
   ARController: {fileID: 0}
   GameFlowController: {fileID: 0}
   playerOwnCombatHandler: {fileID: 7547920880089263539}

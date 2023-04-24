@@ -2432,6 +2432,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerVelocity: {x: 0, y: 0, z: 0}
   playerSpeed: 1
+  rollingSpeed: 4
+  rollingDir: {x: 0, y: 0, z: 0}
   jumpHeight: 0.01
   gravityValue: -9.81
   groundedPlayer: 0
@@ -2440,6 +2442,8 @@ MonoBehaviour:
   animator: {fileID: 9036980633323257398}
   cameraTransform: {fileID: 0}
   nearestBoardPosition: {x: 0, y: 0, z: 0}
+  fallDetectionHeight: -3
+  resetLocation: {x: 0, y: -1, z: 0}
   ARController: {fileID: 0}
   GameFlowController: {fileID: 0}
   playerOwnCombatHandler: {fileID: -8856093971014766255}
@@ -2492,13 +2496,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  shield: 0
   skillCoolDown: 5
+  UpgradeDamagePercentage: 100
   AttackingColliders: []
   DamageTakingColliders:
   - {fileID: 3272698094585902994}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 8369488434654405864}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}

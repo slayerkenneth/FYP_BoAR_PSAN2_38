@@ -2349,6 +2349,8 @@ MonoBehaviour:
   animator: {fileID: 7413344840680693326}
   cameraTransform: {fileID: 0}
   nearestBoardPosition: {x: 0, y: 0, z: 0}
+  fallDetectionHeight: -3
+  resetLocation: {x: 0, y: -1, z: 0}
   ARController: {fileID: 0}
   GameFlowController: {fileID: 0}
   playerOwnCombatHandler: {fileID: 3276981404916579627}
@@ -2426,7 +2428,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  shield: 0
   skillCoolDown: 5
+  UpgradeDamagePercentage: 100
   AttackingColliders:
   - {fileID: 7697881086083608160}
   DamageTakingColliders:
@@ -2434,6 +2438,7 @@ MonoBehaviour:
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: -6390358997438491074}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}
