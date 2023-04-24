@@ -214,4 +214,9 @@ public class ObjectSpawningController : MonoBehaviour
         pos = Vector3.zero;
         return false;
     }
+
+    public List<GameObject> GetPlacedObjectfromScan()
+    {
+        return _placedObjects;
+    }
 }

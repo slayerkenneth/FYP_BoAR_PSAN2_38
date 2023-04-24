@@ -1234,6 +1234,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 179874012}
   m_CullTransparentMesh: 1
+--- !u!1 &195234003 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4568740766930500416, guid: 9c3d09eeec84640a68419eeca0061189,
+    type: 3}
+  m_PrefabInstance: {fileID: 1915193006}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &195234007 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3110042984478421647, guid: 9c3d09eeec84640a68419eeca0061189,
+    type: 3}
+  m_PrefabInstance: {fileID: 1915193006}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &195234009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195234003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eb595276aa13441f8fd41eeeb0636b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GroundMeshRenderer: {fileID: 195234007}
+  groundMatList:
+  - {fileID: 2100000, guid: b610c12dfb915564fa7d6ed9771555e3, type: 2}
+  - {fileID: 2100000, guid: 7ad66946680afb94ab76cb431034e834, type: 2}
+  - {fileID: 2100000, guid: ce4b77858ec6c0f469b07b034c21a85f, type: 2}
+  - {fileID: 2100000, guid: 092340127edfe4255b4ef98d92f18f73, type: 2}
 --- !u!1 &226345115
 GameObject:
   m_ObjectHideFlags: 0
@@ -3153,6 +3183,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1451593558}
+        m_TargetAssemblyTypeName: GameFlowController, Assembly-CSharp
+        m_MethodName: InvalidSceneTriggerReScan
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &581750064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3787,13 +3829,13 @@ MonoBehaviour:
   GameFlowController: {fileID: 1451593558}
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
-  ObjectRecognitionCtrl: {fileID: 1451593560}
+  ObjectSpawnCtrl: {fileID: 2126908886}
   PlacementObjectPf: {fileID: 1537502993957880, guid: 30bdbf2b9c0bd8446af70e5b67b0dfc8,
     type: 3}
   boxContainer: {fileID: 1211082266}
   boxPrefab: {fileID: 5347304568407062166, guid: efb33e49a6005c544b4a82223b9e2a13,
     type: 3}
-  yolov5Detector: {fileID: 0}
+  yolov5Detector: {fileID: 1133637098}
   scanningInstructionUI: {fileID: 501836915}
 --- !u!114 &619056683
 MonoBehaviour:
@@ -6147,7 +6189,7 @@ PrefabInstance:
     - target: {fileID: 3964583102574387885, guid: 6ceccde94086d44138ee14ebfb8b9fcd,
         type: 3}
       propertyPath: DetectInterval
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3964583102574387886, guid: 6ceccde94086d44138ee14ebfb8b9fcd,
         type: 3}
@@ -8608,6 +8650,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3110042984478421647, guid: 9c3d09eeec84640a68419eeca0061189,
         type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 092340127edfe4255b4ef98d92f18f73, type: 2}
+    - target: {fileID: 3110042984478421647, guid: 9c3d09eeec84640a68419eeca0061189,
+        type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: de0802e2ba87046f489e16ae2790ee46, type: 2}
@@ -9843,6 +9890,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1beaf45955e33b43870e505bb8c437a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2126908886 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3964583102574387884, guid: 6ceccde94086d44138ee14ebfb8b9fcd,
+    type: 3}
+  m_PrefabInstance: {fileID: 1373573307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b606c9ec471003841ab2401b31e43192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2129888448

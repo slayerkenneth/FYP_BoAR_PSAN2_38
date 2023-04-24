@@ -63,7 +63,7 @@ public class ARController : MonoBehaviour
     [SerializeField] public Text AreaText;
 
     [Header("object reconition")] 
-    public ObjectRecognitionController ObjectRecognitionCtrl;
+    public ObjectSpawningController ObjectSpawnCtrl;
     public GameObject PlacementObjectPf;
     public GameObject boxContainer;
     public GameObject boxPrefab;
@@ -186,8 +186,9 @@ public class ARController : MonoBehaviour
         else if (_gameboard.Area / _gameboard.Settings.TileSize >= GameFlowController.AreaLimit && 
                  GameFlowController.battleSceneState ==
                  GameFlowController.PVEBattleSceneState.Scanning &&
-                 PhoneCamera.inferenceCount > 5)
+                 PhoneCamera.inferenceCount > 10)
         {
+            ObjectSpawnCtrl.phoneCamera.StopInference();
             GameFlowController.battleSceneState =
                 GameFlowController.PVEBattleSceneState.ScanCompleted;
             GameFlowController.GetAllTileCoordinatesAndMarkWalls();

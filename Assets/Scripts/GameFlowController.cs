@@ -1303,6 +1303,14 @@ public class GameFlowController : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+    public void InvalidSceneTriggerReScan()
+    {
+        if (EnemySpawner.EnemySpawnLocationList.Count < 2)
+        {
+            SceneManager.LoadScene(4);
+        }
+    }
     #endregion
 
     #region ShopUI
