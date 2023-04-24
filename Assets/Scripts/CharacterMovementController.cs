@@ -27,6 +27,8 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Vector3 nearestBoardPosition;
+    [SerializeField] private float fallDetectionHeight;
+    [SerializeField] private Vector3 resetLocation;
 
     [Header("Gameboard environment reference")]
     [SerializeField]
@@ -137,6 +139,8 @@ public class CharacterMovementController : MonoBehaviour
         {
             EndHoldAttack();
         }
+
+        if(transform.position.y < fallDetectionHeight) controller.Move(resetLocation - transform.position);
     }
     public Vector3 GetPlayerPosition()
     {

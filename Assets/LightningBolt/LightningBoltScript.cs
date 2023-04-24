@@ -81,6 +81,8 @@ namespace DigitalRuby.LightningBolt
         [Tooltip("The animation mode for the lightning")]
         public LightningBoltAnimationMode AnimationMode = LightningBoltAnimationMode.PingPong;
 
+        public bool enable = true;
+
         /// <summary>
         /// Assign your own random if you want to have the same lightning appearance
         /// </summary>
@@ -294,20 +296,24 @@ namespace DigitalRuby.LightningBolt
 
         private void Update()
         {
-            orthographic = (Camera.main != null && Camera.main.orthographic);
-            if (timer <= 0.0f)
+            if (enable)
             {
-                if (ManualMode)
+                orthographic = (Camera.main != null && Camera.main.orthographic);
+                if (timer <= 0.0f)
                 {
-                    timer = Duration;
-                    lineRenderer.positionCount = 0;
-                }
-                else
-                {
-                    Trigger();
+                    if (ManualMode)
+                    {
+                        timer = Duration;
+                        lineRenderer.positionCount = 0;
+                    }
+                    else
+                    {
+                        Trigger();
+                    }
                 }
             }
             timer -= Time.deltaTime;
+
         }
 
         /// <summary>
