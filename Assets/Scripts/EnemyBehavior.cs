@@ -55,12 +55,6 @@ public class EnemyBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        attackCountDown -= Time.deltaTime;
-        if (attackCountDown <= 0)
-        {
-            attackCountDown = 0;
-        }
-        
         if (CombatHandler.GetCurrentHP() <= 0)
         {
             //GameFlowController.EnemyKillCount++;
@@ -71,22 +65,17 @@ public class EnemyBehavior : MonoBehaviour
     //Animation Event
     public void AttackEnd()
     {
-        //tempCollider = AtkCharacter.getAttackTarget();
-        //Debug.Log(gameObject.transform.name + " temp Collider: " + tempCollider);
+        //Melee Attack
         if (type == AttackType.Melee)
         {
             if (!ValidHit) return;           
             if (currentAttackingTarget.CompareTag("Player"))
             {
-                Debug.Log(gameObject.name + "attacking player.");
                 CombatHandler.DoDamage(currentAttackingTarget, DamageAmount);
             } 
-            else if (currentAttackingTarget.CompareTag("Tower(D)"))
-            {
-                Debug.Log(gameObject.name + "attacking tower.");
-            }
         }
 
+        //Range Attack
         if (type == AttackType.Range)
         {        
  
@@ -96,23 +85,18 @@ public class EnemyBehavior : MonoBehaviour
             RangePrefab.GetComponent<RangeAttack>().enemy = this.transform;
             RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
             if (!playerInAttackRange && GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.DefencePointMode)
-                RangePrefab.GetComponent<RangeAttack>().target = GameFlowCtrl.GetActiveDefenseTowerPrefab().GetComponentInChildren<DefenceTarget>().GetSpawnedTower().transform;
+                RangePrefab.GetComponent<RangeAttack>().target = 
+                    GameFlowCtrl.GetActiveDefenseTowerPrefab().GetComponentInChildren<DefenceTarget>().GetSpawnedTower().transform;
 
         }
-        
-    
-        
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && attackCountDown <= 0)
+        if (other.CompareTag("Player"))
         {
-            if (other.transform.CompareTag("Player") || other.transform.CompareTag("PlayerMinion"))
-            {
-                CombatHandler.DoDamage(other.transform.GetComponent<CombatHandler>(), 10f);
-                attackCountDown = attackInterval;
-            }
+            ValidHit = true;
+            currentAttackingTarget = other.transform.GetComponent<CombatHandler>();
         }
     }
 

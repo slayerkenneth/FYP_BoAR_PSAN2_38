@@ -86,6 +86,8 @@ public class EnemySpawner : MonoBehaviour
                 {
                     var pos = new Vector3(t.position.x, -1.1f, t.position.z);
                     if (!EnemySpawnLocationList.Contains(pos)) EnemySpawnLocationList.Add(pos);
+                    var towerpos = t.position;
+                    if (!EnemyAtkTowerPositionList.Contains(towerpos)) EnemyAtkTowerPositionList.Add(towerpos);
                 });
                 
                 // Not Ready for spawning any enemy
@@ -96,7 +98,7 @@ public class EnemySpawner : MonoBehaviour
                     if (Enemy == null) break;
                     SpawnEnemy(Enemy,
                         EnemySpawnLocationList[i % EnemySpawnLocationList.Count],
-                        Vector3.zero);
+                        EnemyAtkTowerPositionList[i % EnemyAtkTowerPositionList.Count]);
                 }
             }
             else if (GameFlowCtrl.BattleMode is GameFlowController.PVEBattleSceneState.PushCarBattleMode)
@@ -190,7 +192,7 @@ public class EnemySpawner : MonoBehaviour
         e.AddComponent<EnemyPathfinding>();
         e.GetComponent<EnemyBehavior>().GameFlowCtrl = GameFlowCtrl;
         e.GetComponent<EnemyPathfinding>().GameFlowCtrl = GameFlowCtrl;
-        // e.GetComponent<EnemyPathfinding>().enemyID = ID;
+        e.GetComponent<EnemyPathfinding>().AtkPosition = AtkTowerPos;
         e.GetComponent<EnemyPathfinding>().whatIsGround = whatIsGround;
         e.GetComponent<EnemyPathfinding>().whatIsPlayer = whatIsPlayer;
         e.GetComponent<CombatHandler>().SetCentralCombatHandler(centralBattleCtrl);

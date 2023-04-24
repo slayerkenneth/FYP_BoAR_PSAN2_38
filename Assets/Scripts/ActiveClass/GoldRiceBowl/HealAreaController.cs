@@ -16,11 +16,11 @@ public class HealAreaController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var scale = effect.transform.localScale;
-        scale.x = range / 4.0F;
-        scale.z = range / 4.0F;
-        effect.transform.localScale = scale;
-        Collider.radius = range;
+        // var scale = effect.transform.localScale;
+        // scale.x = range / 4.0F;
+        // scale.z = range / 4.0F;
+        // effect.transform.localScale = scale;
+        // Collider.radius = range;
     }
 
     // Update is called once per frame

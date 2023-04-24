@@ -19,9 +19,7 @@ public class EnemyPathfinding : MonoBehaviour
 
     //tower
     private Vector3 towerPosition;
-    //private GameObject towerPrefab;
-    //public GameObject playerPrefab;
-    //private bool attackTower;
+    public Vector3 AtkPosition;
     private Transform player;
     private bool hasSpawnPlayer = false;
     private GameObject tower;
@@ -46,11 +44,6 @@ public class EnemyPathfinding : MonoBehaviour
     private float calmDownTime = 0.0f;
 
     private float enemySpeed;
-    // private float jumpHeight = 2.0f;
-    // private float gravityValue = -9.81f;
-    // private Vector3 enemyVelocity;
-    // private bool groundedPlayer;
-    private float currentSpeed;
 
     //State
     private bool playerInSightRange;
@@ -82,12 +75,6 @@ public class EnemyPathfinding : MonoBehaviour
         attackTime = 0;
         playerInSightRange = false;
         playerInAttackRange = false;
-        // get the player position (need to change)
-        //player = GameObject.FindGameObjectWithTag("Player").transform;
-        //tower = GameObject.FindGameObjectWithTag("Tower(D)").transform;
-        //Debug.Log(GameObject.FindGameObjectWithTag("Tower(D)"));
-
-        currentSpeed = walkingSpeed;
     }
 
     // Update is called once per frame
@@ -95,8 +82,6 @@ public class EnemyPathfinding : MonoBehaviour
     { 
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-        // if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.SpawningPlayer)
-        //     hasSpawnPlayer = true;
 
         if(!dealWithOverlap)
         {
@@ -112,6 +97,7 @@ public class EnemyPathfinding : MonoBehaviour
                 }
                 if (playerInAttackRange && playerInSightRange) 
                 {
+                    Debug.Log(transform.name + " Attacking Mode");
                     AttackPlayer();
                 }
             }
@@ -127,6 +113,7 @@ public class EnemyPathfinding : MonoBehaviour
                 }
                 if (playerInAttackRange && playerInSightRange) 
                 {
+                    Debug.Log(transform.name + " Attacking Mode");
                     AttackPlayer();
                 }
             }
@@ -143,6 +130,7 @@ public class EnemyPathfinding : MonoBehaviour
                 }
                 if (playerInAttackRange && playerInSightRange) 
                 {
+                    Debug.Log(transform.name + " Attacking Mode");
                     AttackPlayer();
                 }
             }
@@ -158,6 +146,7 @@ public class EnemyPathfinding : MonoBehaviour
                 }
                 if (playerInAttackRange && playerInSightRange) 
                 {
+                    Debug.Log(transform.name + " Attacking Mode");
                     AttackPlayer();
                 }
             }
@@ -176,24 +165,6 @@ public class EnemyPathfinding : MonoBehaviour
         }  
              
     }
-
-    // public void DealWithOverlap(Collider hitCollider)
-    // {   
-    //     Vector3 newPosition;
-    //     if (playerInSightRange)
-    //     {
-    //         playerPosition = GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition();
-    //         playerToCollider = Vector3.Distance(hitCollider.gameObject.transform.position, playerPosition);
-    //         playerToThis = Vector3.Distance(this.transform.position, playerPosition);
-    //         //Debug.Log("Show Player Distance: " + playerToCollider + " " + playerToThis);
-    //         if (playerToThis >= playerToCollider)
-    //         {
-    //             GoToTower();
-    //             calmDownTime = 5.0f;
-    //             calmDown = true;
-    //         }
-    //     }
-    // }
 
     private void OnTriggerEnter(Collider other) 
     {
@@ -267,9 +238,11 @@ public class EnemyPathfinding : MonoBehaviour
     {
         Vector3 newPosition;
         float theta;
+        //If the euler angle of this transform is larger than the overlap's solider euler angle, it will move anticlockwise
+        //until there are no overlap, else it will move clockwise
         if (transform.localEulerAngles.y > col.transform.localEulerAngles.y)
         {
-            theta = transform.localEulerAngles.y + 50;
+            theta = col.transform.localEulerAngles.y + 120;
             if (theta > 360)
             {
                 theta = theta - 360;
@@ -277,12 +250,13 @@ public class EnemyPathfinding : MonoBehaviour
         }
         else
         {
-            theta = transform.localEulerAngles.y - 50;
+            theta = col.transform.localEulerAngles.y - 120;
             if (theta < 0)
             {
-                theta = 360 - theta;
+                theta = 360 + theta;
             }
         }
+        theta = theta * Mathf.Deg2Rad;
         
         newPosition = new Vector3(transform.position.x + Mathf.Sin(theta) * 0.5f, transform.position.y, transform.position.z + Mathf.Cos(theta) * 0.5f);
         return newPosition;
@@ -290,11 +264,12 @@ public class EnemyPathfinding : MonoBehaviour
 
     public void GoToTower()
     {   
-        // it will output error, says that cannot call 2 event in the same time
+        // If capture point mode, call the capture point tower
         if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.CapturePointMode)
         {
             tower = GameFlowCtrl.GetActiveCaptureTowerPrefab();
         }
+        // If defense point mode, call the defense point tower
         if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.DefencePointMode)
         {
             tower = GameFlowCtrl.GetActiveDefenseTowerPrefab();
@@ -302,13 +277,13 @@ public class EnemyPathfinding : MonoBehaviour
         
         if (tower.GetComponentInChildren<Tower>())
         {
-            // transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
-            towerPoint = tower.GetComponentInChildren<Tower>().GetTowerPoints();
-            finalPosition = towerPoint[enemyID].position;
-            SetDestination(finalPosition); 
-            //Debug.Log(gameObject.name + " " + transform.position);        
+            //towerPoint means the specfic location of each enemy
+            finalPosition = tower.transform.position + AtkPosition;
+            //set the location
+            SetDestination(finalPosition);        
             if(Vector3.Distance(transform.position, finalPosition) <= 0.2f)
             {
+                //if it is defense point mode, it will also do damage on the tower
                 if (GameFlowCtrl.battleSceneState == GameFlowController.PVEBattleSceneState.DefencePointMode)
                 {
                     AttackTower(tower.GetComponentInChildren<DefenceTarget>().GetSpawnedTower().transform);
@@ -332,7 +307,7 @@ public class EnemyPathfinding : MonoBehaviour
     {   
         Transform tempPlayer = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
         tempPlayer.position = new Vector3 (tempPlayer.position.x, transform.position.y, tempPlayer.position.z);
-        transform.LookAt(tempPlayer);
+        //set the location
         SetDestination(GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition());
     }
 
@@ -343,6 +318,7 @@ public class EnemyPathfinding : MonoBehaviour
         Transform tempPlayer = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
         tempPlayer.position = new Vector3 (tempPlayer.position.x, transform.position.y, tempPlayer.position.z);
         transform.LookAt(tempPlayer);
+        //each enemy will have different time between two normal attack
         if (!isAttacking())
         {
             attackTime = gameObject.GetComponent<EnemyBehavior>().attackTime;
@@ -377,13 +353,12 @@ public class EnemyPathfinding : MonoBehaviour
         carPrefab = GameFlowCtrl.GetActivePushCarParent();
         if (carPrefab)
         {
+            //set location to the car
             finalPosition = carPrefab.GetComponentInChildren<PushCarController>().ActiveCar.transform.position;
             if(Vector3.Distance(transform.position, finalPosition) <= 0.3f)
                 StopMoving();
             else
-                SetDestination(finalPosition); 
-            //Debug.Log(gameObject.name + " " + transform.position);        
-            
+                SetDestination(finalPosition);  
         }
         
     }
@@ -393,7 +368,7 @@ public class EnemyPathfinding : MonoBehaviour
         float RandomX = UnityEngine.Random.Range(-5, 5);
         float RandomZ = UnityEngine.Random.Range(-5, 5);
         Vector3 temp_position = new Vector3 (transform.position.x + RandomX, transform.position.y, transform.position.z + RandomZ);
-        // Debug.Log(GameFlowCtrl.getARCtrl().GetActiveGameboard().CheckFit(center: temp_position, 0.1f));
+        //make sure the random positio is fit in the gameboard
         if (GameFlowCtrl.getARCtrl().GetActiveGameboard().CheckFit(center: temp_position, 0.1f))
         {
             if (firstTimePatrol)
@@ -401,7 +376,8 @@ public class EnemyPathfinding : MonoBehaviour
                 finalPosition = temp_position;
             }
                 
-
+            //set the location to that random point
+            //if the enemy is walking, it will not assign any random point for enemy to walk unitil it stop moving
             if(isWalking(finalPosition, 0.01f, firstTimePatrol))
             {
                 SetDestination(finalPosition);
@@ -432,35 +408,43 @@ public class EnemyPathfinding : MonoBehaviour
         Transform tempPlayer = GameFlowCtrl.getPlayerMovementCtrl().getCharacterTransform();
         tempPlayer.position = new Vector3 (tempPlayer.position.x, transform.position.y, tempPlayer.position.z);
         transform.LookAt(tempPlayer);
+        //if the enemy not exit the tower, set the location to player
         if (!exitTower)
         {
             SetDestination(GameFlowCtrl.getPlayerMovementCtrl().getPlayerPosition());
         } 
+        //if the enemy exit the tower but in player sight range, it just stop moving
         else if (exitTower && playerInSightRange)
         {
             StopMoving();
         }
+        //if the enemy exit the tower but not in player sight range, it set the location to tower
         else if (exitTower && !playerInSightRange)
         {
             tower =  GameFlowCtrl.GetActiveCaptureTowerPrefab();
             if (tower)
             {
-                // transform.LookAt(GameFlowCtrl.GetCloneTower().transform);
                 towerPoint = tower.GetComponentInChildren<Tower>().GetTowerPoints();
-                var seed = new Random((int)Time.deltaTime);
-                var indx = seed.Next(0, towerPoint.Count);
-                finalPosition = towerPoint[indx].position;
+                finalPosition = towerPoint[enemyID].position;
                 SetDestination(finalPosition); 
             }
         }
     }
 
-    public void setSpeed(float speed) {
-        currentSpeed = speed;
+    public void setSpeed(float speed)
+    {
+        enemySpeed = speed;
     }
 
     public void resetSpeed()
     {
-        currentSpeed = walkingSpeed;
+        enemySpeed = behaviourScript.speed;
     }
+
+    public float getSpeed()
+    {
+        return enemySpeed;
+    }
+
+  
 }
