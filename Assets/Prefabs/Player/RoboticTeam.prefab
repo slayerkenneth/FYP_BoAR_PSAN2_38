@@ -3819,7 +3819,12 @@ PrefabInstance:
     - target: {fileID: 7710086954383210093, guid: acdb90624a404aa438447006f1026065,
         type: 3}
       propertyPath: m_Intensity
-      value: 2.9305463
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9186446616439801708, guid: acdb90624a404aa438447006f1026065,
+        type: 3}
+      propertyPath: SizeModule.enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: acdb90624a404aa438447006f1026065, type: 3}
