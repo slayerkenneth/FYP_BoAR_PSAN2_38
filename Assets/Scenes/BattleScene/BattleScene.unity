@@ -170,9 +170,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerStatus: {fileID: 0}
   GameFlowCtrl: {fileID: 1451593558}
+  playerSpawner: {fileID: 0}
   recentHealth: 0
   totalHealth: 0
   recentMoney: 0
+  recentHPLV: 0
   recentWeaponLV: 0
   recentClass1LV: 0
   recentClass2LV: 0
@@ -376,7 +378,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &28619736
 Transform:
   m_ObjectHideFlags: 0
@@ -4678,7 +4680,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &924853198
 Transform:
   m_ObjectHideFlags: 0
@@ -6250,7 +6252,7 @@ PrefabInstance:
         type: 3}
       propertyPath: modelFile
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 7044bbcb61c8a9e4a9a67f9196e6239e,
+      objectReference: {fileID: 5022602860645237092, guid: f442912ee369248cabda2e51b295d2c8,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ceccde94086d44138ee14ebfb8b9fcd, type: 3}

@@ -1315,6 +1315,7 @@ public class GameFlowController : MonoBehaviour
     {
         if (PossibleRouteMainEndPoints.Count < 1)
         {
+            playerGlobalStatus.currentLevel = 0;
             SceneManager.LoadScene(4);
         }
     }
