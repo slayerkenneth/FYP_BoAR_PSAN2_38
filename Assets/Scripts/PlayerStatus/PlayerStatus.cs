@@ -54,14 +54,14 @@ public class PlayerStatus : ScriptableObject
             if (!_currentPlayer) {
                 PlayerStatus defaultStat = (PlayerStatus)Resources.Load<PlayerStatus>("PlayerStatus/Default");
                 _currentPlayer = CreateInstance<PlayerStatus>();
-                _currentPlayer.currentHP = 100;
                 _currentPlayer.maxHPLv = 0;
                 _currentPlayer.money = 0;
-                _currentPlayer.speedLv = 1;
+                _currentPlayer.speedLv = 0;
                 _currentPlayer.weaponLv = 0;
                 _currentPlayer.currentLevel = 0;
                 _currentPlayer.maxHPStat = defaultStat.maxHPStat;
                 _currentPlayer.speedStat = defaultStat.speedStat;
+                _currentPlayer.currentHP = _currentPlayer.maxHPStat[0];
 
                 // switch (PlayerPrefs.GetInt("selectedChar"))
                 // {
@@ -90,7 +90,7 @@ public class PlayerStatus : ScriptableObject
                 //         _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
                 //         break;
                 // }
-                _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
+                _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuard/HallGuardActive.asset", typeof(HallGuardActive));
                 // _currentPlayer.activeClass = (ProfessorActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
                 _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
                 // _currentPlayer.weaponStat = (BackpackStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Backpack/BackpackStat.asset", typeof(BackpackStat));

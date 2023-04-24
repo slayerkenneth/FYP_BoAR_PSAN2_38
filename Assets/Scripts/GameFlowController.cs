@@ -418,6 +418,7 @@ public class GameFlowController : MonoBehaviour
         {
             // BattleUICanvasParent.SetActive(false);
             BackgroundCanvasParent.SetActive(true);
+            MapParent.GetComponentInChildren<MapController>().UpdateCurrentLevel();
             MapParent.SetActive(true);
         }
         
@@ -930,6 +931,7 @@ public class GameFlowController : MonoBehaviour
 
     public void ExitShopReEnterMap()
     {
+        MapParent.GetComponentInChildren<MapController>().UpdateCurrentLevel();
         MapParent.SetActive(true);
         // ShopUIParentPrefab.SetActive(false);
         Destroy(ActiveShopUI);
@@ -1294,6 +1296,8 @@ public class GameFlowController : MonoBehaviour
         
         BackgroundCanvasParent.SetActive(true);
         BattleUICanvasParent.SetActive(false);
+
+        MapParent.GetComponentInChildren<MapController>().UpdateCurrentLevel();
         MapParent.SetActive(true);
         
         battleSceneState = PVEBattleSceneState.MapActive;

@@ -13,5 +13,15 @@ MonoBehaviour:
   m_Name: ProfessorPassive
   m_EditorClassIdentifier: 
   lv: 9
-  upgradeHint: []
+  upgradeHint:
+  - Increase extra damage!
+  - Increase extra damage!
+  - Increase extra damage!
+  - Increase extra damage!
+  - Increase extra damage!
+  - Increase extra damage!
+  - Increase extra damage!
+  - Increase extra damage!
+  - Increase extra damage!
+  - Increase extra damage!
   UpgradeLv: 6e00000078000000820000008c00000096000000a0000000aa000000b4000000be000000c8000000

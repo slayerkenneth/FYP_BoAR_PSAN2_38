@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 public class UIController : MonoBehaviour
 {
     [Header("Global Reference")] [SerializeField]
     public PlayerStatus PlayerStatus;
     public GameFlowController GameFlowCtrl;
+    public PlayerSpawner playerSpawner;
 
     public ProgressBar HPBar;
     public Button QuitButton;
@@ -33,11 +35,15 @@ public class UIController : MonoBehaviour
     public Button Cancel5Button;
 
     public Label MoneyText;
-    public Label RestoreText;
-    public Label UpHealthText;
+    public Label HealthText;
     public Label UpWeaponText;
     public Label UpClass1Text;
     public Label UpClass2Text;
+
+    public Label UpWeaponTextHint;
+    public Label UpClass1TextHint;
+    public Label UpClass2TextHint;
+
     public Label Item1Text;
     public Label Item2Text;
     public Label Item3Text;
@@ -49,6 +55,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private int recentHealth;
     [SerializeField] private int totalHealth;
     [SerializeField] private int recentMoney;
+    [SerializeField] private int recentHPLV;
     [SerializeField] private int recentWeaponLV;
     [SerializeField] private int recentClass1LV;
     [SerializeField] private int recentClass2LV;
@@ -68,11 +75,6 @@ public class UIController : MonoBehaviour
         UpClass1Button = root.Q<Button>("Upgrade_Class1_Button");
         UpClass2Button = root.Q<Button>("Upgrade_Class2_Button");
 
-        Item1Button = root.Q<Button>("Item1_Button");
-        Item2Button = root.Q<Button>("Item2_Button");
-        Item3Button = root.Q<Button>("Item3_Button");
-        Item4Button = root.Q<Button>("Item4_Button");
-
         Confirm1Button = root.Q<Button>("Confirm1");
         Confirm2Button = root.Q<Button>("Confirm2");
         Confirm3Button = root.Q<Button>("Confirm3");
@@ -86,11 +88,15 @@ public class UIController : MonoBehaviour
         Cancel5Button = root.Q<Button>("Cancel5");
 
         MoneyText = root.Q<Label>("Money_Text");
-        RestoreText = root.Q<Label>("Restore_Money");
-        UpHealthText = root.Q<Label>("Upgrade_Health_Money");
-        UpWeaponText = root.Q<Label>("Upgrade_Weapon_Money");
-        UpClass1Text = root.Q<Label>("Upgrade_Class1_Money");
-        UpClass2Text = root.Q<Label>("Upgrade_Class2_Money");
+        HealthText = root.Q<Label>("Health_LV");
+        UpWeaponText = root.Q<Label>("Upgrade_Weapon_LV");
+        UpClass1Text = root.Q<Label>("Upgrade_Class1_LV");
+        UpClass2Text = root.Q<Label>("Upgrade_Class2_LV");
+
+        UpWeaponTextHint = root.Q<Label>("Upgrade_Weapon_Hint");
+        UpClass1TextHint = root.Q<Label>("Upgrade_Class1_Hint");
+        UpClass2TextHint = root.Q<Label>("Upgrade_Class2_Hint");
+
         Item1Text = root.Q<Label>("Item1");
         Item2Text = root.Q<Label>("Item2");
         Item3Text = root.Q<Label>("Item3");
@@ -99,10 +105,11 @@ public class UIController : MonoBehaviour
 
         QuitButton.clicked += QuitButtonPressed;
 
-        Item1Button.clicked += Item1ButtonPressed;
-        Item2Button.clicked += Item2ButtonPressed;
-        Item3Button.clicked += Item3ButtonPressed;
-        Item4Button.clicked += Item4ButtonPressed;
+        RestoreButton.clicked += RestoreButtonPressed;
+        UpHealthButton.clicked += UpHealthButtonPressed;
+        UpWeaponButton.clicked += UpWeaponButtonPressed;
+        UpClass1Button.clicked += UpClass1ButtonPressed;
+        UpClass2Button.clicked += UpClass2ButtonPressed;
 
         Confirm1Button.clicked += Confirm1ButtonPressed;
         Confirm2Button.clicked += Confirm2ButtonPressed;
@@ -128,18 +135,29 @@ public class UIController : MonoBehaviour
         GameFlowCtrl.ExitShopReEnterMap();
     }
 
-    void RestoreButtonPressed() 
+    void RestoreButtonPressed()
     {
         //increase recent health
         Debug.Log("Restore pressed");
+        if (PlayerStatus.money > 0) {
+            PlayerStatus.money--;
+            PlayerStatus.currentHP = PlayerStatus.maxHPStat[PlayerStatus.maxHPLv];
 
+            UpdateText();
+        }
     }
 
     void UpHealthButtonPressed() 
     {
         //increase recent and total health
         Debug.Log("UpHealth pressed");
+        if (PlayerStatus.money > 0 && PlayerStatus.maxHPLv != 9)
+        {
+            PlayerStatus.money--;
+            PlayerStatus.maxHPLv ++;
 
+            UpdateText();
+        }
     }
 
     void UpWeaponButtonPressed() 
@@ -147,20 +165,36 @@ public class UIController : MonoBehaviour
         //increase weapon lv
         Debug.Log("increase weapon lv pressed");
 
+        if (PlayerStatus.money > 0 && PlayerStatus.weaponLv != 9)
+        {
+            PlayerStatus.money--;
+            PlayerStatus.weaponLv++;
+            UpdateText();
+        }
     }
 
     void UpClass1ButtonPressed() 
     {
         //increase class 1 lv
         Debug.Log("increase class 1 lv pressed");
-
+        if (PlayerStatus.money > 0 && PlayerStatus.activeClass.lv != 9)
+        {
+            PlayerStatus.money--;
+            PlayerStatus.activeClass.lv++;
+            UpdateText();
+        }
     }
 
     void UpClass2ButtonPressed() 
     {
         //increase class 2 lv
         Debug.Log("increase class 2 lv pressed");
-
+        if (PlayerStatus.money > 0 && PlayerStatus.passiveClass.lv != 9)
+        {
+            PlayerStatus.money--;
+            PlayerStatus.passiveClass.lv++;
+            UpdateText();
+        }
     }
 
     void Item1ButtonPressed() 
@@ -279,17 +313,40 @@ public class UIController : MonoBehaviour
         PlayerStatus = PlayerStatus.CurrentPlayer;
         if (PlayerStatus== null) return;
         Debug.Log(PlayerStatus);
+
+        UpdateText();
+    }
+
+    void UpdateText() {
         recentHealth = PlayerStatus.currentHP;
         totalHealth = PlayerStatus.maxHPStat[PlayerStatus.maxHPLv];
         recentMoney = PlayerStatus.money;
         recentWeaponLV = PlayerStatus.weaponStat.lv;
-        // recentClass1LV = PlayerStatus.activeClass.lv;
+        recentClass1LV = PlayerStatus.activeClass.lv;
         recentClass2LV = PlayerStatus.passiveClass.lv;
+        recentHPLV = PlayerStatus.maxHPLv;
 
+        recentMoney = PlayerStatus.money;
         MoneyText.text = recentMoney.ToString();
+
         HPBar.highValue = totalHealth;
         HPBar.lowValue = recentHealth;
         HPBar.value = recentHealth;
         HPBar.title = "HP:" + HPBar.value + "/" + totalHealth;
+
+        HealthText.text = "LV: " + (recentHPLV + 1).ToString();
+        UpWeaponText.text =  (recentWeaponLV+1).ToString();
+        UpClass1Text.text =  (recentClass1LV + 1).ToString();
+        UpClass2Text.text =  (recentClass2LV + 1).ToString();
+
+        if (recentWeaponLV == 9) UpWeaponTextHint.text = "Max level";
+        else UpWeaponTextHint.text = PlayerStatus.weaponStat.upgradeHint[recentWeaponLV];
+
+        if (recentClass1LV == 9) UpWeaponTextHint.text = "Max level";
+        else UpClass1TextHint.text = PlayerStatus.activeClass.upgradeHint[recentClass1LV];
+
+        if (recentClass1LV == 9) UpWeaponTextHint.text = "Max level";
+        else UpClass2TextHint.text = PlayerStatus.passiveClass.upgradeHint[recentClass2LV];
+
     }
 }
