@@ -39,6 +39,7 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
     // Update is called once per frame
     void Update()
     {
+
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
             var controller = bookPrefab.GetComponent<BookController>();
@@ -46,12 +47,13 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
         }
 
         if (SkillCDRemain > 0.0F) SkillCDRemain -= Time.deltaTime;
+
         if (isHoldAttack)
         {
             Vector3 temp_scale = bookPrefab.transform.localScale;
             Vector3 temp_position = bookPrefab.transform.localPosition;
 
-            //Scale
+            //Scale up the size of book
             temp_scale.x += Time.deltaTime;
             temp_scale.y += Time.deltaTime;
             temp_scale.z += Time.deltaTime;
@@ -59,36 +61,45 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
             if (temp_scale.y > maxScale) temp_scale.y = maxScale;
             if (temp_scale.z > maxScale) temp_scale.z = maxScale;
 
-            //Position
+            //fit the position from the character hand
             temp_position.x = temp_scale.x * 1.6f + 0.55f;
             temp_position.y = temp_scale.y * (-0.25f) + 0.6f;
-
             bookPrefab.transform.localScale = temp_scale;
             bookPrefab.transform.localPosition = temp_position;
             
         }
+
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("NormalAttack"))
         {
             Vector3 temp = CharMoveCtrl.getPlayerPosition();
+            //fit the action of character
+            //swipe the book out in the first half of animation
             if (NormalAttackTime < Animator.GetCurrentAnimatorStateInfo(0).length / 2f)
             {
                 bookPrefab.transform.RotateAround(temp, Vector3.up, -Time.deltaTime * rotationSpeed_NormalAttack);
             }
+            //go back to the original position in the second half of anaimation
             if (NormalAttackTime >= Animator.GetCurrentAnimatorStateInfo(0).length / 2f)
             {
                 bookPrefab.transform.RotateAround(temp, Vector3.up, Time.deltaTime * rotationSpeed_NormalAttack);
             }
             NormalAttackTime += Time.deltaTime;           
         }
+
+        //reset the normal attack time 
         if (NormalAttackTime > 0 && Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
             NormalAttackTime = 0;
         }
+
+        //fit the hold attack animation and it will rotate around the character
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("HoldAttack"))
         {
             Vector3 temp = CharMoveCtrl.getPlayerPosition();
             bookPrefab.transform.RotateAround(temp, Vector3.up, -Time.deltaTime * rotationSpeed_HoldAttack);
         }
+
+        //change it back the original size from the scale up size
         if (Animator.GetBool("EndAttack") && Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
             bookPrefab.transform.localScale = originalScale;
@@ -102,13 +113,13 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
     {
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
+            //Play the normal attck animation
             Animator.Play("NormalAttack");
-
+            //set the damage for easily call the DoDamage API
             var controller = bookPrefab.GetComponent<BookController>();
             controller.Damage = NormalAttackDamage;
             controller.isAttack = true;
             controller.combatHandler = combatHandler;
-            // combatHandler.AddAttackingColliders(shield.GetComponent<Collider>());
         }
     }
 
@@ -125,33 +136,22 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
             PlayerStatus.CurrentPlayer.activeClass.skill(gameObject);
         }
     }
+
     public override void StartHoldAttack()
     {
-        WithinBook = true;
         isHoldAttack = true;
         Animator.SetBool("EndAttack", false);
     }
     public override void EndHoldAttack()
     {
-        WithinBook = false;
+        //Play the hold attck animation
         Animator.Play("HoldAttack");
         Animator.SetBool("EndAttack", true);
+        //set the damage for easily call the DoDamage API
         var controller = bookPrefab.GetComponent<BookController>();
         controller.Damage = HoldAttackDamage;
         controller.combatHandler = combatHandler;
         controller.isAttack = true;
-        // Animator.SetBool("Shield", false);
-        // var centerAngle = this.transform.rotation.eulerAngles.y;
-        // var enemyList = GameObject.FindGameObjectsWithTag("Enemy");
-        // foreach (GameObject enemy in enemyList)
-        // {
-        //     var dir = enemy.transform.position - transform.position;
-        //     var angle = Math.Atan2(dir.x, dir.z);
-        //     if (dir.magnitude < revertDistance && InBetween(centerAngle, shieldAngle, angle))
-        //     {
-        //         combatHandler.DoDamage(enemy.GetComponent<CombatHandler>(), revertDamage);
-        //     }
-        // }
         isHoldAttack = false;
     }
 

@@ -15,6 +15,7 @@ public class ProfessorPassive : PassiveClass
 
     [SerializeField] private List<int> UpgradeLv;
 
+    //set the upgrade value and set it back to the player for damage upgrade
     public override void StartPassive(GameObject player)
     {
         player.GetComponent<CombatHandler>().UpgradeDamagePercentage = UpgradeLv[lv];    

@@ -26,7 +26,7 @@ public class PlayerSpawner : MonoBehaviour
         // // Hall Guard not work
         // if (PlayerType == typeof(HallGuardActive))
         // {
-        activeCharacter = Instantiate(RoboticsTeamPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);    
+        activeCharacter = Instantiate(ProfessorPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);    
         // }
         // else if (PlayerType == typeof(ProfessorActive))
         // {

@@ -26,7 +26,7 @@ public class RangeAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (target)
+        if (target && enemy)
         {
             if (stayTime == 5f)
             {
@@ -38,23 +38,21 @@ public class RangeAttack : MonoBehaviour
             stayTime -= Time.deltaTime;
 
             if (!stopRangeAttack)
-            {      
-                // var direction = Mathf.Atan2(player_tempPosition.x - enemy_tempPosition.x, player_tempPosition.z - enemy_tempPosition.z) * Mathf.Rad2Deg;
-                // Debug.Log(direction);
+            { 
+                //if collide with target, it will do damage  
                 if (Vector3.Distance(transform.position, target.position) < 0.05f)
                 {
                     CombatHandler.DoDamage(target.GetComponent<CombatHandler>(), DamageAmount);
-                    Debug.Log(target.name + " " + target.GetComponent<CombatHandler>().GetCurrentHP());
                     stopRangeAttack = true;
                     Destroy(gameObject);
                 }
+
+                //if it cannot collide with target, move along the direction of target until it disappear
                 else 
                 {
-                    // Debug.Log("Halo2");
                     if (Vector3.Distance(transform.position, player_tempPosition) < 0.05f || keepMoving)
                     {
                         var dir = Mathf.Atan2(player_tempPosition.x - enemy_tempPosition.x, player_tempPosition.z - enemy_tempPosition.z) * Mathf.Rad2Deg;
-                        // Debug.Log(dir);
                         if (dir > 0)
                             changeInX = Mathf.Abs(Mathf.Sin(dir * Mathf.Deg2Rad));
                         else
@@ -65,21 +63,21 @@ public class RangeAttack : MonoBehaviour
                         else
                             changeInY = -Mathf.Abs(Mathf.Cos(dir * Mathf.Deg2Rad));
                             
-                        player_tempPosition = new Vector3(transform.position.x + changeInX, transform.position.y, transform.position.z + changeInY);
+                        player_tempPosition = new Vector3(transform.position.x + changeInX, transform.position.y, 
+                            transform.position.z + changeInY);
                         transform.position = Vector3.MoveTowards(transform.position, player_tempPosition, velocity * Time.deltaTime);
                         keepMoving = true;
                     }
                     else
                         transform.position = Vector3.MoveTowards(transform.position, player_tempPosition, velocity * Time.deltaTime);
-                    
-                    // Debug.Log(transform.localEulerAngles.y + " " + changeInX + " " + changeInY);
                 }
             }
             else
             {
                 Destroy(gameObject);
             }
-            // Debug.Log(transform.name + " " + stayTime);
+
+            //if the lifetime is zero, it will be disappear
             if (stayTime <= 0)
             {
                 stopRangeAttack = true;

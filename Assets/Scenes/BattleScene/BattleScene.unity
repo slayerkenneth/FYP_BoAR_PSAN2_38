@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4439403, g: 0.4931519, b: 0.5722083, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6208,7 +6208,7 @@ PrefabInstance:
         type: 3}
       propertyPath: modelFile
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: f442912ee369248cabda2e51b295d2c8,
+      objectReference: {fileID: 5022602860645237092, guid: 645a35851538f064a9369f3d93b6a7d4,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ceccde94086d44138ee14ebfb8b9fcd, type: 3}
@@ -6618,7 +6618,7 @@ MonoBehaviour:
     type: 3}
   MagicCasterPrefab: {fileID: 1953271650171834, guid: ae7cc4cac9bd71e478c8fde6e04c2d94,
     type: 3}
-  ProfessorPrefab: {fileID: 7647134206250791342, guid: 83f1c10455db1b74db02bb88674cd4bb,
+  ProfessorPrefab: {fileID: 7647134206250791342, guid: f6c860a8016f31047b722c8bafea8071,
     type: 3}
   RoboticsTeamPrefab: {fileID: 7673487251499248760, guid: b35d1fc5f88b9b2479ca83cae977332f,
     type: 3}
