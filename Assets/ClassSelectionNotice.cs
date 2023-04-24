@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ClassSelectionNotice : MonoBehaviour
 {
-    public GameObject classNotice;
-
     public void DestroyUI()
     {
         Destroy(gameObject);
