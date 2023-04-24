@@ -1299,14 +1299,17 @@ public class GameFlowController : MonoBehaviour
         battleSceneState = PVEBattleSceneState.MapActive;
     }
 
-    public void ReturnToTitlePage()
+    // To be implemented to dialogue, now dummy to intro
+    public void ReturnToDialogue()
     {
-        SceneManager.LoadScene(0);
+        if (playerGlobalStatus.currentLevel != 1)return;
+        
+        SceneManager.LoadScene(1);
     }
 
     public void InvalidSceneTriggerReScan()
     {
-        if (EnemySpawner.EnemySpawnLocationList.Count < 2)
+        if (PossibleRouteMainEndPoints.Count < 1)
         {
             SceneManager.LoadScene(4);
         }
