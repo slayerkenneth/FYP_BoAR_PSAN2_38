@@ -1,0 +1,35 @@
+﻿title: BeforeChapter4
+tags:
+position: -15,-87
+---
+Axl: I finally got my hands on the EMP device!
+Boaris: Great, then we don't have time to waste!
+Boarissa: We've got to get to the Red Bird sundial before sunset!
+-> Go to the Red Bird sundial
+    <<jump RedbirdSundial>>
+-> Ask questions about the device
+    <<jump AskQuestions>>
+===
+title: RedbirdSundial
+position: -141,99
+---
+Boarlord: You're finally here... again. 
+Axl: What do you mean?
+Boarlord: Did you know that we have been in this situation an infinite amount of times?
+Axl: What?
+Boarlord: You and I are stuck in a time loop. With infinite possibilities in the multiverse, it always ends with you fighting against me. Just as we are about to do now.
+===
+
+title: AskQuestions
+position: 145,104
+---
+Axl: What? What's special about the Sundial?
+Boaris: It's where everything began. We have no time to waste, let's get moving.
+...
+Boarlord: You're finally here... again.
+Axl: What do you mean?
+Boarlord: Did you know that we have been in this situation an infinite amount of times?
+Axl: What?
+Boarlord: You and I are stuck in a time loop. With infinite possibilities in the multiverse, it always ends with you fighting against me. Just as we are about to do now.
+===
+
