@@ -17,15 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CharAndChapterSelection/CharacterSelect.unity
     guid: 470fa8699dbf2e74a9ca92672890b7d9
-  - enabled: 0
-    path: Assets/Scenes/MapScene/MapScene.unity
-    guid: 1e27237ff226c1042af292f41c662a9a
-  - enabled: 0
-    path: Assets/Scenes/BattleScene/DefencePointBattleMode.unity
-    guid: 0ddd4f8d0325c23438ca566d9b452bf4
-  - enabled: 0
-    path: Assets/Scenes/Shop/Shop.unity
-    guid: 090a8295cc603404e901d99a26c4cae7
   - enabled: 1
     path: Assets/Scenes/BattleScene/BattleScene.unity
     guid: f8337546c0c8845a1bc6a238624fde96

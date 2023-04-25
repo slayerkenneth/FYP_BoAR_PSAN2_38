@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GroundTextureReplacer : MonoBehaviour
 {
@@ -11,6 +13,11 @@ public class GroundTextureReplacer : MonoBehaviour
     {
         get => GroundMeshRenderer;
         set => GroundMeshRenderer = value;
+    }
+
+    private void Start()
+    {
+        GroundMeshRenderer.material = groundMatList[Random.Range(0, groundMatList.Count)];
     }
 
     public void SetGroundMeshMat(Material newMat)
