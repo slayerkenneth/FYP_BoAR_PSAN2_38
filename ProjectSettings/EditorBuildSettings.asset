@@ -20,6 +20,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BattleScene/BattleScene.unity
     guid: f8337546c0c8845a1bc6a238624fde96
+  - enabled: 1
+    path: Assets/Scenes/DialogueSystem/BeforeCh1Dialogue.unity
+    guid: a7f675a35497d4e489c744e29a299146
+  - enabled: 1
+    path: Assets/Scenes/DialogueSystem/BeforeCh2Dialogue.unity
+    guid: 53b5f59efd9e7bd49b016f8c7b13941b
+  - enabled: 1
+    path: Assets/Scenes/DialogueSystem/BeforeCh3Dialogue.unity
+    guid: f3a2d74fef422b94caea658943239efa
+  - enabled: 1
+    path: Assets/Scenes/DialogueSystem/BeforeCh4Dialogue.unity
+    guid: fc21774ebafd317458d00afcff459ded
+  - enabled: 1
+    path: Assets/Scenes/DialogueSystem/AfterCh5Dialogue.unity
+    guid: c157914f7317066409489e1408bd0036
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 744b813df90924c169af73489b8325de,
       type: 2}

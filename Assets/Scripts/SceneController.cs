@@ -30,6 +30,16 @@ public class SceneController : MonoBehaviour
     {
         SceneManager.LoadScene(4);
     }
+
+    public void LoadDialogue(int dialogueIndex)
+    {
+        SceneManager.LoadScene(dialogueIndex + 4);
+    }
+
+    public void LoadDialogueSceneFromStaticIndex()
+    {
+        SceneManager.LoadScene(ChapterLoadStore.selectedChapter + 4);
+    }
 }
 
 

@@ -1308,7 +1308,7 @@ public class GameFlowController : MonoBehaviour
     {
         if (playerGlobalStatus.currentLevel != 1)return;
         
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
     public void InvalidSceneTriggerReScan()

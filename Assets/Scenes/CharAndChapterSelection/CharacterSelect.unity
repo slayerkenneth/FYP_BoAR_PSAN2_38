@@ -566,7 +566,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2081949053}
         m_TargetAssemblyTypeName: SceneController, Assembly-CSharp
-        m_MethodName: LoadMapScene
+        m_MethodName: LoadDialogueSceneFromStaticIndex
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -782,7 +782,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6452f5cc1a2c245029acdcc45e397175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  classNotice: {fileID: 0}
 --- !u!1 &1245937983
 GameObject:
   m_ObjectHideFlags: 0
