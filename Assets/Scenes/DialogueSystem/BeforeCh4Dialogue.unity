@@ -257,6 +257,50 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &337555963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 337555965}
+  - component: {fileID: 337555964}
+  m_Layer: 0
+  m_Name: SceneController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &337555964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 337555963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c1a2dace1d92468c88c2d4584d3be98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &337555965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 337555963}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &350656950
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,18 +484,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5736e00bdb4e2524eb8eeb5dc29ca4d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runner: {fileID: 0}
-  loadSprites: []
-  loadAudio: []
-  useResourcesFolders: 0
-  defaultTint: {r: 0, g: 0, b: 0, a: 0}
-  highlightTint: {r: 0, g: 0, b: 0, a: 0}
-  spriteGroup: {fileID: 0}
-  bgImage: {fileID: 0}
-  fadeBG: {fileID: 0}
-  nameplateBG: {fileID: 0}
-  genericSprite: {fileID: 0}
-  genericAudioSource: {fileID: 0}
 --- !u!4 &224084850122224683
 Transform:
   m_ObjectHideFlags: 0
@@ -931,22 +963,22 @@ MonoBehaviour:
       m_Calls: []
   onDialogueComplete:
     m_PersistentCalls:
-      m_Calls: []
-  onCommand:
-    m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 337555964}
+        m_TargetAssemblyTypeName: SceneController, Assembly-CSharp
+        m_MethodName: LoadChapterScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onCommand:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!223 &3739197626767980225
 Canvas:
   m_ObjectHideFlags: 0
@@ -994,20 +1026,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5736e00bdb4e2524eb8eeb5dc29ca4d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runner: {fileID: 3579681405219431117}
-  loadSprites:
-  - {fileID: 21300000, guid: 7e17e6e6a4e37414eb0ddc76aa34b6eb, type: 3}
-  - {fileID: 21300000, guid: 35a0e4137f628bd4090ed4af9844dbfa, type: 3}
-  loadAudio: []
-  useResourcesFolders: 0
-  defaultTint: {r: 0, g: 0, b: 0, a: 0}
-  highlightTint: {r: 0, g: 0, b: 0, a: 0}
-  spriteGroup: {fileID: 0}
-  bgImage: {fileID: 0}
-  fadeBG: {fileID: 0}
-  nameplateBG: {fileID: 0}
-  genericSprite: {fileID: 0}
-  genericAudioSource: {fileID: 0}
 --- !u!1 &4540255441436978852
 GameObject:
   m_ObjectHideFlags: 0
