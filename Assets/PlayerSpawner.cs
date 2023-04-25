@@ -18,24 +18,35 @@ public class PlayerSpawner : MonoBehaviour
     public GameObject RoboticsTeamPrefab;
     public GameObject trackNFieldPrefab;
 
+    public BattlePlayerIconLoader BattlePlayerIconLoader;
+
     public void SpawnPlayer(PlayerStatus globalStatus, Transform parentTransform, Vector3 spawnLocation)
     {
         PlayerStatusRef = PlayerStatus.CurrentPlayer;
         // Type PlayerType = PlayerStatusRef.activeClass.GetType();
+        switch (PlayerPrefs.GetInt("selectedChar"))
+        {
+            case 0: 
+                activeCharacter = Instantiate(HallSecurityPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
+                break;
+                    
+            case 1:
+                activeCharacter = Instantiate(trackNFieldPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
+                break;
+                    
+            case 2:
+                activeCharacter = Instantiate(ProfessorPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
+                break;
+            case 3:
+                activeCharacter = Instantiate(KendoPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform); 
+                break;
+                    
+            case 4: 
+                activeCharacter = Instantiate(RoboticsTeamPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
+                break;
+        }
         
-        // // Hall Guard not work
-        // if (PlayerType == typeof(HallGuardActive))
-        // {
-        activeCharacter = Instantiate(RoboticsTeamPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);    
-        // }
-        // else if (PlayerType == typeof(ProfessorActive))
-        // {
-        //     activeCharacter = Instantiate(ProfessorPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);    
-        // }
-        // else if (PlayerType == typeof(TrackNFieldActive))
-        // {
-        //     activeCharacter = Instantiate(trackNFieldPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
-        // }
+        BattlePlayerIconLoader.SetPlayerIcon();
         
         var CharMoveCtrl = activeCharacter.GetComponent<CharacterMovementController>();
         CharMoveCtrl.ARController = GameFlowController.getARCtrl();

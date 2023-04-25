@@ -63,39 +63,39 @@ public class PlayerStatus : ScriptableObject
                 _currentPlayer.speedStat = defaultStat.speedStat;
                 _currentPlayer.currentHP = _currentPlayer.maxHPStat[0];
 
-                // switch (PlayerPrefs.GetInt("selectedChar"))
-                // {
-                //     case 0:
-                //         _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
-                //         _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
-                //         _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
-                //         break;
-                //     
-                //     case 1:
-                //         
-                //         break;
-                //     
-                //     case 2:
-                //         _currentPlayer.activeClass = (ProfessorActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
-                //         _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
-                //         _currentPlayer.weaponStat = (BookStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Book/BookStat.asset", typeof(BookStat));
-                //
-                //         break;
-                //     case 3:
-                //         break;
-                //     
-                //     case 4:
-                //         _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
-                //         _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
-                //         _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
-                //         break;
-                // }
-                _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuard/HallGuardActive.asset", typeof(HallGuardActive));
-                // _currentPlayer.activeClass = (ProfessorActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
-                _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
-                // _currentPlayer.weaponStat = (BackpackStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Backpack/BackpackStat.asset", typeof(BackpackStat));
-                // _currentPlayer.weaponStat = (BookStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Book/BookStat.asset", typeof(BookStat));
-                _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
+                switch (PlayerPrefs.GetInt("selectedChar"))
+                {
+                    case 0:
+                        _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
+                        _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
+                        _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
+                        break;
+                    
+                    case 1:
+                        
+                        break;
+                    
+                    case 2:
+                        _currentPlayer.activeClass = (ProfessorActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
+                        _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
+                        _currentPlayer.weaponStat = (BookStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Book/BookStat.asset", typeof(BookStat));
+                
+                        break;
+                    case 3:
+                        break;
+                    
+                    case 4:
+                        _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
+                        _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
+                        _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
+                        break;
+                }
+                // _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/HallGuard/HallGuardActive.asset", typeof(HallGuardActive));
+                // // _currentPlayer.activeClass = (ProfessorActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
+                // _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
+                // // _currentPlayer.weaponStat = (BackpackStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Backpack/BackpackStat.asset", typeof(BackpackStat));
+                // // _currentPlayer.weaponStat = (BookStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Book/BookStat.asset", typeof(BookStat));
+                // _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
             
                 // _currentPlayer.activeClass = (HallGuardActive)Resources.Load("Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
                 // // _currentPlayer.activeClass = (ProfessorActive)AssetDatabase.LoadAssetAtPath("Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
@@ -103,7 +103,6 @@ public class PlayerStatus : ScriptableObject
                 // // _currentPlayer.weaponStat = (BackpackStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Backpack/BackpackStat.asset", typeof(BackpackStat));
                 // // _currentPlayer.weaponStat = (BookStat)AssetDatabase.LoadAssetAtPath("Assets/Scripts/weapon_character/Book/BookStat.asset", typeof(BookStat));
                 // _currentPlayer.passiveClass = (ProfessorPassive)Resources.Load("Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
-                
                 _currentPlayer.hideFlags = HideFlags.HideAndDontSave;
             }
             return _currentPlayer;
