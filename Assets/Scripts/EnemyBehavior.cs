@@ -57,7 +57,7 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (CombatHandler.GetCurrentHP() <= 0)
         {
-            //GameFlowController.EnemyKillCount++;
+            GameFlowCtrl.KilledEnemyCount++;
             Destroy(gameObject);
         }
     }

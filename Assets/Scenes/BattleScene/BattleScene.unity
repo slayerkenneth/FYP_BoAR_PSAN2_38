@@ -1833,6 +1833,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 276159902}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &324380789 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4650435058443679876, guid: f046b1f01694e470da076f1ef5407667,
+    type: 3}
+  m_PrefabInstance: {fileID: 4650435057354534260}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &331931139
 GameObject:
   m_ObjectHideFlags: 0
@@ -6492,6 +6498,7 @@ MonoBehaviour:
   battleSceneState: 0
   PlayerSpawnActive: 0
   BattleMode: 12
+  KilledEnemyCount: 0
   arCamera: {fileID: 619056670}
   ARCtrl: {fileID: 619056682}
   playerMovementCtrl: {fileID: 0}
@@ -6540,6 +6547,8 @@ MonoBehaviour:
   LossPopUpWindow: {fileID: 2121741730}
   BackgroundCanvasParent: {fileID: 606874905}
   startFightUI: {fileID: 581750061}
+  tmpTextParent: {fileID: 324380789}
+  tmpTextForStat: {fileID: 0}
   playerGlobalStatus: {fileID: 0}
   PlayerSpawner: {fileID: 1451593562}
   PlayerSpawnLocation: {x: 0, y: 0, z: 0}
@@ -23576,6 +23585,15 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4650435058443679878, guid: f046b1f01694e470da076f1ef5407667,
+        type: 3}
+      propertyPath: m_text
+      value: 'enemies eliminated: 9
+
+        reward: +3 gold
+
+        bonus: +4 hp'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f046b1f01694e470da076f1ef5407667, type: 3}

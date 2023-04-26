@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeMonkey.HealthSystemCM;
 using Niantic.ARDK.Extensions.Gameboard;
+using TMPro;
 using Unity.Barracuda;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -54,6 +55,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] public PVEBattleSceneState battleSceneState = PVEBattleSceneState.Invalid;
     public bool PlayerSpawnActive = false;
     public PVEBattleSceneState BattleMode;
+    public int KilledEnemyCount = 0;
     
     [Header("Other Controller Reference")] 
     [SerializeField] private Camera arCamera;
@@ -115,7 +117,9 @@ public class GameFlowController : MonoBehaviour
     public GameObject LossPopUpWindow;
     public GameObject BackgroundCanvasParent;
     public GameObject startFightUI;
-
+    public GameObject tmpTextParent;
+    public TextMeshProUGUI tmpTextForStat;
+    
     [Header("Global Player status")]
     [SerializeField] public PlayerStatus playerGlobalStatus;
     [SerializeField] public PlayerSpawner PlayerSpawner;
@@ -187,6 +191,8 @@ public class GameFlowController : MonoBehaviour
         
         BattleUICanvasParent.SetActive(false);
         startFightUI.SetActive(false);
+
+        tmpTextForStat = tmpTextParent.GetComponent<TextMeshProUGUI>();
     }
     
     // Old Version
@@ -1235,14 +1241,16 @@ public class GameFlowController : MonoBehaviour
 
     public void RewardNextStage()
     {
-        playerGlobalStatus.money++;
+        playerGlobalStatus.money += KilledEnemyCount;
         playerGlobalStatus.speedLv++;
         playerGlobalStatus.currentHP = (int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP();
         // playerGlobalStatus.currentLevel++; // cannot change this
-        
+
+        tmpTextForStat.SetText("enemies eliminated: " + KilledEnemyCount + "\n" + "reward: +" + KilledEnemyCount + " gold" +
+                              "\n" + "bonus: +4 hp");
         WinPopUpWindow.SetActive(true);
         EnemySpawner.ClearEnemyOnScene();
-        PlayerSpawner.DespawnPlayer((int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP(), playerGlobalStatus.money+1, playerGlobalStatus.weaponLv);
+        PlayerSpawner.DespawnPlayer((int) playerMovementCtrl.GetPlayerCombatHandler().GetCurrentHP(), playerGlobalStatus.money+KilledEnemyCount, playerGlobalStatus.weaponLv);
         ActiveDefenseTowerParent = null;
         ActiveCaptureTowerParent = null;
         ActiveDungeonParent = null;
@@ -1250,10 +1258,12 @@ public class GameFlowController : MonoBehaviour
         ActiveBossFightParent = null;
         EnemySpawner.SetEnemySpawner(false);
         EnemySpawner.ResetTowerTargetReference();
+        KilledEnemyCount = 0;
     }
 
     public void LossRestartFromBeginning()
     {
+        KilledEnemyCount = 0;
         LossPopUpWindow.SetActive(true);
         EnemySpawner.ResetTowerTargetReference();
         EnemySpawner.SetEnemySpawner(false);
