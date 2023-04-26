@@ -1646,12 +1646,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _arCamera: {fileID: 619056670}
-  _agentPrefab: {fileID: 7591547633202612116, guid: 9d8ff95812c144ae2b6ae5ec1d272bff,
-    type: 3}
+  HitTestType: 16
   _shaderMaterial: {fileID: 2100000, guid: a71a9dcfa59fa490ab7f361bed7d1cf1, type: 2}
   _semanticManager: {fileID: 619056672}
+  GameFlowController: {fileID: 0}
   DebugText: {fileID: 1486486168}
   AreaText: {fileID: 1023190698}
+  ObjectRecognitionCtrl: {fileID: 0}
+  PlacementObjectPf: {fileID: 0}
+  boxContainer: {fileID: 0}
+  boxPrefab: {fileID: 0}
+  yolov5Detector: {fileID: 0}
+  scanningInstructionUI: {fileID: 0}
 --- !u!1 &622892559
 GameObject:
   m_ObjectHideFlags: 0

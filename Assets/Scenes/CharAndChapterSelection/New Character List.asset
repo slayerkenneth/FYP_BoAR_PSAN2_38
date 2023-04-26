@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb9c3f212aa9a714c99b76ad5332fa55, type: 3}
+  m_Name: New Character List
+  m_EditorClassIdentifier: 
+  character:
+  - charName: MAGIC CASTER
+    charSprite: {fileID: 21300000, guid: 9212c87bf81564767814a72285b45244, type: 3}
+  - charName: TRACK AND FIELD MEMBER
+    charSprite: {fileID: 21300000, guid: a257ede00af404a4cb854e55102fc235, type: 3}
+  - charName: PROFESSOR
+    charSprite: {fileID: 21300000, guid: 5a79d41fc3ddb4e47bfafbc8fd5a7a89, type: 3}
+  - charName: KENDO CLUB MEMBER
+    charSprite: {fileID: 21300000, guid: be3f7b75bc5da5a42b00131214373a53, type: 3}
+  - charName: ROBOTICS TEAM MASCOT
+    charSprite: {fileID: 21300000, guid: 3505a33315d62f340b2154d78b91f413, type: 3}

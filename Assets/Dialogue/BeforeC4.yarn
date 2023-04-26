@@ -1,0 +1,38 @@
+﻿title: BeforeChapter4
+tags:
+---
+<<Scene Ch4S1>>
+<<Act Axl emptyprefab left center #ffffff>>
+<<Act Boaris emptyprefab right center #c0ebd8>>
+<<Act Boarissa emptyprefab 1.25 center #dbb3ab>>
+<<Act Boarlord emptyprefab 1.5 center #c3bee6>>
+Axl: I finally got my hands on the EMP device!
+Boaris: Great, then we don't have time to waste!
+Boarissa: We've got to get to the Red Bird sundial before sunset!
+-> Go to the Red Bird sundial
+    <<jump RedbirdSundial>>
+-> Ask questions about the device
+    <<jump AskQuestions>>
+===
+title: RedbirdSundial
+---
+<<Scene Ch4S2>>
+Boarlord: You're finally here... again. 
+Axl: What do you mean?
+Boarlord: Did you know that we have been in this situation an infinite amount of times?
+Axl: What?
+Boarlord: You and I are stuck in a time loop. With infinite possibilities in the multiverse, it always ends with you fighting against me. Just as we are about to do now.
+===
+
+title: AskQuestions
+---
+Axl: What? What's special about the Sundial?
+Boaris: It's where everything began. We have no time to waste, let's get moving.
+<<Scene Ch4S2>>
+Boarlord: You're finally here... again.
+Axl: What do you mean?
+Boarlord: Did you know that we have been in this situation an infinite amount of times?
+Axl: What?
+Boarlord: You and I are stuck in a time loop. With infinite possibilities in the multiverse, it always ends with you fighting against me. Just as we are about to do now.
+===
+

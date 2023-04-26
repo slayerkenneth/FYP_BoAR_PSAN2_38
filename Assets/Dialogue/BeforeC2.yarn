@@ -1,0 +1,53 @@
+﻿title: BeforeChapter2
+tags:
+---
+<<Scene Ch2S1>>
+<<Act Axl emptyprefab left center #ffffff>>
+<<Act Boarlord emptyprefab 1.25 center #dbb3ab>>
+<<Act Unknown emptyprefab right center #c0ebd8>>
+Axl: That was a weird dream... I feel terrible. Oh, it's time for another boring class...
+<<Scene Ch2S2>>
+Boarlord: Last time we were rudely interrupted by an intruder.
+<<Scene Ch2S3>>
+Axl: Oh, so it wasn't a dream... let me try to get more information this time.
+<<Scene Ch2S4>>
+Boarlord: YOU AGAIN! YOU WON'T GET AWAY SO EASILY THIS TIME!
+<<Scene Ch2S5>>
+Axl: (panting) Jeez...I have... got to get better... at not getting noticed.
+<<Scene Ch2S6>>
+Unknown: Pssh...Over here.
+-> Talk to them
+    <<jump TalkToThem>>
+-> Continue running
+    <<jump ContinueRunning>>
+===
+title: TalkToThem
+---
+<<Scene Ch2S6>>
+Axl: Who are you? I'm being chased by a crazy group of boars!
+Unknown: We know, We can help. The experiment must be stopped.
+<<Scene Ch2S7>>
+Axl: You mean the one in the locker?
+Unknown: Yes. Yesterday's blast left you with the power to synchronise with versions of yourself across the multiverse.
+<<Scene Ch2S8>>
+Boarlord: YOU! YOU'RE NOT GETTING AWAY TODAY.
+Unknown: I've gotta go, find me in the next time loop!
+<<Scene Ch2S9>>
+Axl: Wait!
+<<Scene Ch2S10>>
+Boarlord: Haha, you have no choice but to battle me again.
+===
+title: ContinueRunning
+---
+<<Scene Ch2S5>>
+Axl: I don't have time for this!
+<<Scene Ch2S6>>
+Unknown: Come with us. Yesterday's blast left you with the power to synchronise with versions of yourself across the multiverse.
+<<Scene Ch2S8>>
+Boarlord: YOU THERE!
+Unknown: Crap! Find me in the next time loop!
+<<Scene Ch2S9>>
+Axl: Wait!
+<<Scene Ch2S10>>
+Boarlord: Haha, you have no choice but to battle me again.
+===

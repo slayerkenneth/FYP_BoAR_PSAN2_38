@@ -7,6 +7,11 @@ TagManager:
   - Enemy
   - Tower(D)
   - Tower(C)
+  - WinUI
+  - LoseUI
+  - PushItem
+  - AttackPoint
+  - PlayerMinion
   layers:
   - Default
   - TransparentFX
@@ -17,8 +22,9 @@ TagManager:
   - ARDK_Gameboard
   - ARDK_MockWorld
   - Player
-  - 
-  - 
+  - Enemy
+  - Glow_object
+  - Tower
   - 
   - 
   - 

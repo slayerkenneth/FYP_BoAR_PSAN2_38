@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: dd1d36e33e37f446ab89a6b7cad3a67e
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _MainTex: {instanceID: 0}
+  - _SemanticTex: {instanceID: 0}
+  - _OverlayTex: {instanceID: 0}
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
