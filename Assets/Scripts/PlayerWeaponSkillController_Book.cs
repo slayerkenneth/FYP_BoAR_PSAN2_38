@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerWeaponSkillController_Book : MonoBehaviour
+public class PlayerWeaponSkillController_Book : PlayerWeaponSkillController
 {
 
     [Header("Reference")] 
@@ -33,7 +33,7 @@ public class PlayerWeaponSkillController_Book : MonoBehaviour
         
     }
 
-    public void NormalAttack()
+    public override void NormalAttack()
     {
         if (!ValidHit) return;
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
@@ -44,7 +44,7 @@ public class PlayerWeaponSkillController_Book : MonoBehaviour
         
     }
 
-    public void StartHoldAttack()
+    public override void StartHoldAttack()
     {
         if (Animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
@@ -52,7 +52,7 @@ public class PlayerWeaponSkillController_Book : MonoBehaviour
         }
     }
 
-    public void EndHoldAttack()
+    public override void EndHoldAttack()
     {
         Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, 0.2f, whatIsEnemy);
         if (Physics.CheckSphere(transform.position, 0.5f))
@@ -85,7 +85,7 @@ public class PlayerWeaponSkillController_Book : MonoBehaviour
         
     }
 
-    public void CastSkill()
+    public override void CastSkill()
     {
         
     }
@@ -104,4 +104,16 @@ public class PlayerWeaponSkillController_Book : MonoBehaviour
         ValidHit = false;
         // shd be after animation end and depends on collider of the weapon
     }
-}
+
+    public override void Rolling()
+    {
+        
+    }
+    
+    public override float OnrecieveDamage(float damageAmount, CombatHandler attacker)
+    {
+        if (Animator.GetCurrentAnimatorStateInfo(0).IsName("rolling")) return 0;
+        
+        // Animator.Play("ReceiveDamage");
+        return damageAmount;
+    }}

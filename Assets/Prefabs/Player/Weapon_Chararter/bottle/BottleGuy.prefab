@@ -2081,7 +2081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ea5b44e0ddb58745bae42f96dea5672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatHandler: {fileID: 0}
+  combatHandler: {fileID: -8856093971014766255}
   damagePerSec: 0
 --- !u!54 &6139177443758888127
 Rigidbody:
@@ -2573,6 +2573,8 @@ MonoBehaviour:
   animator: {fileID: 9036980633323257398}
   cameraTransform: {fileID: 6949730444206268635}
   nearestBoardPosition: {x: 0, y: 0, z: 0}
+  fallDetectionHeight: -3
+  resetLocation: {x: 0, y: -1, z: 0}
   ARController: {fileID: 0}
   GameFlowController: {fileID: 0}
   playerOwnCombatHandler: {fileID: -8856093971014766255}
@@ -2650,13 +2652,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  shield: 0
   skillCoolDown: 5
+  UpgradeDamagePercentage: 100
   AttackingColliders: []
   DamageTakingColliders:
   - {fileID: 3272698094585902994}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: 8369488434654405864}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}

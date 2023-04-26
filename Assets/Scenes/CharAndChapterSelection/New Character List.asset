@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: New Character List
   m_EditorClassIdentifier: 
   character:
-  - charName: HALL SECURITY GUARD
-    charSprite: {fileID: 21300000, guid: fd00f5fd8a34b76499e1ea72718b8fbd, type: 3}
+  - charName: MAGIC CASTER
+    charSprite: {fileID: 21300000, guid: 9212c87bf81564767814a72285b45244, type: 3}
   - charName: TRACK AND FIELD MEMBER
     charSprite: {fileID: 21300000, guid: a257ede00af404a4cb854e55102fc235, type: 3}
   - charName: PROFESSOR

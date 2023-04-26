@@ -200,32 +200,32 @@ public class ObjectRecognitionController : MonoBehaviour
 
     public void SpawnSceneItems()
     {
-        if (SceneItemsLocations.Capacity == 0) return;
-        var hitPoint = new Vector3();
-        var gameboard = ARCtrl.GetActiveGameboard();
-        foreach (var ray in SceneItemsLocations)
-        {
-            var b = gameboard.RayCast(ray, out hitPoint);      // Null Object reference 
-            // Intersect the Gameboard with the ray
-            if (b)
-            {
-                // Check whether the object can be fit in the resulting position
-                if (gameboard.CheckFit(center: hitPoint, 0.01f))
-                {
-                    var landscape = Instantiate(PlacementObjectPf, hitPoint, Quaternion.identity);
-                    landscape.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                    _placedObjects.Add(landscape);
-                }
-            }
-        }
-
-        foreach (var box in RecognitionBoxes)
-        {
-            RecognitionBoxes.Remove(box);
-            Destroy(box);
-        }
-        
-        DebugText.text = "Scene items generated";
+        // if (SceneItemsLocations.Capacity == 0) return;
+        // var hitPoint = new Vector3();
+        // var gameboard = ARCtrl.GetActiveGameboard();
+        // foreach (var ray in SceneItemsLocations)
+        // {
+        //     var b = gameboard.RayCast(ray, out hitPoint);      // Null Object reference 
+        //     // Intersect the Gameboard with the ray
+        //     if (b)
+        //     {
+        //         // Check whether the object can be fit in the resulting position
+        //         if (gameboard.CheckFit(center: hitPoint, 0.01f))
+        //         {
+        //             var landscape = Instantiate(PlacementObjectPf, hitPoint, Quaternion.identity);
+        //             landscape.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        //             _placedObjects.Add(landscape);
+        //         }
+        //     }
+        // }
+        //
+        // foreach (var box in RecognitionBoxes)
+        // {
+        //     RecognitionBoxes.Remove(box);
+        //     Destroy(box);
+        // }
+        //
+        // DebugText.text = "Scene items generated";
     }
     
     void _gpu_scale(Texture2D src, int width, int height, FilterMode fmode)

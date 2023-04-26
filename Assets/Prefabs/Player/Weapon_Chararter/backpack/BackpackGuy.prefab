@@ -1450,6 +1450,8 @@ MonoBehaviour:
   animator: {fileID: 95922273507661854}
   cameraTransform: {fileID: 0}
   nearestBoardPosition: {x: 0, y: 0, z: 0}
+  fallDetectionHeight: -3
+  resetLocation: {x: 0, y: -1.1, z: 0}
   ARController: {fileID: 0}
   GameFlowController: {fileID: 0}
   playerOwnCombatHandler: {fileID: -2058255866417811186}
@@ -1502,7 +1504,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  shield: 0
   skillCoolDown: 5
+  UpgradeDamagePercentage: 100
   AttackingColliders:
   - {fileID: 0}
   DamageTakingColliders:
@@ -1510,6 +1514,7 @@ MonoBehaviour:
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: -3798238779284867034}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}
@@ -1543,37 +1548,13 @@ MonoBehaviour:
   combatHandler: {fileID: -2058255866417811186}
   GameFlowCtrl: {fileID: 0}
   Weapon: {fileID: 6598198972772966951}
-  NormalAttackDamage: 20
-  SkillDamage: 200
-  normalAttackCount: 3
   shieldPrefab: {fileID: 3885239102448684386, guid: ddd55144fa765e84585a8489edfa5de0,
     type: 3}
   shieldAngle: 180
   revertDistance: 3
   revertDamage: 20
-  NormalAttackDamageLv:
-  - 20
-  - 30
-  - 30
-  - 30
-  - 40
-  - 50
-  - 50
-  - 50
-  - 50
-  - 50
-  MaxHitCountLv: 02000000020000000300000003000000030000000300000003000000040000000400000005000000
-  revertDamageLv:
-  - 0
-  - 0
-  - 0
-  - 10
-  - 10
-  - 10
-  - 10
-  - 10
-  - 20
-  - 20
+  NormalAttackDamage: 20
+  MaxHitCount: 0
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0

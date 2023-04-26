@@ -12,7 +12,6 @@ public class PlayerSpawner : MonoBehaviour
     
     [Header("Character Prefabs")]
     public GameObject KendoPrefab;
-    public GameObject HallSecurityPrefab;
     public GameObject MagicCasterPrefab;
     public GameObject ProfessorPrefab;
     public GameObject RoboticsTeamPrefab;
@@ -27,7 +26,7 @@ public class PlayerSpawner : MonoBehaviour
         switch (PlayerPrefs.GetInt("selectedChar"))
         {
             case 0: 
-                activeCharacter = Instantiate(HallSecurityPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
+                activeCharacter = Instantiate(MagicCasterPrefab, spawnLocation, new Quaternion(0, 0, 0, 0), parentTransform);
                 break;
                     
             case 1:

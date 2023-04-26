@@ -4208,7 +4208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActiveIconImage: {fileID: 696422995}
   playerIconSpites:
-  - {fileID: 21300000, guid: fd00f5fd8a34b76499e1ea72718b8fbd, type: 3}
+  - {fileID: 21300000, guid: 9212c87bf81564767814a72285b45244, type: 3}
   - {fileID: 21300000, guid: a257ede00af404a4cb854e55102fc235, type: 3}
   - {fileID: 21300000, guid: 5a79d41fc3ddb4e47bfafbc8fd5a7a89, type: 3}
   - {fileID: 21300000, guid: be3f7b75bc5da5a42b00131214373a53, type: 3}
@@ -6676,17 +6676,15 @@ MonoBehaviour:
   activeCharacter: {fileID: 0}
   GameFlowController: {fileID: 1451593558}
   PlayerStatusRef: {fileID: 0}
-  KendoPrefab: {fileID: 1556040939566342, guid: 8fffc8111ceddc044a92c1d13747c5bb,
+  KendoPrefab: {fileID: 1556040939566342, guid: 012f75391d50dcd49a42dfb8ef8bf5db,
     type: 3}
-  HallSecurityPrefab: {fileID: 7830203463684231489, guid: ed32d4f332a647e4ea52918af5219fb5,
+  MagicCasterPrefab: {fileID: 1953271650171834, guid: c6fdf075ec0388d4098d80e06747a0af,
     type: 3}
-  MagicCasterPrefab: {fileID: 1953271650171834, guid: ae7cc4cac9bd71e478c8fde6e04c2d94,
-    type: 3}
-  ProfessorPrefab: {fileID: 7647134206250791342, guid: 83f1c10455db1b74db02bb88674cd4bb,
+  ProfessorPrefab: {fileID: 7647134206250791342, guid: f6c860a8016f31047b722c8bafea8071,
     type: 3}
   RoboticsTeamPrefab: {fileID: 7673487251499248760, guid: b35d1fc5f88b9b2479ca83cae977332f,
     type: 3}
-  trackNFieldPrefab: {fileID: 8189980434977739222, guid: 94e5b71d2f05ea14dbf4f0fbd4fc8598,
+  trackNFieldPrefab: {fileID: 8189980434977739222, guid: eb64b54ddc44347478d7c6d3d45f821c,
     type: 3}
   BattlePlayerIconLoader: {fileID: 696422997}
 --- !u!1 &1486486166

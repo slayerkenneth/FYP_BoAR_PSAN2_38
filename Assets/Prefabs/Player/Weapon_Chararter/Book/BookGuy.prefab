@@ -2345,7 +2345,7 @@ MonoBehaviour:
   bookAngle: 180
   NormalAttackDamage: 10
   HoldAttackDamage: 20
-  maxScale: {x: 1.5, y: 1.5, z: 1.5}
+  maxScale: 0
   rotationSpeed_NormalAttack: 350
   rotationSpeed_HoldAttack: 325
 --- !u!114 &3741930513873572181
@@ -2372,12 +2372,14 @@ MonoBehaviour:
   animator: {fileID: 7413344840680693326}
   cameraTransform: {fileID: 0}
   nearestBoardPosition: {x: 0, y: 0, z: 0}
+  fallDetectionHeight: -3
+  resetLocation: {x: 0, y: -1, z: 0}
   ARController: {fileID: 0}
   GameFlowController: {fileID: 0}
   playerOwnCombatHandler: {fileID: 3276981404916579627}
   playerOwnHealthSystem: {fileID: -6390358997438491074}
   maxHP: 100
-  PlayerWeaponSkillCtrl: {fileID: 0}
+  PlayerWeaponSkillCtrl: {fileID: 8773225246261705635}
   debugLog: {fileID: 0}
 --- !u!143 &4107456148009102222
 CharacterController:
@@ -2424,13 +2426,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  shield: 0
   skillCoolDown: 5
+  UpgradeDamagePercentage: 100
   AttackingColliders: []
   DamageTakingColliders:
   - {fileID: 4107456148009102222}
   AttackTarget: {fileID: 0}
   DamageSource: {fileID: 0}
   healthSystemComponent: {fileID: -6390358997438491074}
+  extraDamage: 0
   ARCtrl: {fileID: 0}
   GameFlowCtrl: {fileID: 0}
   CentralBattleCtrl: {fileID: 0}

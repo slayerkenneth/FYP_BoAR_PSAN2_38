@@ -62,22 +62,25 @@ public class PlayerStatus : ScriptableObject
                 _currentPlayer.maxHPStat = defaultStat.maxHPStat;
                 _currentPlayer.speedStat = defaultStat.speedStat;
                 _currentPlayer.currentHP = _currentPlayer.maxHPStat[0];
-
+                
                 switch (PlayerPrefs.GetInt("selectedChar"))
                 {
                     case 0:
-                        _currentPlayer.activeClass =
-                            (HallGuardActive)AssetDatabase.LoadAssetAtPath(
-                                "Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
-                        _currentPlayer.weaponStat =
-                            (CableStat)AssetDatabase.LoadAssetAtPath(
-                                "Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
-                        _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath(
-                            "Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
+                        _currentPlayer.activeClass = (GoldRiceBowlActive)AssetDatabase.LoadAssetAtPath(
+                                "Assets/Scripts/ActiveClass/GoldRiceBowlActive.asset", typeof(GoldRiceBowlActive));
+                        _currentPlayer.weaponStat = (IpadStat)AssetDatabase.LoadAssetAtPath(
+                                "Assets/Scripts/weapon_character/Ipad/IpadStat.asset", typeof(IpadStat));
+                        _currentPlayer.passiveClass = (GoldRicePassive)AssetDatabase.LoadAssetAtPath(
+                            "Assets/Scripts/PassiveClass/GoldRiceBowl/GoldRicePassive.asset", typeof(GoldRicePassive));
                         break;
                 
                     case 1:
-                
+                        _currentPlayer.activeClass = (GoldRiceBowlActive)AssetDatabase.LoadAssetAtPath(
+                            "Assets/Scripts/ActiveClass/GoldRiceBowlActive.asset", typeof(GoldRiceBowlActive));
+                        _currentPlayer.weaponStat = (IpadStat)AssetDatabase.LoadAssetAtPath(
+                            "Assets/Scripts/weapon_character/Ipad/IpadStat.asset", typeof(IpadStat));
+                        _currentPlayer.passiveClass = (GoldRicePassive)AssetDatabase.LoadAssetAtPath(
+                            "Assets/Scripts/PassiveClass/GoldRiceBowl/GoldRicePassive.asset", typeof(GoldRicePassive));
                         break;
                 
                     case 2:
@@ -85,8 +88,7 @@ public class PlayerStatus : ScriptableObject
                             "Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
                         _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath(
                             "Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
-                        _currentPlayer.weaponStat =
-                            (BookStat)AssetDatabase.LoadAssetAtPath(
+                        _currentPlayer.weaponStat = (BookStat)AssetDatabase.LoadAssetAtPath(
                                 "Assets/Scripts/weapon_character/Book/BookStat.asset", typeof(BookStat));
                 
                         break;
@@ -94,32 +96,33 @@ public class PlayerStatus : ScriptableObject
                         break;
                 
                     case 4:
-                        _currentPlayer.activeClass =
-                            (HallGuardActive)AssetDatabase.LoadAssetAtPath(
-                                "Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
-                        _currentPlayer.weaponStat =
-                            (CableStat)AssetDatabase.LoadAssetAtPath(
+                        _currentPlayer.activeClass = (HallGuardActive)AssetDatabase.LoadAssetAtPath(
+                            "Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
+                        _currentPlayer.weaponStat = (CableStat)AssetDatabase.LoadAssetAtPath(
                                 "Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
-                        _currentPlayer.passiveClass = (ProfessorPassive)AssetDatabase.LoadAssetAtPath(
-                            "Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
+                        _currentPlayer.passiveClass = (GoldRicePassive)AssetDatabase.LoadAssetAtPath(
+                            "Assets/Scripts/PassiveClass/GoldRiceBowl/GoldRicePassive.asset", typeof(GoldRicePassive));
                         break;
                 }
                 
                 // switch (PlayerPrefs.GetInt("selectedChar"))
                 // {
                 //     case 0:
-                //         _currentPlayer.activeClass =
-                //             (HallGuardActive)Resources.Load(
-                //                 "Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
-                //         _currentPlayer.weaponStat =
-                //             (CableStat)Resources.Load(
-                //                 "Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
-                //         _currentPlayer.passiveClass = (ProfessorPassive)Resources.Load(
-                //             "Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
+                //         _currentPlayer.activeClass = (GoldRiceBowlActive)Resources.Load(
+                //                 "Assets/Scripts/ActiveClass/GoldRiceBowlActive.asset", typeof(GoldRiceBowlActive));
+                //         _currentPlayer.weaponStat = (IpadStat)Resources.Load(
+                //                 "Assets/Scripts/weapon_character/Ipad/IpadStat.asset", typeof(IpadStat));
+                //         _currentPlayer.passiveClass = (GoldRicePassive)Resources.Load(
+                //             "Assets/Scripts/PassiveClass/GoldRiceBowl/GoldRicePassive.asset", typeof(GoldRicePassive));
                 //         break;
                 //
                 //     case 1:
-                //
+                //         _currentPlayer.activeClass = (GoldRiceBowlActive)Resources.Load(
+                //             "Assets/Scripts/ActiveClass/GoldRiceBowlActive.asset", typeof(GoldRiceBowlActive));
+                //         _currentPlayer.weaponStat = (IpadStat)Resources.Load(
+                //             "Assets/Scripts/weapon_character/Ipad/IpadStat.asset", typeof(IpadStat));
+                //         _currentPlayer.passiveClass = (GoldRicePassive)Resources.Load(
+                //             "Assets/Scripts/PassiveClass/GoldRiceBowl/GoldRicePassive.asset", typeof(GoldRicePassive));
                 //         break;
                 //
                 //     case 2:
@@ -127,8 +130,7 @@ public class PlayerStatus : ScriptableObject
                 //             "Assets/Scripts/ActiveClass/Professor/ProfessorActive.asset", typeof(ProfessorActive));
                 //         _currentPlayer.passiveClass = (ProfessorPassive)Resources.Load(
                 //             "Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
-                //         _currentPlayer.weaponStat =
-                //             (BookStat)Resources.Load(
+                //         _currentPlayer.weaponStat = (BookStat)Resources.Load(
                 //                 "Assets/Scripts/weapon_character/Book/BookStat.asset", typeof(BookStat));
                 //
                 //         break;
@@ -136,14 +138,12 @@ public class PlayerStatus : ScriptableObject
                 //         break;
                 //
                 //     case 4:
-                //         _currentPlayer.activeClass =
-                //             (HallGuardActive)Resources.Load(
-                //                 "Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
-                //         _currentPlayer.weaponStat =
-                //             (CableStat)Resources.Load(
+                //         _currentPlayer.activeClass = (HallGuardActive)Resources.Load(
+                //             "Assets/Scripts/ActiveClass/HallGuardActive.asset", typeof(HallGuardActive));
+                //         _currentPlayer.weaponStat = (CableStat)Resources.Load(
                 //                 "Assets/Scripts/weapon_character/Cable/CableStat.asset", typeof(CableStat));
-                //         _currentPlayer.passiveClass = (ProfessorPassive)Resources.Load(
-                //             "Assets/Scripts/ActiveClass/Professor/ProfessorPassive.asset", typeof(ProfessorPassive));
+                //         _currentPlayer.passiveClass = (GoldRicePassive)Resources.Load(
+                //             "Assets/Scripts/PassiveClass/GoldRiceBowl/GoldRicePassive.asset", typeof(GoldRicePassive));
                 //         break;
                 // }
 

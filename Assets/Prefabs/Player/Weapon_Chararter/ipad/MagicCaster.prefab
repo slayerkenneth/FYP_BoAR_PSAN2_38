@@ -2152,14 +2152,14 @@ MonoBehaviour:
   animator: {fileID: 95805638432926132}
   cameraTransform: {fileID: 0}
   nearestBoardPosition: {x: 0, y: 0, z: 0}
-  fallDetectionHeight: -5
-  resetLocation: {x: 0, y: 0, z: 0}
+  fallDetectionHeight: -3
+  resetLocation: {x: 0, y: -1, z: 0}
   ARController: {fileID: 0}
   GameFlowController: {fileID: 0}
   playerOwnCombatHandler: {fileID: 7284652761695880775}
   playerOwnHealthSystem: {fileID: 3394933375001385906}
   maxHP: 100
-  PlayerWeaponSkillCtrl: {fileID: 0}
+  PlayerWeaponSkillCtrl: {fileID: -5288457231689039481}
   debugLog: {fileID: 0}
 --- !u!143 &3036157893341125485
 CharacterController:
@@ -2208,6 +2208,7 @@ MonoBehaviour:
   hp: 100
   shield: 0
   skillCoolDown: 5
+  UpgradeDamagePercentage: 100
   AttackingColliders: []
   DamageTakingColliders:
   - {fileID: 3036157893341125485}
