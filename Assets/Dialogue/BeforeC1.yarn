@@ -1,10 +1,15 @@
-﻿title: Start
+﻿title: BeforeChapter1
 tags:
 ---
-Tom: I think I went to the wrong classroom...
-Tom: It seems that something is weird about everyone here...
+<<Scene Ch1S1>>
+<<Act Axl emptyprefab left center #ffffff>>
+<<Act Boarlord emptyprefab 1.25 center #dbb3ab>>
+Axl: I think I went to the wrong classroom... it seems that something is weird about everyone here
+<<Scene Ch1S2>>
 Boarlord: (in an unknown language) It is time. The experiment has been completed... We are ready.
-Tom: What? That didn't sound good. I better hide.
+<<Scene Ch1S3>>
+Axl: What? That didn't sound good. I better hide.
+<<Scene Ch1S3>>
 -> Hide
     <<jump Hide>>
 -> Continue listening
@@ -12,22 +17,33 @@ Tom: What? That didn't sound good. I better hide.
 ===
 title: Hide
 ---
-...
+<<Scene Ch1S4>>
+Axl: Oops...
+<<Scene Ch1S5>>
 Boarlord: I HEARD THAT. COME OUT NOW, WHOEVER YOU ARE!
-(TOM'S HANDS STARTS TO CLAM UP, HEART BEATING FASTER EVERY SECOND)
-Tom: Think, think... where can I hide?
-(TOM'S THOUGHTS ARE SUDDENLY INTERRUPTED WHEN A SUDDEN BURST OF FIRE FLASHES IN FRONT OF HIS EYES)
-Tom: What is happening? Why are I glowing? This is insane...I have to get out of here and find out what's going on.
+<<Scene Ch1S6>>
+Axl: Think, think... where can I hide?
+<<Scene Ch1S7>>
+Axl: What is happening?
+<<Scene Ch1S8>>
+Axl: Why are I glowing? This is insane...I have to get out of here and find out what's going on.
+<<Scene Ch1S9>>
 Boarlord: Going somewhere? Not before you defeat me!
 ===
 title: ContinueListening
 ---
+<<Scene Ch1S10>>
 Boarlord: My fellow boars, we recently made a breakthrough in our experiment and are finally ready to take over the world!
-(TOM ACCIDENTALLY MAKES A SOUND)
+<<Scene Ch1S11>>
+Axl: What?!
+<<Scene Ch1S5>>
 Boarlord: Intruder! Get him!
-(TOM MAKES A RUN FOR THE EXIT, HEARING LOUD FOOTSTEPS TRAILING BEHIND HIM)
-Tom: I have to get out of here before they catch me.
-(A VIOLENT BURST OF FIRE SUDDENLY FLASHES IN FRONT OF HIS EYES)
-Tom: Woah! Why are I glowing? This is insane...I have to get out of here and find out what's going on.
+<<Scene Ch1S6>>
+Axl: I have to get out of here before they catch me.
+<<Scene Ch1S7>>
+Axl: Woah!
+<<Scene Ch1S8>>
+Axl: Why are I glowing? This is insane...I have to get out of here and find out what's going on.
+<<Scene Ch1S9>>
 Boarlord: Going somewhere? Not before you defeat me!
 ===

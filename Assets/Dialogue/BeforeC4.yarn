@@ -1,7 +1,11 @@
 ﻿title: BeforeChapter4
 tags:
-position: -15,-87
 ---
+<<Scene Ch4S1>>
+<<Act Axl emptyprefab left center #ffffff>>
+<<Act Boaris emptyprefab right center #c0ebd8>>
+<<Act Boarissa emptyprefab 1.25 center #dbb3ab>>
+<<Act Boarlord emptyprefab 1.5 center #c3bee6>>
 Axl: I finally got my hands on the EMP device!
 Boaris: Great, then we don't have time to waste!
 Boarissa: We've got to get to the Red Bird sundial before sunset!
@@ -11,8 +15,8 @@ Boarissa: We've got to get to the Red Bird sundial before sunset!
     <<jump AskQuestions>>
 ===
 title: RedbirdSundial
-position: -141,99
 ---
+<<Scene Ch4S2>>
 Boarlord: You're finally here... again. 
 Axl: What do you mean?
 Boarlord: Did you know that we have been in this situation an infinite amount of times?
@@ -21,11 +25,10 @@ Boarlord: You and I are stuck in a time loop. With infinite possibilities in the
 ===
 
 title: AskQuestions
-position: 145,104
 ---
 Axl: What? What's special about the Sundial?
 Boaris: It's where everything began. We have no time to waste, let's get moving.
-...
+<<Scene Ch4S2>>
 Boarlord: You're finally here... again.
 Axl: What do you mean?
 Boarlord: Did you know that we have been in this situation an infinite amount of times?
