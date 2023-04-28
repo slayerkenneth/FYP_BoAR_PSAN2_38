@@ -138,6 +138,7 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] public GameObject DefenseTowerParentPrefab;
     [SerializeField] public GameObject ActiveDefenseTowerParent;
     [SerializeField] private DefenceTarget DefTarget;
+    [SerializeField] public GameObject TimerText;
     
     [Header("CaptureTower")]
     [SerializeField] public GameObject CaptureTowerParentPrefab;
@@ -327,6 +328,7 @@ public class GameFlowController : MonoBehaviour
             {
                 battleSceneState = PVEBattleSceneState.WinBattle;
                 DebugText.text = " Player Win !";
+                TimerText.SetActive(false);
                 Destroy(ActiveDefenseTowerParent);
                 RewardNextStage();
                 battleSceneState = PVEBattleSceneState.BattleConclusion;
@@ -1313,12 +1315,17 @@ public class GameFlowController : MonoBehaviour
         battleSceneState = PVEBattleSceneState.MapActive;
     }
 
-    // To be implemented to dialogue, now dummy to intro
+    
     public void ReturnToDialogue()
     {
         if (playerGlobalStatus.currentLevel != 1)return;
-        
-        SceneManager.LoadScene(2);
+        playerGlobalStatus.currentLevel = 0;
+        Destroy(playerGlobalStatus);
+        if (ChapterLoadStore.selectedChapter == 5)
+        {
+            SceneManager.LoadScene(9);
+        }
+        else SceneManager.LoadScene(2);
     }
 
     public void InvalidSceneTriggerReScan()

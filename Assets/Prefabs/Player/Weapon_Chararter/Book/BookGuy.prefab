@@ -2345,6 +2345,7 @@ MonoBehaviour:
   bookAngle: 180
   NormalAttackDamage: 10
   HoldAttackDamage: 20
+  CharMoveCtrl: {fileID: 3741930513873572181}
   maxScale: 0
   rotationSpeed_NormalAttack: 350
   rotationSpeed_HoldAttack: 325

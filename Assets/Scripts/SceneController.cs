@@ -38,7 +38,11 @@ public class SceneController : MonoBehaviour
 
     public void LoadDialogueSceneFromStaticIndex()
     {
-        SceneManager.LoadScene(ChapterLoadStore.selectedChapter + 4);
+        if (ChapterLoadStore.selectedChapter == 5)
+        {
+            LoadMapScene();
+        }
+        else SceneManager.LoadScene(ChapterLoadStore.selectedChapter + 4);
     }
 }
 

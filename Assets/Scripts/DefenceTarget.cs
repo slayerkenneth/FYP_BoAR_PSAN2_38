@@ -34,6 +34,7 @@ public class DefenceTarget : MonoBehaviour
     private void Start()
     {
         CurrentTime = DefenceTime;
+        CurrentTimeText.gameObject.SetActive(true);
         GameFlowCtrl.SetDefenseTower(this);
     }
 

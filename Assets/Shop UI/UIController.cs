@@ -321,9 +321,9 @@ public class UIController : MonoBehaviour
         recentHealth = PlayerStatus.currentHP;
         totalHealth = PlayerStatus.maxHPStat[PlayerStatus.maxHPLv];
         recentMoney = PlayerStatus.money;
-        recentWeaponLV = PlayerStatus.weaponStat.lv;
-        recentClass1LV = PlayerStatus.activeClass.lv;
-        recentClass2LV = PlayerStatus.passiveClass.lv;
+        if (PlayerStatus.weaponStat) recentWeaponLV = PlayerStatus.weaponStat.lv;
+        if (PlayerStatus.activeClass) recentClass1LV = PlayerStatus.activeClass.lv;
+        if (PlayerStatus.passiveClass) recentClass2LV = PlayerStatus.passiveClass.lv;
         recentHPLV = PlayerStatus.maxHPLv;
 
         recentMoney = PlayerStatus.money;
@@ -340,13 +340,13 @@ public class UIController : MonoBehaviour
         UpClass2Text.text =  (recentClass2LV + 1).ToString();
 
         if (recentWeaponLV == 9) UpWeaponTextHint.text = "Max level";
-        else UpWeaponTextHint.text = PlayerStatus.weaponStat.upgradeHint[recentWeaponLV];
+        else if (PlayerStatus.weaponStat) UpWeaponTextHint.text = PlayerStatus.weaponStat.upgradeHint[recentWeaponLV];
 
         if (recentClass1LV == 9) UpWeaponTextHint.text = "Max level";
-        else UpClass1TextHint.text = PlayerStatus.activeClass.upgradeHint[recentClass1LV];
+        else if (PlayerStatus.activeClass) UpClass1TextHint.text = PlayerStatus.activeClass.upgradeHint[recentClass1LV];
 
         if (recentClass1LV == 9) UpWeaponTextHint.text = "Max level";
-        else UpClass2TextHint.text = PlayerStatus.passiveClass.upgradeHint[recentClass2LV];
+        else if (PlayerStatus.passiveClass) UpClass2TextHint.text = PlayerStatus.passiveClass.upgradeHint[recentClass2LV];
 
     }
 }
