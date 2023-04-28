@@ -11,7 +11,7 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
     // public float revertDamage;
     public float NormalAttackDamage;
     public float HoldAttackDamage;
-    private CharacterMovementController CharMoveCtrl;
+    public CharacterMovementController CharMoveCtrl;
     
     private float NormalAttackTime;
     private bool isHoldAttack = false;
@@ -33,7 +33,6 @@ public class PlayerWeaponSkillCharacter_Book : PlayerWeaponSkillController
         NormalAttackTime = 0;
         originalScale = bookPrefab.transform.localScale;
         originalPosition = bookPrefab.transform.localPosition;
-        CharMoveCtrl = GetComponent<CharacterMovementController>();
     }
 
     // Update is called once per frame

@@ -6278,7 +6278,7 @@ PrefabInstance:
         type: 3}
       propertyPath: modelFile
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: f442912ee369248cabda2e51b295d2c8,
+      objectReference: {fileID: 5022602860645237092, guid: 7fb918283a9502d4797fa8c002abd990,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ceccde94086d44138ee14ebfb8b9fcd, type: 3}
@@ -6559,6 +6559,7 @@ MonoBehaviour:
   DefenseTowerParentPrefab: {fileID: 1249809416}
   ActiveDefenseTowerParent: {fileID: 0}
   DefTarget: {fileID: 1429391864}
+  TimerText: {fileID: 4098587496175638026}
   CaptureTowerParentPrefab: {fileID: 1545443209}
   ActiveCaptureTowerParent: {fileID: 0}
   capTargetSpawner: {fileID: 0}
@@ -6607,7 +6608,7 @@ MonoBehaviour:
   MaxEnemyCount: 5
   EnemySpawnLocationList: []
   activeEnemies: []
-  spawnInterval: 0
+  spawnInterval: 10
   spawnTimeCounter: 0
   DefenseModeEnemyMax: 3
   CaptureModeEnemyMax: 3
@@ -10548,7 +10549,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1793135473082958421}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 710665049}
+        m_TargetAssemblyTypeName: SceneController, Assembly-CSharp
+        m_MethodName: LoadChapterScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!224 &1793135473082958419
 RectTransform:
   m_ObjectHideFlags: 0
