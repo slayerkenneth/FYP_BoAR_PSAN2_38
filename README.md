@@ -1,4 +1,4 @@
-# ARMeshingTest Readme, Build Guide
+# BoAR AR Game Readme, Build Guide
 Experimental Repo For FYP development
 
 ## Testing device specs:
