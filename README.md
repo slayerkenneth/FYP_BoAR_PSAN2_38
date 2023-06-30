@@ -1,5 +1,5 @@
 # BoAR AR Game Readme, Build Guide
-Experimental Repo For FYP development
+Repo For FYP development
 
 ## Testing device specs:
 - Android 7.0 or above 
